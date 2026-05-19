@@ -26,7 +26,7 @@ public static class Program
 		string[] words = opts.Prompt?.ToArray() ?? [];
 		string? prompt = words.Length > 0 ? string.Join(' ', words) : null;
 
-		ReplResult result = await ReplLoop.RunAsync(provider, prompt);
+		ReplResult result = await new ReplLoop(provider).RunAsync(prompt);
 
 		if (!result.ShouldExecute || string.IsNullOrWhiteSpace(result.Command))
 		{
