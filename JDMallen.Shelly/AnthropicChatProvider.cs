@@ -5,32 +5,46 @@ namespace JDMallen.Shelly;
 
 public sealed class AnthropicChatProvider : IChatProvider
 {
-	private const string MODEL_ID = "claude-haiku-4-5-20251001";
+	internal const string ApiKeyEnvVar = "ANTHROPIC_API_KEY_SHELLY";
 
-	private readonly AnthropicClient _client = new()
+	private readonly AnthropicClient _client;
+	private readonly string _model;
+
+	public AnthropicChatProvider(string apiKey, string model)
 	{
-		ApiKey = Environment.GetEnvironmentVariable(Program.ApiKeyEnvVar),
-	};
+		_client = new AnthropicClient { ApiKey = apiKey };
+		_model = model;
+	}
 
-	public async Task<string> GetSuggestionAsync(
+	public Task<string> GetSuggestionAsync(
 		string prompt,
 		string context,
 		CancellationToken cancellationToken = default)
-	{
-		var system
-			= $"You are a shell command expert. Given a description of what the user wants to do, output ONLY the shell command(s) that accomplish it. No explanations, no markdown, no code fences---just the raw command(s). If multiple commands are needed, separate them with && or use appropriate shell syntax. Context: {context}";
+		=> ChatAsync(Prompts.Suggestion(context), prompt, sanitize: true, cancellationToken);
 
+	public Task<string> ExplainCommandAsync(
+		string command,
+		string context,
+		CancellationToken cancellationToken = default)
+		=> ChatAsync(Prompts.Explain(context), command, sanitize: false, cancellationToken);
+
+	private async Task<string> ChatAsync(
+		string system,
+		string userMessage,
+		bool sanitize,
+		CancellationToken cancellationToken)
+	{
 		var parameters = new MessageCreateParams
 		{
 			MaxTokens = 500,
-			Model = MODEL_ID,
+			Model = _model,
 			System = system,
 			Messages =
 			[
 				new MessageParam
 				{
 					Role = Role.User,
-					Content = prompt,
+					Content = userMessage,
 				},
 			],
 		};
@@ -39,12 +53,13 @@ public sealed class AnthropicChatProvider : IChatProvider
 			parameters,
 			cancellationToken: cancellationToken);
 
-		return string.Concat(
+		string text = string.Concat(
 				response.Content
 					.Select(block => block.Value)
 					.OfType<TextBlock>()
-					.Select(text => text.Text)
-			)
+					.Select(t => t.Text))
 			.Trim();
+
+		return sanitize ? CommandSanitizer.Strip(text) : text;
 	}
 }

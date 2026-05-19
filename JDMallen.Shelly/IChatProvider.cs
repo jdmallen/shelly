@@ -6,4 +6,9 @@ public interface IChatProvider
 		string prompt,
 		string context,
 		CancellationToken cancellationToken = default);
+
+	Task<string> ExplainCommandAsync(
+		string command,
+		string context,
+		CancellationToken cancellationToken = default);
 }

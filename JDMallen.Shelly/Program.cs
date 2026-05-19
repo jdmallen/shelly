@@ -6,8 +6,6 @@ namespace JDMallen.Shelly;
 
 public static class Program
 {
-	internal const string ApiKeyEnvVar = "ANTHROPIC_API_KEY_SHELLY";
-
 	public static async Task<int> Main(string[] args)
 	{
 		return await Parser.Default
@@ -17,19 +15,17 @@ public static class Program
 
 	private static async Task<int> RunAsync(Options opts)
 	{
-		LoadAnthropicCredsFile();
+		ShellyConfig config = ShellyConfig.Load();
 
-		if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(ApiKeyEnvVar)))
+		IChatProvider? provider = CreateProvider(config);
+		if (provider is null)
 		{
-			await Console.Error.WriteLineAsync($"Error: {ApiKeyEnvVar} environment variable not set");
-
 			return 1;
 		}
 
 		string[] words = opts.Prompt?.ToArray() ?? [];
 		string? prompt = words.Length > 0 ? string.Join(' ', words) : null;
 
-		var provider = new AnthropicChatProvider();
 		ReplResult result = await ReplLoop.RunAsync(provider, prompt);
 
 		if (!result.ShouldExecute || string.IsNullOrWhiteSpace(result.Command))
@@ -38,6 +34,64 @@ public static class Program
 		}
 
 		return await ExecuteAsync(result.Command);
+	}
+
+	private static IChatProvider? CreateProvider(ShellyConfig config)
+	{
+		return config.Provider.ToLowerInvariant() switch
+		{
+			"azure" => CreateAzureProvider(),
+			"anthropic" => CreateAnthropicProvider(config.Anthropic),
+			_ => Fail($"Unknown provider '{config.Provider}' in {ShellyConfig.ConfigPath()}. Expected 'anthropic' or 'azure'."),
+		};
+	}
+
+	private static IChatProvider? CreateAnthropicProvider(AnthropicConfig cfg)
+	{
+		string? apiKey = Environment.GetEnvironmentVariable(AnthropicChatProvider.ApiKeyEnvVar);
+		if (string.IsNullOrEmpty(apiKey))
+		{
+			return Fail($"{AnthropicChatProvider.ApiKeyEnvVar} environment variable not set");
+		}
+
+		return new AnthropicChatProvider(apiKey, cfg.Model);
+	}
+
+	private static IChatProvider? CreateAzureProvider()
+	{
+		string? apiKey = Environment.GetEnvironmentVariable(AzureChatProvider.ApiKeyEnvVar);
+		string? endpoint = Environment.GetEnvironmentVariable(AzureChatProvider.EndpointEnvVar);
+		string? deployment = Environment.GetEnvironmentVariable(AzureChatProvider.DeploymentEnvVar);
+
+		var missing = new List<string>();
+		if (string.IsNullOrEmpty(apiKey))
+		{
+			missing.Add(AzureChatProvider.ApiKeyEnvVar);
+		}
+
+		if (string.IsNullOrEmpty(endpoint))
+		{
+			missing.Add(AzureChatProvider.EndpointEnvVar);
+		}
+
+		if (string.IsNullOrEmpty(deployment))
+		{
+			missing.Add(AzureChatProvider.DeploymentEnvVar);
+		}
+
+		if (missing.Count > 0)
+		{
+			return Fail($"Azure provider misconfigured. Missing env var(s): {string.Join(", ", missing)}.");
+		}
+
+		return new AzureChatProvider(apiKey!, endpoint!, deployment!);
+	}
+
+	private static IChatProvider? Fail(string message)
+	{
+		Console.Error.WriteLine($"Error: {message}");
+
+		return null;
 	}
 
 	private static async Task<int> ExecuteAsync(string command)
@@ -71,43 +125,6 @@ public static class Program
 		return process.ExitCode;
 	}
 
-	private static void LoadAnthropicCredsFile()
-	{
-		string? home = Environment.GetEnvironmentVariable("HOME");
-		if (string.IsNullOrEmpty(home))
-		{
-			return;
-		}
-
-		string path = Path.Combine(home, ".anthropic_creds");
-		if (!File.Exists(path))
-		{
-			return;
-		}
-
-		foreach (string line in File.ReadAllLines(path)
-			         .Select(raw => raw.TrimStart())
-			         .Where(line => !line.StartsWith('#') && line.Length != 0))
-		{
-			string ln = line;
-			if (ln.StartsWith("export ", StringComparison.Ordinal))
-			{
-				ln = ln[7..];
-			}
-
-			int eq = ln.IndexOf('=');
-			if (eq <= 0)
-			{
-				continue;
-			}
-
-			string value = ln[(eq + 1)..].Trim().Trim('"', '\'');
-			if (Environment.GetEnvironmentVariable(ApiKeyEnvVar) is null)
-			{
-				Environment.SetEnvironmentVariable(ApiKeyEnvVar, value);
-			}
-		}
-	}
 }
 
 [UsedImplicitly]

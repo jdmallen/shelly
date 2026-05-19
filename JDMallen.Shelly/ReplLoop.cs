@@ -46,6 +46,37 @@ public static class ReplLoop
 				return ReplResult.Quit();
 			}
 
+			(ActionOutcome outcome, string? refinement) = await ActOnSuggestionAsync(
+				provider,
+				suggestion,
+				context,
+				cancellationToken);
+
+			switch (outcome)
+			{
+				case ActionOutcome.Execute:
+					return ReplResult.Execute(suggestion);
+				case ActionOutcome.Quit:
+					return ReplResult.Quit();
+				case ActionOutcome.Retry:
+					if (!string.IsNullOrWhiteSpace(refinement))
+					{
+						prompt = $"{prompt} (refinement: {refinement})";
+					}
+
+					continue;
+			}
+		}
+	}
+
+	private static async Task<(ActionOutcome, string?)> ActOnSuggestionAsync(
+		IChatProvider provider,
+		string suggestion,
+		string context,
+		CancellationToken cancellationToken)
+	{
+		while (true)
+		{
 			Console.WriteLine();
 			WriteColor("Suggestion:\n", ConsoleColor.Green);
 			WriteColor($"{suggestion}\n", ConsoleColor.Yellow);
@@ -57,30 +88,46 @@ public static class ReplLoop
 
 			switch (choice)
 			{
+				case ConsoleKey.X:
+					return (ActionOutcome.Execute, null);
+
 				case ConsoleKey.E:
-					return ReplResult.Execute(suggestion);
+					WriteColor("Explaining...\n", ConsoleColor.Cyan);
+					string explanation;
+					try
+					{
+						explanation = await provider.ExplainCommandAsync(suggestion, context, cancellationToken);
+					}
+					catch (Exception ex)
+					{
+						WriteColor($"Error: {ex.Message}\n", ConsoleColor.Red);
+
+						continue;
+					}
+
+					Console.WriteLine();
+					WriteColor("Explanation:\n", ConsoleColor.Green);
+					Console.WriteLine(explanation);
+
+					continue;
 
 				case ConsoleKey.C:
 					await ClipboardService.SetTextAsync(suggestion, cancellationToken);
 					WriteColor("Copied to clipboard\n", ConsoleColor.Green);
 
-					return ReplResult.Quit();
+					return (ActionOutcome.Quit, null);
 
 				case ConsoleKey.R:
 					WriteColor("What should be different? ", ConsoleColor.Cyan);
 					string? refinement = Console.ReadLine();
-					if (!string.IsNullOrWhiteSpace(refinement))
-					{
-						prompt = $"{prompt} (refinement: {refinement})";
-					}
 
-					continue;
+					return (ActionOutcome.Retry, refinement);
 
 				case ConsoleKey.Q:
 				case ConsoleKey.Escape:
-					Console.WriteLine("Bye");
+					Console.WriteLine("Goodbye!");
 
-					return ReplResult.Quit();
+					return (ActionOutcome.Quit, null);
 
 				default:
 					WriteColor("Invalid choice\n", ConsoleColor.Yellow);
@@ -92,9 +139,11 @@ public static class ReplLoop
 
 	private static void WriteOptions()
 	{
-		Console.Write("[");
+		Console.Write("e[");
+		WriteColor("x", ConsoleColor.Green);
+		Console.Write("]ecute  [");
 		WriteColor("e", ConsoleColor.Green);
-		Console.Write("]xecute  [");
+		Console.Write("]xplain  [");
 		WriteColor("c", ConsoleColor.Green);
 		Console.Write("]opy  [");
 		WriteColor("r", ConsoleColor.Green);
@@ -109,6 +158,13 @@ public static class ReplLoop
 		Console.ForegroundColor = color;
 		Console.Write(text);
 		Console.ForegroundColor = previous;
+	}
+
+	private enum ActionOutcome
+	{
+		Execute,
+		Retry,
+		Quit,
 	}
 }
 
