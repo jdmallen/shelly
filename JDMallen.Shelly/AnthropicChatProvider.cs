@@ -7,7 +7,10 @@ public sealed class AnthropicChatProvider : IChatProvider
 {
 	private const string MODEL_ID = "claude-haiku-4-5-20251001";
 
-	private readonly AnthropicClient _client = new();
+	private readonly AnthropicClient _client = new()
+	{
+		ApiKey = Environment.GetEnvironmentVariable(Program.ApiKeyEnvVar),
+	};
 
 	public async Task<string> GetSuggestionAsync(
 		string prompt,
