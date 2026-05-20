@@ -1,0 +1,17 @@
+<Project>
+
+	<PropertyGroup>
+		<Version>0.1.0</Version>
+		<Authors>J.D. Mallen</Authors>
+		<Company>J.D. Mallen</Company>
+		<Product>Shelly</Product>
+		<Copyright>Copyright © J.D. Mallen</Copyright>
+		<RepositoryUrl>https://github.com/jdmallen/shelly</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+</Project>

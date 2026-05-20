@@ -1,4 +1,4 @@
 <Solution>
-	<Project Path="src/DMallen.Shelly/JDMallen.Shelly.csproj" />
+	<Project Path="src/JDMallen.Shelly/JDMallen.Shelly.csproj" />
 	<Project Path="test/JDMallen.Shelly.Tests/JDMallen.Shelly.Tests.csproj" />
 </Solution>

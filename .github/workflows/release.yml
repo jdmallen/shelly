@@ -1,0 +1,101 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag to publish (e.g. 0.1.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: build-${{ matrix.rid }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { rid: linux-x64,   os: ubuntu-latest,  archive: tar.gz }
+          - { rid: linux-arm64, os: ubuntu-latest,  archive: tar.gz }
+          - { rid: win-x64,     os: windows-latest, archive: zip    }
+          - { rid: win-arm64,   os: windows-latest, archive: zip    }
+          - { rid: osx-x64,     os: macos-latest,   archive: tar.gz }
+          - { rid: osx-arm64,   os: macos-latest,   archive: tar.gz }
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Resolve version
+        id: ver
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            v="${{ github.event.inputs.version }}"
+          else
+            v="${GITHUB_REF_NAME#v}"
+          fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+
+      - name: Publish
+        shell: bash
+        run: |
+          dotnet publish src/JDMallen.Shelly/JDMallen.Shelly.csproj \
+            --configuration Release \
+            --runtime ${{ matrix.rid }} \
+            --output artifacts/${{ matrix.rid }} \
+            -p:Version=${{ steps.ver.outputs.version }} \
+            --nologo
+
+      - name: Package (tar.gz)
+        if: matrix.archive == 'tar.gz'
+        shell: bash
+        run: |
+          cd artifacts/${{ matrix.rid }}
+          tar -czf ../shelly-${{ steps.ver.outputs.version }}-${{ matrix.rid }}.tar.gz shelly
+
+      - name: Package (zip)
+        if: matrix.archive == 'zip'
+        shell: pwsh
+        run: |
+          Compress-Archive -Path artifacts/${{ matrix.rid }}/shelly.exe -DestinationPath artifacts/shelly-${{ steps.ver.outputs.version }}-${{ matrix.rid }}.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shelly-${{ matrix.rid }}
+          path: artifacts/shelly-*.${{ matrix.archive }}
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: |
+          cd artifacts
+          sha256sum shelly-*.tar.gz shelly-*.zip > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/shelly-*.tar.gz
+            artifacts/shelly-*.zip
+            artifacts/SHA256SUMS.txt
+          generate_release_notes: true
