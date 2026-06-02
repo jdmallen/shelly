@@ -28,21 +28,44 @@ public static class Program
 
 		ReplResult result = await new ReplLoop(provider).RunAsync(prompt);
 
-		if (!result.ShouldExecute || string.IsNullOrWhiteSpace(result.Command))
+		if (string.IsNullOrWhiteSpace(result.Command))
 		{
 			return 0;
 		}
 
-		return await ExecuteAsync(result.Command);
+		return result.Action switch
+		{
+			ReplAction.Execute => await ExecuteAsync(result.Command),
+			ReplAction.Edit    => WriteEditHandoff(result.Command),
+			_                  => 0,
+		};
+	}
+
+	private static int WriteEditHandoff(string command)
+	{
+		string? path = EditHandoff.FilePath;
+		if (string.IsNullOrEmpty(path))
+		{
+			// The edit action is only offered when the wrapper sets the env var,
+			// so this is defensive: print the command so it isn't silently lost.
+			Console.WriteLine(command);
+
+			return 0;
+		}
+
+		File.WriteAllText(path, command);
+
+		return 0;
 	}
 
 	private static IChatProvider? CreateProvider(ShellyConfig config)
 	{
 		return config.Provider.ToLowerInvariant() switch
 		{
-			"azure" => CreateAzureProvider(),
+			"azure"     => CreateAzureProvider(),
 			"anthropic" => CreateAnthropicProvider(config.Anthropic),
-			_ => Fail($"Unknown provider '{config.Provider}' in {ShellyConfig.ConfigPath()}. Expected 'anthropic' or 'azure'."),
+			_ => Fail(
+				$"Unknown provider '{config.Provider}' in {ShellyConfig.ConfigPath()}. Expected 'anthropic' or 'azure'."),
 		};
 	}
 
@@ -81,7 +104,8 @@ public static class Program
 
 		if (missing.Count > 0)
 		{
-			return Fail($"Azure provider misconfigured. Missing env var(s): {string.Join(", ", missing)}.");
+			return Fail(
+				$"Azure provider misconfigured. Missing env var(s): {string.Join(", ", missing)}.");
 		}
 
 		return new AzureChatProvider(apiKey!, endpoint!, deployment!);
@@ -124,7 +148,6 @@ public static class Program
 
 		return process.ExitCode;
 	}
-
 }
 
 [UsedImplicitly]

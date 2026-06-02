@@ -1,5 +1,3 @@
-using JDMallen.Shelly;
-
 namespace JDMallen.Shelly.Tests.Fakes;
 
 internal sealed class FakeChatProvider : IChatProvider

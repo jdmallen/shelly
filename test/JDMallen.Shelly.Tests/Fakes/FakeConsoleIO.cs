@@ -1,5 +1,4 @@
 using System.Text;
-using JDMallen.Shelly;
 
 namespace JDMallen.Shelly.Tests.Fakes;
 

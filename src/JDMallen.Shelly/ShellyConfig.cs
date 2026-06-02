@@ -23,7 +23,9 @@ public sealed class ShellyConfig
 		try
 		{
 			using FileStream stream = File.OpenRead(path);
-			ShellyConfig? loaded = JsonSerializer.Deserialize(stream, ShellyConfigJsonContext.Default.ShellyConfig);
+			ShellyConfig? loaded = JsonSerializer.Deserialize(
+				stream,
+				ShellyConfigJsonContext.Default.ShellyConfig);
 
 			return loaded ?? new ShellyConfig();
 		}

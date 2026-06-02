@@ -11,7 +11,7 @@ Thinking...
 Suggestion:
 du -ah . | sort -rh | head -n 5
 
-e[x]ecute  [e]xplain  [c]opy  [r]etry  [q]uit
+e[x]ecute  [e]dit  ex[p]lain  [c]opy  [r]etry  [q]uit
 ```
 
 ## Install
@@ -50,6 +50,13 @@ xattr -d com.apple.quarantine /usr/local/bin/shelly
 ```
 
 **Windows:** extract `shelly.exe` and place it somewhere on `%PATH%`.
+
+**Linux clipboard:** the `[c]opy` action shells out to a system clipboard tool.
+Install one of `wl-clipboard` (Wayland), `xclip`, or `xsel` (X11) — whichever
+your desktop uses. The clipboard lives in the graphical session, so copy only
+works from a local desktop terminal where `WAYLAND_DISPLAY` or `DISPLAY` is set;
+over a headless/SSH session there's no clipboard to copy into and `shelly` will
+say so. Either way, every other action still works.
 
 ### Build from source
 
@@ -148,10 +155,37 @@ At the suggestion menu:
 | Key     | Action                                                       |
 | ------- | ------------------------------------------------------------ |
 | `x`     | Execute the suggested command in your `$SHELL` (or `cmd.exe` on Windows) |
-| `e`     | Explain what the command does                                |
+| `e`     | Edit — drop the command onto your next prompt, unexecuted, to tweak before running (requires [shell integration](#edit-on-the-command-line-shell-integration)) |
+| `p`     | Explain what the command does                                |
 | `c`     | Copy the command to the clipboard and quit                   |
 | `r`     | Retry — optionally type a refinement to nudge the model      |
 | `q` / Esc | Quit without doing anything                                |
+
+The `[e]dit` and `[c]opy` options only appear when they can actually work:
+`edit` requires the shell wrapper below, and `copy` requires a graphical
+session with a clipboard tool (so it's hidden over headless/SSH sessions).
+
+### Edit on the command line (shell integration)
+
+The `[e]dit` action puts the suggested command onto your **next prompt**
+without running it, so you can adjust it first. A program can't type into its
+parent shell's input line on its own, so this needs a small wrapper function
+that shelly ships with.
+
+**zsh** — source the wrapper from your `~/.zshrc`:
+
+```sh
+source /path/to/shelly/shell/shelly.zsh
+```
+
+(If you installed only the binary, grab `shell/shelly.zsh` from this repo.) The
+wrapper runs the real `shelly`, and when you press `e` it pushes the command
+onto your next prompt via zsh's `print -z`. Once it's sourced, the `[e]dit`
+option appears automatically.
+
+**bash / fish:** not supported yet. Neither can reliably prefill the next
+prompt from a plain function call the way zsh's `print -z` does, so the edit
+option simply won't show. `copy` remains the portable alternative.
 
 ## Develop
 
@@ -171,6 +205,7 @@ Layout:
 ```
 src/JDMallen.Shelly/       # main app
 test/JDMallen.Shelly.Tests # xunit v3 unit tests
+shell/shelly.zsh           # zsh wrapper enabling the [e]dit action
 scripts/publish.sh         # multi-RID release script
 .github/workflows/         # CI + release automation
 ```

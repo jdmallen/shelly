@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Publishes self-contained single-file binaries for all supported RIDs.
 # Usage:  scripts/publish.sh [version]
-# Output: artifacts/<rid>/shelly[.exe]  and  artifacts/shelly-<version>-<rid>.{tar.gz,zip}
+# Output: dist/<rid>/shelly[.exe]  and  dist/shelly-<version>-<rid>.{tar.gz,zip}
 
 set -euo pipefail
 
@@ -44,8 +44,10 @@ for rid in "${rids[@]}"; do
 		(cd "$stage" && zip -q "$repo_root/$archive" shelly.exe)
 	else
 		cp "$out_dir/shelly" "$stage/"
+		# Bundle the zsh wrapper that enables the [e]dit action.
+		cp "shell/shelly.zsh" "$stage/"
 		archive="$out_root/shelly-$version-$rid.tar.gz"
-		tar -C "$stage" -czf "$archive" shelly
+		tar -C "$stage" -czf "$archive" shelly shelly.zsh
 	fi
 	rm -rf "$stage"
 	echo "    -> $archive ($(du -h "$archive" | cut -f1))"

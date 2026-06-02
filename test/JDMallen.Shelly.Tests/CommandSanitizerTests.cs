@@ -1,4 +1,3 @@
-using JDMallen.Shelly;
 using Xunit;
 
 namespace JDMallen.Shelly.Tests;

@@ -24,13 +24,21 @@ public sealed class AzureChatProvider : IChatProvider
 		string prompt,
 		string context,
 		CancellationToken cancellationToken = default)
-		=> ChatAsync(Prompts.Suggestion(context), prompt, sanitize: true, cancellationToken);
+		=> ChatAsync(
+			Prompts.Suggestion(context),
+			prompt,
+			sanitize: true,
+			cancellationToken);
 
 	public Task<string> ExplainCommandAsync(
 		string command,
 		string context,
 		CancellationToken cancellationToken = default)
-		=> ChatAsync(Prompts.Explain(context), command, sanitize: false, cancellationToken);
+		=> ChatAsync(
+			Prompts.Explain(context),
+			command,
+			sanitize: false,
+			cancellationToken);
 
 	private async Task<string> ChatAsync(
 		string system,
