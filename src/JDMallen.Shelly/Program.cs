@@ -6,6 +6,12 @@ namespace JDMallen.Shelly;
 
 public static class Program
 {
+	// Shared transport for all chat completions; one REPL session, one client.
+	private static readonly HttpClient HttpClient = new()
+	{
+		Timeout = TimeSpan.FromSeconds(30),
+	};
+
 	public static async Task<int> Main(string[] args)
 	{
 		return await Parser.Default
@@ -71,35 +77,38 @@ public static class Program
 
 	private static IChatProvider? CreateAnthropicProvider(AnthropicConfig cfg)
 	{
-		string? apiKey = Environment.GetEnvironmentVariable(AnthropicChatProvider.ApiKeyEnvVar);
+		string? apiKey = Environment.GetEnvironmentVariable(ChatProvider.AnthropicApiKeyEnvVar);
 		if (string.IsNullOrEmpty(apiKey))
 		{
-			return Fail($"{AnthropicChatProvider.ApiKeyEnvVar} environment variable not set");
+			return Fail($"{ChatProvider.AnthropicApiKeyEnvVar} environment variable not set");
 		}
 
-		return new AnthropicChatProvider(apiKey, cfg.Model);
+		return new ChatProvider(
+			new AnthropicChatClient(
+				HttpClient,
+				new AnthropicClientOptions(apiKey, cfg.Model)));
 	}
 
 	private static IChatProvider? CreateAzureProvider()
 	{
-		string? apiKey = Environment.GetEnvironmentVariable(AzureChatProvider.ApiKeyEnvVar);
-		string? endpoint = Environment.GetEnvironmentVariable(AzureChatProvider.EndpointEnvVar);
-		string? deployment = Environment.GetEnvironmentVariable(AzureChatProvider.DeploymentEnvVar);
+		string? apiKey = Environment.GetEnvironmentVariable(ChatProvider.AzureApiKeyEnvVar);
+		string? endpoint = Environment.GetEnvironmentVariable(ChatProvider.AzureEndpointEnvVar);
+		string? deployment = Environment.GetEnvironmentVariable(ChatProvider.AzureDeploymentEnvVar);
 
 		var missing = new List<string>();
 		if (string.IsNullOrEmpty(apiKey))
 		{
-			missing.Add(AzureChatProvider.ApiKeyEnvVar);
+			missing.Add(ChatProvider.AzureApiKeyEnvVar);
 		}
 
 		if (string.IsNullOrEmpty(endpoint))
 		{
-			missing.Add(AzureChatProvider.EndpointEnvVar);
+			missing.Add(ChatProvider.AzureEndpointEnvVar);
 		}
 
 		if (string.IsNullOrEmpty(deployment))
 		{
-			missing.Add(AzureChatProvider.DeploymentEnvVar);
+			missing.Add(ChatProvider.AzureDeploymentEnvVar);
 		}
 
 		if (missing.Count > 0)
@@ -108,7 +117,10 @@ public static class Program
 				$"Azure provider misconfigured. Missing env var(s): {string.Join(", ", missing)}.");
 		}
 
-		return new AzureChatProvider(apiKey!, endpoint!, deployment!);
+		return new ChatProvider(
+			new AzureOpenAIChatClient(
+				HttpClient,
+				new AzureOpenAIClientOptions(apiKey!, endpoint!, deployment!)));
 	}
 
 	private static IChatProvider? Fail(string message)

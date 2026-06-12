@@ -24,9 +24,6 @@
 		<HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
 		<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
 		<UseSystemResourceKeys>true</UseSystemResourceKeys>
-		<!-- Anthropic + Azure SDKs use reflection-based JSON internally; trimming
-		     defaults this off. Re-enable so SDK serialization keeps working. -->
-		<JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -34,10 +31,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Anthropic" Version="12.21.0" />
-		<PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 		<PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
+        <PackageReference Include="JDMallen.Toolbox.AI" Version="3.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Chat client types (IChatCompletionClient et al.) used throughout. -->
+		<Using Include="JDMallen.Toolbox.AI" />
 	</ItemGroup>
 
 </Project>

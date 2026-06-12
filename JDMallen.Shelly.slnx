@@ -1,4 +1,11 @@
 <Solution>
+	<Folder Name="/Solution Items/">
+		<File Path=".gitignore" />
+		<File Path="LICENSE" />
+		<File Path="README.md" />
+		<File Path="scripts\publish.sh" />
+		<File Path="shell\shelly.zsh" />
+	</Folder>
 	<Project Path="src/JDMallen.Shelly/JDMallen.Shelly.csproj" />
 	<Project Path="test/JDMallen.Shelly.Tests/JDMallen.Shelly.Tests.csproj" />
 </Solution>

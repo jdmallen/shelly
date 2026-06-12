@@ -1,57 +1,21 @@
 #!/usr/bin/env bash
-# Publishes self-contained single-file binaries for all supported RIDs.
-# Usage:  scripts/publish.sh [version]
-# Output: dist/<rid>/shelly[.exe]  and  dist/shelly-<version>-<rid>.{tar.gz,zip}
-
+# Thin wrapper around the shared JDMallen publish engine (publish-dotnet.sh,
+# vendored from https://github.com/jdmallen/toolbox). All arguments (runtimes,
+# -v/--version, -h/--help) are handled by the engine.
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$repo_root"
 
-version="${1:-0.1.0}"
 project="src/JDMallen.Shelly/JDMallen.Shelly.csproj"
-out_root="dist"
+exe_name="shelly"
+default_runtimes=(linux-x64 linux-arm64 win-x64 win-arm64 osx-x64 osx-arm64)
+# Bundle the zsh wrapper that enables the [e]dit action into non-Windows archives.
+extra_unix_files=(shell/shelly.zsh)
 
-rids=(
-	linux-x64
-	linux-arm64
-	win-x64
-	win-arm64
-	osx-x64
-	osx-arm64
-)
+# Single source of truth for the version is <Version> in Directory.Build.props (it
+# applies to every project, including tests), not the csproj. Pre-set `version` so
+# the engine uses it instead of reading the csproj; a -v/--version arg still wins.
+version="$(grep -oP '(?<=<Version>)[^<]+' "$repo_root/Directory.Build.props" | head -n1 || true)"
 
-rm -rf "$out_root"
-mkdir -p "$out_root"
-
-for rid in "${rids[@]}"; do
-	out_dir="$out_root/$rid"
-	echo ">>> Publishing $rid"
-	dotnet publish "$project" \
-		--configuration Release \
-		--runtime "$rid" \
-		--output "$out_dir" \
-		-p:Version="$version" \
-		--nologo \
-		--verbosity minimal
-
-	# Stage just the executable for the archive.
-	stage="$out_root/stage-$rid"
-	mkdir -p "$stage"
-	if [[ "$rid" == win-* ]]; then
-		cp "$out_dir/shelly.exe" "$stage/"
-		archive="$out_root/shelly-$version-$rid.zip"
-		(cd "$stage" && zip -q "$repo_root/$archive" shelly.exe)
-	else
-		cp "$out_dir/shelly" "$stage/"
-		# Bundle the zsh wrapper that enables the [e]dit action.
-		cp "shell/shelly.zsh" "$stage/"
-		archive="$out_root/shelly-$version-$rid.tar.gz"
-		tar -C "$stage" -czf "$archive" shelly shelly.zsh
-	fi
-	rm -rf "$stage"
-	echo "    -> $archive ($(du -h "$archive" | cut -f1))"
-done
-
-echo
-echo "Done. Artifacts in $out_root/"
+source "$repo_root/scripts/publish-dotnet.sh"
