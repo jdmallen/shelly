@@ -9,6 +9,9 @@ public sealed class ShellyConfig
 
 	public AnthropicConfig Anthropic { get; set; } = new();
 
+	[JsonPropertyName("openai")]
+	public OpenAIConfig OpenAI { get; set; } = new();
+
 	public static ShellyConfig Load()
 	{
 		string path = ConfigPath();
@@ -40,11 +43,13 @@ public sealed class ShellyConfig
 	public static string ConfigPath()
 	{
 		string baseDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-		if (string.IsNullOrEmpty(baseDir))
+		if (!string.IsNullOrEmpty(baseDir))
 		{
-			string? home = Environment.GetEnvironmentVariable("HOME");
-			baseDir = string.IsNullOrEmpty(home) ? "." : Path.Combine(home, ".config");
+			return Path.Combine(baseDir, "shelly", "config.json");
 		}
+
+		string? home = Environment.GetEnvironmentVariable("HOME");
+		baseDir = string.IsNullOrEmpty(home) ? "." : Path.Combine(home, ".config");
 
 		return Path.Combine(baseDir, "shelly", "config.json");
 	}
@@ -71,6 +76,39 @@ public sealed class ShellyConfig
 public sealed class AnthropicConfig
 {
 	public string Model { get; set; } = "claude-haiku-4-5-20251001";
+}
+
+/// <summary>
+/// Settings for any server speaking the OpenAI <c>/v1/chat/completions</c> API —
+/// openai.com, or a self-hosted runner such as llama.cpp, llama-swap, Ollama, or
+/// vLLM. Unlike the hosted providers, both the address and the model name are
+/// deployment-specific, so there is no useful default for either.
+/// </summary>
+public sealed class OpenAIConfig
+{
+	/// <summary>
+	/// The API root including the version segment, e.g.
+	/// "http://10.10.0.20:8080/v1".
+	/// </summary>
+	public string BaseUrl { get; set; } = string.Empty;
+
+	/// <summary>The model name as the server reports it at <c>/v1/models</c>.</summary>
+	public string Model { get; set; } = string.Empty;
+
+	/// <summary>
+	/// HTTP timeout. Defaults high because a self-hosted runner may have to load
+	/// the weights from disk before it generates a single token, and a large
+	/// quantized model can take minutes to answer.
+	/// </summary>
+	public int TimeoutSeconds { get; set; } = 300;
+
+	/// <summary>
+	/// Generation budget. Defaults well above the hosted providers' 500 because
+	/// reasoning models spend most of their output on a thinking block that is
+	/// discarded before the answer is read — too small a budget truncates the
+	/// thought and leaves no answer at all.
+	/// </summary>
+	public int MaxTokens { get; set; } = 2048;
 }
 
 [JsonSourceGenerationOptions(

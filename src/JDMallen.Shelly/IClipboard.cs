@@ -38,15 +38,7 @@ internal sealed class SystemClipboard : IClipboard
 				return false;
 			}
 
-			foreach (ClipboardCommand candidate in LinuxCandidates(hasWayland, hasX11))
-			{
-				if (IsOnPath(candidate.FileName))
-				{
-					return true;
-				}
-			}
-
-			return false;
+			return LinuxCandidates(hasWayland, hasX11).Any(candidate => IsOnPath(candidate.FileName));
 		}
 	}
 
@@ -105,11 +97,13 @@ internal sealed class SystemClipboard : IClipboard
 			yield return new ClipboardCommand("wl-copy", string.Empty);
 		}
 
-		if (hasX11)
+		if (!hasX11)
 		{
-			yield return new ClipboardCommand("xclip", "-selection clipboard");
-			yield return new ClipboardCommand("xsel", "-i --clipboard");
+			yield break;
 		}
+
+		yield return new ClipboardCommand("xclip", "-selection clipboard");
+		yield return new ClipboardCommand("xsel", "-i --clipboard");
 	}
 
 	private static bool IsOnPath(string fileName)
@@ -120,20 +114,9 @@ internal sealed class SystemClipboard : IClipboard
 			return false;
 		}
 
-		foreach (string dir in pathEnv.Split(Path.PathSeparator))
-		{
-			if (string.IsNullOrEmpty(dir))
-			{
-				continue;
-			}
-
-			if (File.Exists(Path.Combine(dir, fileName)))
-			{
-				return true;
-			}
-		}
-
-		return false;
+		return pathEnv.Split(Path.PathSeparator)
+			.Where(dir => !string.IsNullOrEmpty(dir))
+			.Any(dir => File.Exists(Path.Combine(dir, fileName)));
 	}
 
 	private static async Task PipeToAsync(

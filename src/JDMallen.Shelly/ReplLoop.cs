@@ -91,6 +91,13 @@ public sealed class ReplLoop
 					}
 
 					continue;
+				default:
+#pragma warning disable CA2208
+					throw new ArgumentOutOfRangeException(
+						nameof(outcome),
+						outcome,
+						"Unexpected action outcome");
+#pragma warning restore CA2208
 			}
 		}
 	}
@@ -111,6 +118,7 @@ public sealed class ReplLoop
 			ConsoleKey choice = _io.ReadKey();
 			_io.WriteLine();
 
+			// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 			switch (choice)
 			{
 				case ConsoleKey.X:
@@ -185,20 +193,7 @@ public sealed class ReplLoop
 
 	private void WriteOptions()
 	{
-		bool first = true;
-
-		void Option(string before, char key, string after)
-		{
-			if (!first)
-			{
-				_io.Write("  ");
-			}
-
-			first = false;
-			_io.Write($"{before}[");
-			_io.Write(key.ToString(), ConsoleColor.Green);
-			_io.Write($"]{after}");
-		}
+		var first = true;
 
 		Option("e", 'x', "ecute");
 		if (_editEnabled)
@@ -215,6 +210,21 @@ public sealed class ReplLoop
 		Option(string.Empty, 'r', "etry");
 		Option(string.Empty, 'q', "uit");
 		_io.Write(" ");
+
+		return;
+
+		void Option(string before, char key, string after)
+		{
+			if (!first)
+			{
+				_io.Write("  ");
+			}
+
+			first = false;
+			_io.Write($"{before}[");
+			_io.Write(key.ToString(), ConsoleColor.Green);
+			_io.Write($"]{after}");
+		}
 	}
 
 	private enum ActionOutcome

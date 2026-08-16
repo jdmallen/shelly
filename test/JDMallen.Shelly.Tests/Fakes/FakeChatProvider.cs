@@ -14,25 +14,27 @@ internal sealed class FakeChatProvider : IChatProvider
 
 	public Exception? ExplanationThrow { get; set; }
 
-	public Task<string> GetSuggestionAsync(string prompt, string context, CancellationToken cancellationToken = default)
+	public Task<string> GetSuggestionAsync(
+		string prompt,
+		string context,
+		CancellationToken cancellationToken = default)
 	{
 		SuggestionPrompts.Add(prompt);
-		if (SuggestionThrow is not null)
-		{
-			throw SuggestionThrow;
-		}
 
-		return Task.FromResult(SuggestionResponses.Dequeue());
+		return SuggestionThrow is not null
+			? throw SuggestionThrow
+			: Task.FromResult(SuggestionResponses.Dequeue());
 	}
 
-	public Task<string> ExplainCommandAsync(string command, string context, CancellationToken cancellationToken = default)
+	public Task<string> ExplainCommandAsync(
+		string command,
+		string context,
+		CancellationToken cancellationToken = default)
 	{
 		ExplanationCommands.Add(command);
-		if (ExplanationThrow is not null)
-		{
-			throw ExplanationThrow;
-		}
 
-		return Task.FromResult(ExplanationResponses.Dequeue());
+		return ExplanationThrow is not null
+			? throw ExplanationThrow
+			: Task.FromResult(ExplanationResponses.Dequeue());
 	}
 }

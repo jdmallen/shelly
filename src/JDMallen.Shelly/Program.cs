@@ -6,11 +6,9 @@ namespace JDMallen.Shelly;
 
 public static class Program
 {
-	// Shared transport for all chat completions; one REPL session, one client.
-	private static readonly HttpClient HttpClient = new()
-	{
-		Timeout = TimeSpan.FromSeconds(30),
-	};
+	// Hosted providers answer in seconds; a self-hosted model may need minutes,
+	// so its timeout comes from config instead.
+	private const int HOSTED_TIMEOUT_SECONDS = 30;
 
 	public static async Task<int> Main(string[] args)
 	{
@@ -64,14 +62,22 @@ public static class Program
 		return 0;
 	}
 
-	private static IChatProvider? CreateProvider(ShellyConfig config)
+	// One REPL session, one client; the caller-owned lifetime spans the process.
+	private static HttpClient CreateHttpClient(int timeoutSeconds) =>
+		new()
+		{
+			Timeout = TimeSpan.FromSeconds(timeoutSeconds),
+		};
+
+	internal static IChatProvider? CreateProvider(ShellyConfig config)
 	{
 		return config.Provider.ToLowerInvariant() switch
 		{
-			"azure"     => CreateAzureProvider(),
-			"anthropic" => CreateAnthropicProvider(config.Anthropic),
+			"azure"             => CreateAzureProvider(),
+			"anthropic"         => CreateAnthropicProvider(config.Anthropic),
+			"openai" or "local" => CreateOpenAIProvider(config.OpenAI),
 			_ => Fail(
-				$"Unknown provider '{config.Provider}' in {ShellyConfig.ConfigPath()}. Expected 'anthropic' or 'azure'."),
+				$"Unknown provider '{config.Provider}' in {ShellyConfig.ConfigPath()}. Expected 'anthropic', 'azure', or 'openai'."),
 		};
 	}
 
@@ -85,8 +91,48 @@ public static class Program
 
 		return new ChatProvider(
 			new AnthropicChatClient(
-				HttpClient,
+				CreateHttpClient(HOSTED_TIMEOUT_SECONDS),
 				new AnthropicClientOptions(apiKey, cfg.Model)));
+	}
+
+	private static IChatProvider? CreateOpenAIProvider(OpenAIConfig cfg)
+	{
+		var missing = new List<string>();
+		if (string.IsNullOrWhiteSpace(cfg.BaseUrl))
+		{
+			missing.Add("openai.baseUrl");
+		}
+
+		if (string.IsNullOrWhiteSpace(cfg.Model))
+		{
+			missing.Add("openai.model");
+		}
+
+		if (missing.Count > 0)
+		{
+			return Fail(
+				$"OpenAI provider misconfigured. Set {string.Join(" and ", missing)} in {ShellyConfig.ConfigPath()}.");
+		}
+
+		if (cfg.TimeoutSeconds <= 0)
+		{
+			return Fail($"openai.timeoutSeconds must be greater than 0 (got {cfg.TimeoutSeconds}).");
+		}
+
+		if (cfg.MaxTokens <= 0)
+		{
+			return Fail($"openai.maxTokens must be greater than 0 (got {cfg.MaxTokens}).");
+		}
+
+		// Self-hosted runners usually accept anonymous requests, so the key is
+		// optional: supply it only if the env var is set.
+		string? apiKey = Environment.GetEnvironmentVariable(ChatProvider.OpenAIApiKeyEnvVar);
+
+		return new ChatProvider(
+			new OpenAICompatibleChatClient(
+				CreateHttpClient(cfg.TimeoutSeconds),
+				new OpenAICompatibleClientOptions(cfg.BaseUrl, cfg.Model, apiKey)),
+			cfg.MaxTokens);
 	}
 
 	private static IChatProvider? CreateAzureProvider()
@@ -119,7 +165,7 @@ public static class Program
 
 		return new ChatProvider(
 			new AzureOpenAIChatClient(
-				HttpClient,
+				CreateHttpClient(HOSTED_TIMEOUT_SECONDS),
 				new AzureOpenAIClientOptions(apiKey!, endpoint!, deployment!)));
 	}
 

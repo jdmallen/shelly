@@ -5,6 +5,44 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0]
+
+Adds a third backend: any endpoint speaking the OpenAI `/v1/chat/completions`
+API, which covers openai.com and — the motivating case — models you host
+yourself via llama.cpp, llama-swap, Ollama, vLLM, or LM Studio. Nothing about
+the existing Anthropic and Azure setups changes.
+
+### Added
+
+- **`openai` provider (alias `local`).** Set `provider` to `"openai"` and fill in
+  the new `openai` block in the config file: `baseUrl` (the API root including
+  the version segment, e.g. `http://10.10.0.20:8080/v1`), `model` (whatever your
+  server reports at `/v1/models`), plus optional `timeoutSeconds` and
+  `maxTokens`. Both `baseUrl` and `model` are deployment-specific, so neither has
+  a default; leaving either blank fails with a message naming the missing key and
+  the config file's path.
+- **Optional API key.** `OPENAI_API_KEY_SHELLY` is sent as a bearer token when
+  set and omitted entirely when not, because self-hosted runners generally do not
+  authenticate.
+- **Reasoning-model support.** Thinking blocks are stripped before the
+  suggestion is shown, whether the server splits them into `reasoning_content` or
+  inlines them as `<think>…</think>`. If generation is truncated mid-thought,
+  shelly reports "No suggestion received from API" instead of offering raw
+  reasoning as a command to execute.
+
+### Changed
+
+- **The HTTP timeout is now per-provider.** Anthropic and Azure keep the previous
+  30 seconds; the `openai` provider defaults to `timeoutSeconds: 300`, because a
+  self-hosted model may have to load its weights from disk before it produces a
+  single token.
+- **The token budget is now per-provider.** Anthropic and Azure keep the previous
+  500; the `openai` provider defaults to `maxTokens: 2048`, since a reasoning
+  model spends most of its output on a thinking block that never reaches the
+  caller and a 500-token budget leaves no room for an answer.
+- **`JDMallen.Toolbox.AI`** upgraded to **3.1.0**, which supplies the underlying
+  `OpenAICompatibleChatClient`.
+
 ## [1.0.0]
 
 The first stable release. It adds an `[e]dit` action with zsh shell integration,

@@ -1,23 +1,23 @@
 <Project>
 
-	<PropertyGroup>
-		<!--
-		     Single source of truth for the version, applied to every project in the
-		     solution (app and tests). scripts/publish.sh and the release workflow read
-		     this value (overridable via -v on publish.sh) to stamp published binaries
-		     and name release archives.
-		-->
-		<Version>1.0.0</Version>
-		<Authors>J.D. Mallen</Authors>
-		<Company>J.D. Mallen</Company>
-		<Product>Shelly</Product>
-		<Copyright>Copyright © J.D. Mallen</Copyright>
-		<RepositoryUrl>https://github.com/jdmallen/shelly</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
-		<LangVersion>latest</LangVersion>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-	</PropertyGroup>
+    <PropertyGroup>
+        <!--
+             Single source of truth for the version, applied to every project in the
+             solution (app and tests). scripts/publish.sh and the release workflow read
+             this value (overridable via -v on publish.sh) to stamp published binaries
+             and name release archives.
+        -->
+        <Version>1.1.0</Version>
+        <Authors>J.D. Mallen</Authors>
+        <Company>J.D. Mallen</Company>
+        <Product>Shelly</Product>
+        <Copyright>Copyright © J.D. Mallen</Copyright>
+        <RepositoryUrl>https://github.com/jdmallen/shelly</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    </PropertyGroup>
 
 </Project>

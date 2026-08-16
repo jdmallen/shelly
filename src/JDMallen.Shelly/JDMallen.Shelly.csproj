@@ -1,44 +1,44 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>net10.0</TargetFramework>
-		<AssemblyName>shelly</AssemblyName>
-		<RootNamespace>JDMallen.Shelly</RootNamespace>
-		<RollForward>LatestMajor</RollForward>
-	</PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <AssemblyName>shelly</AssemblyName>
+        <RootNamespace>JDMallen.Shelly</RootNamespace>
+        <RollForward>LatestMajor</RollForward>
+    </PropertyGroup>
 
-	<!-- Publish settings: only apply during `dotnet publish` for a specific RID,
-	     so the test project can still reference the main project in Release builds. -->
-	<PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
-		<PublishSingleFile>true</PublishSingleFile>
-		<SelfContained>true</SelfContained>
-		<PublishTrimmed>true</PublishTrimmed>
-		<TrimMode>partial</TrimMode>
-		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-		<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
-		<DebugType>embedded</DebugType>
-		<DebuggerSupport>false</DebuggerSupport>
-		<EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
-		<EventSourceSupport>false</EventSourceSupport>
-		<HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
-		<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
-		<UseSystemResourceKeys>true</UseSystemResourceKeys>
-	</PropertyGroup>
+    <!-- Publish settings: only apply during `dotnet publish` for a specific RID,
+         so the test project can still reference the main project in Release builds. -->
+    <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+        <PublishSingleFile>true</PublishSingleFile>
+        <SelfContained>true</SelfContained>
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>partial</TrimMode>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+        <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+        <DebugType>embedded</DebugType>
+        <DebuggerSupport>false</DebuggerSupport>
+        <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+        <EventSourceSupport>false</EventSourceSupport>
+        <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+        <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<InternalsVisibleTo Include="JDMallen.Shelly.Tests" />
-	</ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="JDMallen.Shelly.Tests"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="CommandLineParser" Version="2.9.1" />
-		<PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
-        <PackageReference Include="JDMallen.Toolbox.AI" Version="3.0.0" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="CommandLineParser" Version="2.9.1"/>
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.4"/>
+        <PackageReference Include="JDMallen.Toolbox.AI" Version="3.1.0"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<!-- Chat client types (IChatCompletionClient et al.) used throughout. -->
-		<Using Include="JDMallen.Toolbox.AI" />
-	</ItemGroup>
+    <ItemGroup>
+        <!-- Chat client types (IChatCompletionClient et al.) used throughout. -->
+        <Using Include="JDMallen.Toolbox.AI"/>
+    </ItemGroup>
 
 </Project>

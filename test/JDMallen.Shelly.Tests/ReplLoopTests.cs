@@ -9,7 +9,11 @@ public class ReplLoopTests
 	private readonly FakeConsoleIO _io = new();
 	private readonly FakeClipboard _clipboard = new();
 
-	private ReplLoop NewLoop(bool editEnabled = false) => new(_provider, _io, _clipboard, editEnabled);
+	private ReplLoop NewLoop(bool editEnabled = false) => new(
+		_provider,
+		_io,
+		_clipboard,
+		editEnabled);
 
 	[Fact]
 	public async Task Execute_ReturnsExecuteResultWithSuggestion()
@@ -17,7 +21,8 @@ public class ReplLoopTests
 		_provider.SuggestionResponses.Enqueue("ls -la");
 		_io.ReadKeys.Enqueue(ConsoleKey.X);
 
-		ReplResult result = await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
+		ReplResult result
+			= await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.True(result.ShouldExecute);
 		Assert.Equal("ls -la", result.Command);
@@ -31,7 +36,8 @@ public class ReplLoopTests
 		_provider.SuggestionResponses.Enqueue("ls -la");
 		_io.ReadKeys.Enqueue(ConsoleKey.E);
 
-		ReplResult result = await NewLoop(editEnabled: true).RunAsync("list files", TestContext.Current.CancellationToken);
+		ReplResult result = await NewLoop(editEnabled: true)
+			.RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.Equal(ReplAction.Edit, result.Action);
 		Assert.False(result.ShouldExecute);
@@ -45,7 +51,8 @@ public class ReplLoopTests
 		_io.ReadKeys.Enqueue(ConsoleKey.E);
 		_io.ReadKeys.Enqueue(ConsoleKey.Q);
 
-		ReplResult result = await NewLoop(editEnabled: false).RunAsync("list files", TestContext.Current.CancellationToken);
+		ReplResult result = await NewLoop(editEnabled: false)
+			.RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.Equal(ReplAction.Quit, result.Action);
 		Assert.Contains("Invalid choice", _io.Output.ToString());
@@ -60,7 +67,8 @@ public class ReplLoopTests
 		_io.ReadKeys.Enqueue(ConsoleKey.C);
 		_io.ReadKeys.Enqueue(ConsoleKey.Q);
 
-		ReplResult result = await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
+		ReplResult result
+			= await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.Equal(ReplAction.Quit, result.Action);
 		Assert.Empty(_clipboard.SetTexts);
@@ -74,7 +82,8 @@ public class ReplLoopTests
 		_provider.SuggestionResponses.Enqueue("ls -la");
 		_io.ReadKeys.Enqueue(ConsoleKey.Q);
 
-		ReplResult result = await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
+		ReplResult result
+			= await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.False(result.ShouldExecute);
 		Assert.Null(result.Command);
@@ -86,7 +95,8 @@ public class ReplLoopTests
 		_provider.SuggestionResponses.Enqueue("ls -la");
 		_io.ReadKeys.Enqueue(ConsoleKey.Escape);
 
-		ReplResult result = await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
+		ReplResult result
+			= await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.False(result.ShouldExecute);
 	}
@@ -97,7 +107,8 @@ public class ReplLoopTests
 		_provider.SuggestionResponses.Enqueue("ls -la");
 		_io.ReadKeys.Enqueue(ConsoleKey.C);
 
-		ReplResult result = await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
+		ReplResult result
+			= await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.False(result.ShouldExecute);
 		Assert.Single(_clipboard.SetTexts);
@@ -113,7 +124,8 @@ public class ReplLoopTests
 		_io.ReadLines.Enqueue("by size");
 		_io.ReadKeys.Enqueue(ConsoleKey.X);
 
-		ReplResult result = await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
+		ReplResult result
+			= await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.True(result.ShouldExecute);
 		Assert.Equal("ls -laSh", result.Command);
@@ -131,7 +143,8 @@ public class ReplLoopTests
 		_io.ReadLines.Enqueue("");
 		_io.ReadKeys.Enqueue(ConsoleKey.X);
 
-		ReplResult result = await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
+		ReplResult result
+			= await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.True(result.ShouldExecute);
 		Assert.Equal("ls -la", result.Command);
@@ -146,7 +159,8 @@ public class ReplLoopTests
 		_io.ReadKeys.Enqueue(ConsoleKey.P);
 		_io.ReadKeys.Enqueue(ConsoleKey.X);
 
-		ReplResult result = await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
+		ReplResult result
+			= await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.True(result.ShouldExecute);
 		Assert.Equal("ls -la", result.Command);
@@ -210,7 +224,8 @@ public class ReplLoopTests
 		_io.ReadKeys.Enqueue(ConsoleKey.P);
 		_io.ReadKeys.Enqueue(ConsoleKey.Q);
 
-		ReplResult result = await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
+		ReplResult result
+			= await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.False(result.ShouldExecute);
 		Assert.Contains("explain broke", _io.Output.ToString());
@@ -224,10 +239,12 @@ public class ReplLoopTests
 		_io.ReadKeys.Enqueue(ConsoleKey.A);
 		_io.ReadKeys.Enqueue(ConsoleKey.Q);
 
-		ReplResult result = await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
+		ReplResult result
+			= await NewLoop().RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.False(result.ShouldExecute);
 		Assert.Contains("Invalid choice", _io.Output.ToString());
+
 		// Provider should have been queried exactly once — invalid key doesn't re-fetch.
 		Assert.Single(_provider.SuggestionPrompts);
 	}
