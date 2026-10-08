@@ -75,9 +75,7 @@ internal sealed class SystemClipboard : IClipboard
 		(bool hasWayland, bool hasX11) = DetectDisplays();
 		if (!hasWayland && !hasX11)
 		{
-			throw new InvalidOperationException(
-				"No graphical session detected (no WAYLAND_DISPLAY or DISPLAY). "
-				+ "The clipboard isn't available over a headless/SSH session.");
+			throw new InvalidOperationException(Strings.NoGraphicalSession);
 		}
 
 		foreach (ClipboardCommand candidate in LinuxCandidates(hasWayland, hasX11)
@@ -86,8 +84,7 @@ internal sealed class SystemClipboard : IClipboard
 			return candidate;
 		}
 
-		throw new InvalidOperationException(
-			"No clipboard tool found. Install wl-clipboard (Wayland), xclip, or xsel.");
+		throw new InvalidOperationException(Strings.NoClipboardTool);
 	}
 
 	private static IEnumerable<ClipboardCommand> LinuxCandidates(bool hasWayland, bool hasX11)
@@ -148,7 +145,7 @@ internal sealed class SystemClipboard : IClipboard
 			string error = await process.StandardError.ReadToEndAsync(cancellationToken);
 
 			throw new InvalidOperationException(
-				$"'{command.FileName}' exited with code {process.ExitCode}. {error}".Trim());
+				Strings.ProcessExited(command.FileName, process.ExitCode, error));
 		}
 	}
 

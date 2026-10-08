@@ -43,7 +43,7 @@ internal abstract record CommandLineArgs
 					return new ShowVersion();
 				default:
 					return new Error(
-						$"Option '{argument.TrimStart('-')}' is unknown.");
+						Strings.UnknownOption(argument.TrimStart('-')));
 			}
 		}
 

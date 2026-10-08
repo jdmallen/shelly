@@ -34,7 +34,7 @@ public sealed class ShellyConfig
 		}
 		catch (JsonException ex)
 		{
-			Console.Error.WriteLine($"Warning: failed to parse {path}: {ex.Message}. Using defaults.");
+			Console.Error.WriteLine(Strings.ConfigParseWarning(path, ex.Message));
 
 			return new ShellyConfig();
 		}

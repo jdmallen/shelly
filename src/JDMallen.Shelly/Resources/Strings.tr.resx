@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="WhatToDo" xml:space="preserve">
+		<value>Ne yapmak istiyorsun?</value>
+	</data>
+    <data name="Thinking" xml:space="preserve">
+		<value>Düşünüyorum...</value>
+	</data>
+    <data name="ErrorFormat" xml:space="preserve">
+		<value>Hata: {0}</value>
+	</data>
+    <data name="NoSuggestion" xml:space="preserve">
+		<value>API'den öneri alınamadı</value>
+	</data>
+    <data name="SuggestionHeader" xml:space="preserve">
+		<value>Öneri:</value>
+	</data>
+    <data name="Explaining" xml:space="preserve">
+		<value>Açıklanıyor...</value>
+	</data>
+    <data name="ExplanationHeader" xml:space="preserve">
+		<value>Açıklama:</value>
+	</data>
+    <data name="CopiedToClipboard" xml:space="preserve">
+		<value>Panoya kopyalandı</value>
+	</data>
+    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+		<value>Pano kullanılamıyor: {0}</value>
+	</data>
+    <data name="InstallClipboardToolLinux" xml:space="preserve">
+		<value>Linux'ta kopyalamayı etkinleştirmek için xclip, xsel veya wl-clipboard yükle.</value>
+	</data>
+    <data name="WhatShouldBeDifferent" xml:space="preserve">
+		<value>Ne farklı olmalı?</value>
+	</data>
+    <data name="Goodbye" xml:space="preserve">
+		<value>Hoşça kal!</value>
+	</data>
+    <data name="InvalidChoice" xml:space="preserve">
+		<value>Geçersiz seçim</value>
+	</data>
+    <data name="MenuExecute" xml:space="preserve">
+		<value>[x] çalıştır</value>
+	</data>
+    <data name="MenuEdit" xml:space="preserve">
+		<value>[e] düzenle</value>
+	</data>
+    <data name="MenuExplain" xml:space="preserve">
+		<value>[p] açıkla</value>
+	</data>
+    <data name="MenuCopy" xml:space="preserve">
+		<value>[c] kopyala</value>
+	</data>
+    <data name="MenuRetry" xml:space="preserve">
+		<value>[r] yeniden dene</value>
+	</data>
+    <data name="MenuQuit" xml:space="preserve">
+		<value>[q] çık</value>
+	</data>
+    <data name="Executing" xml:space="preserve">
+		<value>Çalıştırılıyor...</value>
+	</data>
+    <data name="FailedToStartShell" xml:space="preserve">
+		<value>kabuk başlatılamadı</value>
+	</data>
+    <data name="UnknownProviderFormat" xml:space="preserve">
+		<value>{1} içinde bilinmeyen sağlayıcı '{0}'. Beklenen: 'anthropic', 'azure' veya 'openai'.</value>
+	</data>
+    <data name="EnvVarNotSetFormat" xml:space="preserve">
+		<value>{0} ortam değişkeni ayarlanmamış</value>
+	</data>
+    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+		<value>OpenAI sağlayıcısı yanlış yapılandırılmış. {1} içinde {0} değerini ayarla.</value>
+	</data>
+    <data name="ListConjunction" xml:space="preserve">
+		<value>ve</value>
+	</data>
+    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+		<value>{0} 0'dan büyük olmalı (alınan: {1}).</value>
+	</data>
+    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+		<value>Azure sağlayıcısı yanlış yapılandırılmış. Eksik ortam değişken(ler)i: {0}.</value>
+	</data>
+    <data name="UnknownOptionFormat" xml:space="preserve">
+		<value>'{0}' seçeneği bilinmiyor.</value>
+	</data>
+    <data name="ConfigParseWarningFormat" xml:space="preserve">
+		<value>Uyarı: {0} ayrıştırılamadı: {1}. Varsayılanlar kullanılıyor.</value>
+	</data>
+    <data name="NoGraphicalSession" xml:space="preserve">
+		<value>Grafik oturum algılanmadı (WAYLAND_DISPLAY veya DISPLAY yok). Pano, ekransız (headless) veya SSH oturumunda kullanılamaz.</value>
+	</data>
+    <data name="NoClipboardTool" xml:space="preserve">
+		<value>Pano aracı bulunamadı. wl-clipboard (Wayland), xclip veya xsel yükle.</value>
+	</data>
+    <data name="ProcessExitedFormat" xml:space="preserve">
+		<value>'{0}' {1} koduyla sonlandı. {2}</value>
+	</data>
+    <data name="HelpOptionHelp" xml:space="preserve">
+		<value>Bu yardım ekranını gösterir.</value>
+	</data>
+    <data name="HelpOptionVersion" xml:space="preserve">
+		<value>Sürüm bilgisini gösterir.</value>
+	</data>
+    <data name="HelpOptionTerminator" xml:space="preserve">
+		<value>Seçenek ayrıştırmayı bitirir; kalanı istemdir.</value>
+	</data>
+    <data name="HelpPrompt" xml:space="preserve">
+		<value>Komut açıklaması. Belirtilmezse sorulur.</value>
+	</data>
+    <data name="ResponseLanguage" xml:space="preserve">
+		<value>Turkish</value>
+	</data>
+</root>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="WhatToDo" xml:space="preserve">
+		<value>Що ви хочете зробити?</value>
+	</data>
+    <data name="Thinking" xml:space="preserve">
+		<value>Думаю...</value>
+	</data>
+    <data name="ErrorFormat" xml:space="preserve">
+		<value>Помилка: {0}</value>
+	</data>
+    <data name="NoSuggestion" xml:space="preserve">
+		<value>API не повернув пропозицію</value>
+	</data>
+    <data name="SuggestionHeader" xml:space="preserve">
+		<value>Пропозиція:</value>
+	</data>
+    <data name="Explaining" xml:space="preserve">
+		<value>Пояснюю...</value>
+	</data>
+    <data name="ExplanationHeader" xml:space="preserve">
+		<value>Пояснення:</value>
+	</data>
+    <data name="CopiedToClipboard" xml:space="preserve">
+		<value>Скопійовано в буфер обміну</value>
+	</data>
+    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+		<value>Буфер обміну недоступний: {0}</value>
+	</data>
+    <data name="InstallClipboardToolLinux" xml:space="preserve">
+		<value>Установіть xclip, xsel або wl-clipboard, щоб увімкнути копіювання в Linux.</value>
+	</data>
+    <data name="WhatShouldBeDifferent" xml:space="preserve">
+		<value>Що потрібно змінити?</value>
+	</data>
+    <data name="Goodbye" xml:space="preserve">
+		<value>До побачення!</value>
+	</data>
+    <data name="InvalidChoice" xml:space="preserve">
+		<value>Неправильний вибір</value>
+	</data>
+    <data name="MenuExecute" xml:space="preserve">
+		<value>[x] виконати</value>
+	</data>
+    <data name="MenuEdit" xml:space="preserve">
+		<value>[e] змінити</value>
+	</data>
+    <data name="MenuExplain" xml:space="preserve">
+		<value>[p] пояснити</value>
+	</data>
+    <data name="MenuCopy" xml:space="preserve">
+		<value>[c] копіювати</value>
+	</data>
+    <data name="MenuRetry" xml:space="preserve">
+		<value>[r] повторити</value>
+	</data>
+    <data name="MenuQuit" xml:space="preserve">
+		<value>[q] вийти</value>
+	</data>
+    <data name="Executing" xml:space="preserve">
+		<value>Виконую...</value>
+	</data>
+    <data name="FailedToStartShell" xml:space="preserve">
+		<value>не вдалося запустити оболонку</value>
+	</data>
+    <data name="UnknownProviderFormat" xml:space="preserve">
+		<value>Невідомий провайдер '{0}' у {1}. Очікується 'anthropic', 'azure' або 'openai'.</value>
+	</data>
+    <data name="EnvVarNotSetFormat" xml:space="preserve">
+		<value>Змінну середовища {0} не задано</value>
+	</data>
+    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+		<value>Провайдер OpenAI налаштовано неправильно. Задайте {0} у {1}.</value>
+	</data>
+    <data name="ListConjunction" xml:space="preserve">
+		<value>і</value>
+	</data>
+    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+		<value>{0} має бути більше за 0 (отримано {1}).</value>
+	</data>
+    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+		<value>Провайдер Azure налаштовано неправильно. Відсутні змінні середовища: {0}.</value>
+	</data>
+    <data name="UnknownOptionFormat" xml:space="preserve">
+		<value>Невідомий параметр '{0}'.</value>
+	</data>
+    <data name="ConfigParseWarningFormat" xml:space="preserve">
+		<value>Попередження: не вдалося розібрати {0}: {1}. Використовуються типові значення.</value>
+	</data>
+    <data name="NoGraphicalSession" xml:space="preserve">
+		<value>Графічний сеанс не виявлено (немає WAYLAND_DISPLAY і DISPLAY). Буфер обміну недоступний у сеансі без графіки або через SSH.</value>
+	</data>
+    <data name="NoClipboardTool" xml:space="preserve">
+		<value>Не знайдено утиліту для буфера обміну. Установіть wl-clipboard (Wayland), xclip або xsel.</value>
+	</data>
+    <data name="ProcessExitedFormat" xml:space="preserve">
+		<value>'{0}' завершився з кодом {1}. {2}</value>
+	</data>
+    <data name="HelpOptionHelp" xml:space="preserve">
+		<value>Показати цю довідку.</value>
+	</data>
+    <data name="HelpOptionVersion" xml:space="preserve">
+		<value>Показати відомості про версію.</value>
+	</data>
+    <data name="HelpOptionTerminator" xml:space="preserve">
+		<value>Завершує розбір параметрів; решта вважається запитом.</value>
+	</data>
+    <data name="HelpPrompt" xml:space="preserve">
+		<value>Опис команди. Якщо його не вказано, його буде запитано.</value>
+	</data>
+    <data name="ResponseLanguage" xml:space="preserve">
+		<value>Ukrainian</value>
+	</data>
+</root>

@@ -55,13 +55,13 @@ public static class Program
 		        {BuildVersionLine()}
 		        {copyright}
 
-		          --help             Display this help screen.
+		          --help             {Strings.HelpOptionHelp}
 
-		          --version          Display version information.
+		          --version          {Strings.HelpOptionVersion}
 
-		          --                 End option parsing; the rest is the prompt.
+		          --                 {Strings.HelpOptionTerminator}
 
-		          prompt (pos. 0)    Command description. If omitted, you'll be prompted.
+		          prompt (pos. 0)    {Strings.HelpPrompt}
 		        """;
 	}
 
@@ -122,7 +122,7 @@ public static class Program
 			"anthropic"         => CreateAnthropicProvider(config.Anthropic),
 			"openai" or "local" => CreateOpenAIProvider(config.OpenAI),
 			_ => Fail(
-				$"Unknown provider '{config.Provider}' in {ShellyConfig.ConfigPath()}. Expected 'anthropic', 'azure', or 'openai'."),
+				Strings.UnknownProvider(config.Provider, ShellyConfig.ConfigPath())),
 		};
 	}
 
@@ -131,7 +131,7 @@ public static class Program
 		string? apiKey = Environment.GetEnvironmentVariable(ChatProvider.AnthropicApiKeyEnvVar);
 		if (string.IsNullOrEmpty(apiKey))
 		{
-			return Fail($"{ChatProvider.AnthropicApiKeyEnvVar} environment variable not set");
+			return Fail(Strings.EnvVarNotSet(ChatProvider.AnthropicApiKeyEnvVar));
 		}
 
 		return new ChatProvider(
@@ -156,17 +156,19 @@ public static class Program
 		if (missing.Count > 0)
 		{
 			return Fail(
-				$"OpenAI provider misconfigured. Set {string.Join(" and ", missing)} in {ShellyConfig.ConfigPath()}.");
+				Strings.OpenAIMisconfigured(
+					string.Join($" {Strings.ListConjunction} ", missing),
+					ShellyConfig.ConfigPath()));
 		}
 
 		if (cfg.TimeoutSeconds <= 0)
 		{
-			return Fail($"openai.timeoutSeconds must be greater than 0 (got {cfg.TimeoutSeconds}).");
+			return Fail(Strings.MustBeGreaterThanZero("openai.timeoutSeconds", cfg.TimeoutSeconds));
 		}
 
 		if (cfg.MaxTokens <= 0)
 		{
-			return Fail($"openai.maxTokens must be greater than 0 (got {cfg.MaxTokens}).");
+			return Fail(Strings.MustBeGreaterThanZero("openai.maxTokens", cfg.MaxTokens));
 		}
 
 		// Self-hosted runners usually accept anonymous requests, so the key is
@@ -205,7 +207,7 @@ public static class Program
 		if (missing.Count > 0)
 		{
 			return Fail(
-				$"Azure provider misconfigured. Missing env var(s): {string.Join(", ", missing)}.");
+				Strings.AzureMisconfigured(string.Join(", ", missing)));
 		}
 
 		return new ChatProvider(
@@ -216,7 +218,7 @@ public static class Program
 
 	private static IChatProvider? Fail(string message)
 	{
-		Console.Error.WriteLine($"Error: {message}");
+		Console.Error.WriteLine(Strings.Error(message));
 
 		return null;
 	}
@@ -236,13 +238,13 @@ public static class Program
 		startInfo.ArgumentList.Add(command);
 
 		Console.ForegroundColor = ConsoleColor.Cyan;
-		Console.WriteLine("Executing...");
+		Console.WriteLine(Strings.Executing);
 		Console.ResetColor();
 
 		Process? process = Process.Start(startInfo);
 		if (process is null)
 		{
-			await Console.Error.WriteLineAsync("Error: failed to start shell");
+			await Console.Error.WriteLineAsync(Strings.Error(Strings.FailedToStartShell));
 
 			return 1;
 		}

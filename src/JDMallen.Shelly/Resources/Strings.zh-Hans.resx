@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="WhatToDo" xml:space="preserve">
+		<value>你想做什么？</value>
+	</data>
+    <data name="Thinking" xml:space="preserve">
+		<value>思考中...</value>
+	</data>
+    <data name="ErrorFormat" xml:space="preserve">
+		<value>错误：{0}</value>
+	</data>
+    <data name="NoSuggestion" xml:space="preserve">
+		<value>未从 API 收到任何建议</value>
+	</data>
+    <data name="SuggestionHeader" xml:space="preserve">
+		<value>建议：</value>
+	</data>
+    <data name="Explaining" xml:space="preserve">
+		<value>正在解释...</value>
+	</data>
+    <data name="ExplanationHeader" xml:space="preserve">
+		<value>解释：</value>
+	</data>
+    <data name="CopiedToClipboard" xml:space="preserve">
+		<value>已复制到剪贴板</value>
+	</data>
+    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+		<value>剪贴板不可用：{0}</value>
+	</data>
+    <data name="InstallClipboardToolLinux" xml:space="preserve">
+		<value>请安装 xclip、xsel 或 wl-clipboard 以在 Linux 上启用复制功能。</value>
+	</data>
+    <data name="WhatShouldBeDifferent" xml:space="preserve">
+		<value>需要做哪些调整？</value>
+	</data>
+    <data name="Goodbye" xml:space="preserve">
+		<value>再见！</value>
+	</data>
+    <data name="InvalidChoice" xml:space="preserve">
+		<value>无效的选择</value>
+	</data>
+    <data name="MenuExecute" xml:space="preserve">
+		<value>[x] 执行</value>
+	</data>
+    <data name="MenuEdit" xml:space="preserve">
+		<value>[e] 编辑</value>
+	</data>
+    <data name="MenuExplain" xml:space="preserve">
+		<value>[p] 解释</value>
+	</data>
+    <data name="MenuCopy" xml:space="preserve">
+		<value>[c] 复制</value>
+	</data>
+    <data name="MenuRetry" xml:space="preserve">
+		<value>[r] 重试</value>
+	</data>
+    <data name="MenuQuit" xml:space="preserve">
+		<value>[q] 退出</value>
+	</data>
+    <data name="Executing" xml:space="preserve">
+		<value>正在执行...</value>
+	</data>
+    <data name="FailedToStartShell" xml:space="preserve">
+		<value>无法启动 shell</value>
+	</data>
+    <data name="UnknownProviderFormat" xml:space="preserve">
+		<value>{1} 中的提供商 '{0}' 未知。应为 'anthropic'、'azure' 或 'openai'。</value>
+	</data>
+    <data name="EnvVarNotSetFormat" xml:space="preserve">
+		<value>未设置环境变量 {0}</value>
+	</data>
+    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+		<value>OpenAI 提供商配置有误。请在 {1} 中设置 {0}。</value>
+	</data>
+    <data name="ListConjunction" xml:space="preserve">
+		<value>和</value>
+	</data>
+    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+		<value>{0} 必须大于 0（当前值：{1}）。</value>
+	</data>
+    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+		<value>Azure 提供商配置有误。缺少环境变量：{0}。</value>
+	</data>
+    <data name="UnknownOptionFormat" xml:space="preserve">
+		<value>未知选项 '{0}'。</value>
+	</data>
+    <data name="ConfigParseWarningFormat" xml:space="preserve">
+		<value>警告：无法解析 {0}：{1}。将使用默认设置。</value>
+	</data>
+    <data name="NoGraphicalSession" xml:space="preserve">
+		<value>未检测到图形会话（没有 WAYLAND_DISPLAY 或 DISPLAY）。在无头或 SSH 会话中无法使用剪贴板。</value>
+	</data>
+    <data name="NoClipboardTool" xml:space="preserve">
+		<value>未找到剪贴板工具。请安装 wl-clipboard (Wayland)、xclip 或 xsel。</value>
+	</data>
+    <data name="ProcessExitedFormat" xml:space="preserve">
+		<value>'{0}' 已退出，代码为 {1}。{2}</value>
+	</data>
+    <data name="HelpOptionHelp" xml:space="preserve">
+		<value>显示此帮助界面。</value>
+	</data>
+    <data name="HelpOptionVersion" xml:space="preserve">
+		<value>显示版本信息。</value>
+	</data>
+    <data name="HelpOptionTerminator" xml:space="preserve">
+		<value>结束选项解析；其余内容作为提示词。</value>
+	</data>
+    <data name="HelpPrompt" xml:space="preserve">
+		<value>命令描述。如果省略，将提示你输入。</value>
+	</data>
+    <data name="ResponseLanguage" xml:space="preserve">
+		<value>Simplified Chinese</value>
+	</data>
+</root>

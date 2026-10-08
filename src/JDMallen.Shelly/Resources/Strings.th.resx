@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="WhatToDo" xml:space="preserve">
+		<value>คุณต้องการทำอะไร?</value>
+	</data>
+    <data name="Thinking" xml:space="preserve">
+		<value>กำลังคิด...</value>
+	</data>
+    <data name="ErrorFormat" xml:space="preserve">
+		<value>ข้อผิดพลาด: {0}</value>
+	</data>
+    <data name="NoSuggestion" xml:space="preserve">
+		<value>ไม่ได้รับคำแนะนำจาก API</value>
+	</data>
+    <data name="SuggestionHeader" xml:space="preserve">
+		<value>คำแนะนำ:</value>
+	</data>
+    <data name="Explaining" xml:space="preserve">
+		<value>กำลังอธิบาย...</value>
+	</data>
+    <data name="ExplanationHeader" xml:space="preserve">
+		<value>คำอธิบาย:</value>
+	</data>
+    <data name="CopiedToClipboard" xml:space="preserve">
+		<value>คัดลอกไปยังคลิปบอร์ดแล้ว</value>
+	</data>
+    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+		<value>ใช้คลิปบอร์ดไม่ได้: {0}</value>
+	</data>
+    <data name="InstallClipboardToolLinux" xml:space="preserve">
+		<value>ติดตั้ง xclip, xsel หรือ wl-clipboard เพื่อเปิดใช้การคัดลอกบน Linux</value>
+	</data>
+    <data name="WhatShouldBeDifferent" xml:space="preserve">
+		<value>ต้องการให้เปลี่ยนอะไร?</value>
+	</data>
+    <data name="Goodbye" xml:space="preserve">
+		<value>ลาก่อน!</value>
+	</data>
+    <data name="InvalidChoice" xml:space="preserve">
+		<value>ตัวเลือกไม่ถูกต้อง</value>
+	</data>
+    <data name="MenuExecute" xml:space="preserve">
+		<value>[x] รัน</value>
+	</data>
+    <data name="MenuEdit" xml:space="preserve">
+		<value>[e] แก้ไข</value>
+	</data>
+    <data name="MenuExplain" xml:space="preserve">
+		<value>[p] อธิบาย</value>
+	</data>
+    <data name="MenuCopy" xml:space="preserve">
+		<value>[c] คัดลอก</value>
+	</data>
+    <data name="MenuRetry" xml:space="preserve">
+		<value>[r] ลองใหม่</value>
+	</data>
+    <data name="MenuQuit" xml:space="preserve">
+		<value>[q] ออก</value>
+	</data>
+    <data name="Executing" xml:space="preserve">
+		<value>กำลังรัน...</value>
+	</data>
+    <data name="FailedToStartShell" xml:space="preserve">
+		<value>เริ่มเชลล์ไม่สำเร็จ</value>
+	</data>
+    <data name="UnknownProviderFormat" xml:space="preserve">
+		<value>ไม่รู้จักผู้ให้บริการ '{0}' ใน {1} ค่าที่รองรับ: 'anthropic', 'azure' หรือ 'openai'</value>
+	</data>
+    <data name="EnvVarNotSetFormat" xml:space="preserve">
+		<value>ยังไม่ได้ตั้งค่าตัวแปรสภาพแวดล้อม {0}</value>
+	</data>
+    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+		<value>ตั้งค่าผู้ให้บริการ OpenAI ไม่ถูกต้อง ให้ตั้งค่า {0} ใน {1}</value>
+	</data>
+    <data name="ListConjunction" xml:space="preserve">
+		<value>และ</value>
+	</data>
+    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+		<value>{0} ต้องมากกว่า 0 (ได้รับ {1})</value>
+	</data>
+    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+		<value>ตั้งค่าผู้ให้บริการ Azure ไม่ถูกต้อง ขาดตัวแปรสภาพแวดล้อม: {0}</value>
+	</data>
+    <data name="UnknownOptionFormat" xml:space="preserve">
+		<value>ไม่รู้จักตัวเลือก '{0}'</value>
+	</data>
+    <data name="ConfigParseWarningFormat" xml:space="preserve">
+		<value>คำเตือน: แยกวิเคราะห์ {0} ไม่สำเร็จ: {1} จะใช้ค่าเริ่มต้นแทน</value>
+	</data>
+    <data name="NoGraphicalSession" xml:space="preserve">
+		<value>ไม่พบเซสชันกราฟิก (ไม่มี WAYLAND_DISPLAY หรือ DISPLAY) ไม่สามารถใช้คลิปบอร์ดผ่านเซสชัน headless/SSH ได้</value>
+	</data>
+    <data name="NoClipboardTool" xml:space="preserve">
+		<value>ไม่พบเครื่องมือคลิปบอร์ด ให้ติดตั้ง wl-clipboard (Wayland), xclip หรือ xsel</value>
+	</data>
+    <data name="ProcessExitedFormat" xml:space="preserve">
+		<value>'{0}' จบการทำงานด้วยรหัส {1} {2}</value>
+	</data>
+    <data name="HelpOptionHelp" xml:space="preserve">
+		<value>แสดงหน้าจอวิธีใช้นี้</value>
+	</data>
+    <data name="HelpOptionVersion" xml:space="preserve">
+		<value>แสดงข้อมูลเวอร์ชัน</value>
+	</data>
+    <data name="HelpOptionTerminator" xml:space="preserve">
+		<value>สิ้นสุดการแยกวิเคราะห์ตัวเลือก ส่วนที่เหลือคือพรอมต์</value>
+	</data>
+    <data name="HelpPrompt" xml:space="preserve">
+		<value>คำอธิบายคำสั่ง หากไม่ระบุ ระบบจะถามคุณ</value>
+	</data>
+    <data name="ResponseLanguage" xml:space="preserve">
+		<value>Thai</value>
+	</data>
+</root>

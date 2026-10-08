@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="WhatToDo" xml:space="preserve">
+		<value>Vad vill du göra?</value>
+	</data>
+    <data name="Thinking" xml:space="preserve">
+		<value>Tänker...</value>
+	</data>
+    <data name="ErrorFormat" xml:space="preserve">
+		<value>Fel: {0}</value>
+	</data>
+    <data name="NoSuggestion" xml:space="preserve">
+		<value>Inget förslag mottogs från API:et</value>
+	</data>
+    <data name="SuggestionHeader" xml:space="preserve">
+		<value>Förslag:</value>
+	</data>
+    <data name="Explaining" xml:space="preserve">
+		<value>Förklarar...</value>
+	</data>
+    <data name="ExplanationHeader" xml:space="preserve">
+		<value>Förklaring:</value>
+	</data>
+    <data name="CopiedToClipboard" xml:space="preserve">
+		<value>Kopierat till urklipp</value>
+	</data>
+    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+		<value>Urklipp är inte tillgängligt: {0}</value>
+	</data>
+    <data name="InstallClipboardToolLinux" xml:space="preserve">
+		<value>Installera xclip, xsel eller wl-clipboard för att kunna kopiera i Linux.</value>
+	</data>
+    <data name="WhatShouldBeDifferent" xml:space="preserve">
+		<value>Vad ska vara annorlunda?</value>
+	</data>
+    <data name="Goodbye" xml:space="preserve">
+		<value>Hej då!</value>
+	</data>
+    <data name="InvalidChoice" xml:space="preserve">
+		<value>Ogiltigt val</value>
+	</data>
+    <data name="MenuExecute" xml:space="preserve">
+		<value>[x] kör</value>
+	</data>
+    <data name="MenuEdit" xml:space="preserve">
+		<value>[e] redigera</value>
+	</data>
+    <data name="MenuExplain" xml:space="preserve">
+		<value>[p] förklara</value>
+	</data>
+    <data name="MenuCopy" xml:space="preserve">
+		<value>[c] kopiera</value>
+	</data>
+    <data name="MenuRetry" xml:space="preserve">
+		<value>[r] försök igen</value>
+	</data>
+    <data name="MenuQuit" xml:space="preserve">
+		<value>[q] avsluta</value>
+	</data>
+    <data name="Executing" xml:space="preserve">
+		<value>Kör...</value>
+	</data>
+    <data name="FailedToStartShell" xml:space="preserve">
+		<value>kunde inte starta skalet</value>
+	</data>
+    <data name="UnknownProviderFormat" xml:space="preserve">
+		<value>Okänd leverantör '{0}' i {1}. Förväntade 'anthropic', 'azure' eller 'openai'.</value>
+	</data>
+    <data name="EnvVarNotSetFormat" xml:space="preserve">
+		<value>Miljövariabeln {0} är inte satt</value>
+	</data>
+    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+		<value>OpenAI-leverantören är felkonfigurerad. Ange {0} i {1}.</value>
+	</data>
+    <data name="ListConjunction" xml:space="preserve">
+		<value>och</value>
+	</data>
+    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+		<value>{0} måste vara större än 0 (fick {1}).</value>
+	</data>
+    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+		<value>Azure-leverantören är felkonfigurerad. Saknade miljövariabler: {0}.</value>
+	</data>
+    <data name="UnknownOptionFormat" xml:space="preserve">
+		<value>Alternativet '{0}' är okänt.</value>
+	</data>
+    <data name="ConfigParseWarningFormat" xml:space="preserve">
+		<value>Varning: kunde inte tolka {0}: {1}. Använder standardvärden.</value>
+	</data>
+    <data name="NoGraphicalSession" xml:space="preserve">
+		<value>Ingen grafisk session hittades (varken WAYLAND_DISPLAY eller DISPLAY). Urklipp är inte tillgängligt i en headless- eller SSH-session.</value>
+	</data>
+    <data name="NoClipboardTool" xml:space="preserve">
+		<value>Inget urklippsverktyg hittades. Installera wl-clipboard (Wayland), xclip eller xsel.</value>
+	</data>
+    <data name="ProcessExitedFormat" xml:space="preserve">
+		<value>'{0}' avslutades med kod {1}. {2}</value>
+	</data>
+    <data name="HelpOptionHelp" xml:space="preserve">
+		<value>Visar den här hjälpskärmen.</value>
+	</data>
+    <data name="HelpOptionVersion" xml:space="preserve">
+		<value>Visar versionsinformation.</value>
+	</data>
+    <data name="HelpOptionTerminator" xml:space="preserve">
+		<value>Avslutar tolkningen av alternativ; resten är prompten.</value>
+	</data>
+    <data name="HelpPrompt" xml:space="preserve">
+		<value>Beskrivning av kommandot. Om den utelämnas tillfrågas du.</value>
+	</data>
+    <data name="ResponseLanguage" xml:space="preserve">
+		<value>Swedish</value>
+	</data>
+</root>

@@ -7,7 +7,7 @@
              this value (overridable via -v on publish.sh) to stamp published binaries
              and name release archives.
         -->
-        <Version>1.2.0</Version>
+        <Version>1.3.0</Version>
         <Authors>J.D. Mallen</Authors>
         <Company>J.D. Mallen</Company>
         <Product>Shelly</Product>

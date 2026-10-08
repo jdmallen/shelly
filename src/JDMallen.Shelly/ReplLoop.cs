@@ -41,7 +41,7 @@ public sealed class ReplLoop
 		{
 			if (string.IsNullOrWhiteSpace(prompt))
 			{
-				_io.Write("What do you want to do? ", ConsoleColor.Cyan);
+				_io.Write($"{Strings.WhatToDo} ", ConsoleColor.Cyan);
 				string? line = _io.ReadLine();
 				if (string.IsNullOrWhiteSpace(line))
 				{
@@ -51,7 +51,7 @@ public sealed class ReplLoop
 				prompt = line;
 			}
 
-			_io.Write("Thinking...\n", ConsoleColor.Cyan);
+			_io.Write($"{Strings.Thinking}\n", ConsoleColor.Cyan);
 			string suggestion;
 			try
 			{
@@ -59,14 +59,14 @@ public sealed class ReplLoop
 			}
 			catch (Exception ex)
 			{
-				_io.Write($"Error: {ex.Message}\n", ConsoleColor.Red);
+				_io.Write($"{Strings.Error(ex.Message)}\n", ConsoleColor.Red);
 
 				return ReplResult.Quit();
 			}
 
 			if (string.IsNullOrWhiteSpace(suggestion))
 			{
-				_io.Write("No suggestion received from API\n", ConsoleColor.Red);
+				_io.Write($"{Strings.NoSuggestion}\n", ConsoleColor.Red);
 
 				return ReplResult.Quit();
 			}
@@ -110,7 +110,7 @@ public sealed class ReplLoop
 		while (true)
 		{
 			_io.WriteLine();
-			_io.Write("Suggestion:\n", ConsoleColor.Green);
+			_io.Write($"{Strings.SuggestionHeader}\n", ConsoleColor.Green);
 			_io.Write($"{suggestion}\n", ConsoleColor.Yellow);
 			_io.WriteLine();
 			WriteOptions();
@@ -128,7 +128,7 @@ public sealed class ReplLoop
 					return (ActionOutcome.Edit, null);
 
 				case ConsoleKey.P:
-					_io.Write("Explaining...\n", ConsoleColor.Cyan);
+					_io.Write($"{Strings.Explaining}\n", ConsoleColor.Cyan);
 					string explanation;
 					try
 					{
@@ -139,13 +139,13 @@ public sealed class ReplLoop
 					}
 					catch (Exception ex)
 					{
-						_io.Write($"Error: {ex.Message}\n", ConsoleColor.Red);
+						_io.Write($"{Strings.Error(ex.Message)}\n", ConsoleColor.Red);
 
 						continue;
 					}
 
 					_io.WriteLine();
-					_io.Write("Explanation:\n", ConsoleColor.Green);
+					_io.Write($"{Strings.ExplanationHeader}\n", ConsoleColor.Green);
 					_io.WriteLine(explanation);
 
 					continue;
@@ -154,17 +154,17 @@ public sealed class ReplLoop
 					try
 					{
 						await _clipboard.SetTextAsync(suggestion, cancellationToken);
-						_io.Write("Copied to clipboard\n", ConsoleColor.Green);
+						_io.Write($"{Strings.CopiedToClipboard}\n", ConsoleColor.Green);
 
 						return (ActionOutcome.Quit, null);
 					}
 					catch (Exception ex)
 					{
-						_io.Write($"Clipboard unavailable: {ex.Message}\n", ConsoleColor.Red);
+						_io.Write($"{Strings.ClipboardUnavailable(ex.Message)}\n", ConsoleColor.Red);
 						if (OperatingSystem.IsLinux())
 						{
 							_io.Write(
-								"Install xclip, xsel, or wl-clipboard to enable copying on Linux.\n",
+								$"{Strings.InstallClipboardToolLinux}\n",
 								ConsoleColor.Yellow);
 						}
 
@@ -172,19 +172,19 @@ public sealed class ReplLoop
 					}
 
 				case ConsoleKey.R:
-					_io.Write("What should be different? ", ConsoleColor.Cyan);
+					_io.Write($"{Strings.WhatShouldBeDifferent} ", ConsoleColor.Cyan);
 					string? refinement = _io.ReadLine();
 
 					return (ActionOutcome.Retry, refinement);
 
 				case ConsoleKey.Q:
 				case ConsoleKey.Escape:
-					_io.WriteLine("Goodbye!");
+					_io.WriteLine(Strings.Goodbye);
 
 					return (ActionOutcome.Quit, null);
 
 				default:
-					_io.Write("Invalid choice\n", ConsoleColor.Yellow);
+					_io.Write($"{Strings.InvalidChoice}\n", ConsoleColor.Yellow);
 
 					continue;
 			}
@@ -195,25 +195,27 @@ public sealed class ReplLoop
 	{
 		var first = true;
 
-		Option("e", 'x', "ecute");
+		Option('x', Strings.MenuExecute);
 		if (_editEnabled)
 		{
-			Option(string.Empty, 'e', "dit");
+			Option('e', Strings.MenuEdit);
 		}
 
-		Option("ex", 'p', "lain");
+		Option('p', Strings.MenuExplain);
 		if (_clipboardEnabled)
 		{
-			Option(string.Empty, 'c', "opy");
+			Option('c', Strings.MenuCopy);
 		}
 
-		Option(string.Empty, 'r', "etry");
-		Option(string.Empty, 'q', "uit");
+		Option('r', Strings.MenuRetry);
+		Option('q', Strings.MenuQuit);
 		_io.Write(" ");
 
 		return;
 
-		void Option(string before, char key, string after)
+		// Each label carries its key as "[k]" (e.g. "e[x]ecute", "[x] ausführen");
+		// the key is fixed across languages, so only the label around it varies.
+		void Option(char key, string label)
 		{
 			if (!first)
 			{
@@ -221,6 +223,12 @@ public sealed class ReplLoop
 			}
 
 			first = false;
+			string marker = $"[{key}]";
+			int markerIndex = label.IndexOf(marker, StringComparison.Ordinal);
+			(string before, string after) = markerIndex < 0
+				? (string.Empty, $" {label}")
+				: (label[..markerIndex], label[(markerIndex + marker.Length)..]);
+
 			_io.Write($"{before}[");
 			_io.Write(key.ToString(), ConsoleColor.Green);
 			_io.Write($"]{after}");

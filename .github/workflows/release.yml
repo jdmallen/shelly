@@ -158,7 +158,7 @@ jobs:
           retention-days: 14
 
   release:
-    needs: [check, build]
+    needs: [ check, build ]
     if: >-
       needs.check.outputs.exists == 'false'
       && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)

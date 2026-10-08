@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0]
+
+### Added
+
+- **Localized UI.** Every user-facing string moved into
+  `Resources/Strings.resx`, with translations for 19 cultures: `zh-Hans`,
+  `zh-Hant`, `es`, `pt-BR`, `de`, `ja`, `fr`, `ru`, `ko`, `id`, `it`, `pl`,
+  `tr`, `uk`, `vi`, `nl`, `cs`, `sv` and `th`. The culture comes from the OS
+  UI culture (`LC_ALL`/`LC_MESSAGES`/`LANG` on Unix); anything untranslated
+  falls back to English. Menu keys are unchanged in every language.
+- **Explanations in your language.** The model prompts stay in English, which
+  models follow most reliably; under a translated culture the explain prompt
+  adds "Write your explanation in {language}." The translations are compiled
+  into the Native AOT binary, which grows by about 153 KB on linux-x64.
+
 ## [1.2.0]
 
 ### Added

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="WhatToDo" xml:space="preserve">
+		<value>Apa yang ingin Anda lakukan?</value>
+	</data>
+    <data name="Thinking" xml:space="preserve">
+		<value>Sedang berpikir...</value>
+	</data>
+    <data name="ErrorFormat" xml:space="preserve">
+		<value>Kesalahan: {0}</value>
+	</data>
+    <data name="NoSuggestion" xml:space="preserve">
+		<value>Tidak ada saran yang diterima dari API</value>
+	</data>
+    <data name="SuggestionHeader" xml:space="preserve">
+		<value>Saran:</value>
+	</data>
+    <data name="Explaining" xml:space="preserve">
+		<value>Sedang menjelaskan...</value>
+	</data>
+    <data name="ExplanationHeader" xml:space="preserve">
+		<value>Penjelasan:</value>
+	</data>
+    <data name="CopiedToClipboard" xml:space="preserve">
+		<value>Disalin ke papan klip</value>
+	</data>
+    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+		<value>Papan klip tidak tersedia: {0}</value>
+	</data>
+    <data name="InstallClipboardToolLinux" xml:space="preserve">
+		<value>Pasang xclip, xsel, atau wl-clipboard untuk mengaktifkan penyalinan di Linux.</value>
+	</data>
+    <data name="WhatShouldBeDifferent" xml:space="preserve">
+		<value>Apa yang harus berbeda?</value>
+	</data>
+    <data name="Goodbye" xml:space="preserve">
+		<value>Sampai jumpa!</value>
+	</data>
+    <data name="InvalidChoice" xml:space="preserve">
+		<value>Pilihan tidak valid</value>
+	</data>
+    <data name="MenuExecute" xml:space="preserve">
+		<value>[x] jalankan</value>
+	</data>
+    <data name="MenuEdit" xml:space="preserve">
+		<value>[e] sunting</value>
+	</data>
+    <data name="MenuExplain" xml:space="preserve">
+		<value>[p] jelaskan</value>
+	</data>
+    <data name="MenuCopy" xml:space="preserve">
+		<value>[c] salin</value>
+	</data>
+    <data name="MenuRetry" xml:space="preserve">
+		<value>[r] coba lagi</value>
+	</data>
+    <data name="MenuQuit" xml:space="preserve">
+		<value>[q] keluar</value>
+	</data>
+    <data name="Executing" xml:space="preserve">
+		<value>Menjalankan...</value>
+	</data>
+    <data name="FailedToStartShell" xml:space="preserve">
+		<value>gagal memulai shell</value>
+	</data>
+    <data name="UnknownProviderFormat" xml:space="preserve">
+		<value>Penyedia tidak dikenal '{0}' di {1}. Yang diharapkan: 'anthropic', 'azure', atau 'openai'.</value>
+	</data>
+    <data name="EnvVarNotSetFormat" xml:space="preserve">
+		<value>Variabel lingkungan {0} belum diatur</value>
+	</data>
+    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+		<value>Penyedia OpenAI salah dikonfigurasi. Atur {0} di {1}.</value>
+	</data>
+    <data name="ListConjunction" xml:space="preserve">
+		<value>dan</value>
+	</data>
+    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+		<value>{0} harus lebih besar dari 0 (diperoleh {1}).</value>
+	</data>
+    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+		<value>Penyedia Azure salah dikonfigurasi. Variabel lingkungan yang hilang: {0}.</value>
+	</data>
+    <data name="UnknownOptionFormat" xml:space="preserve">
+		<value>Opsi '{0}' tidak dikenal.</value>
+	</data>
+    <data name="ConfigParseWarningFormat" xml:space="preserve">
+		<value>Peringatan: gagal mengurai {0}: {1}. Menggunakan nilai bawaan.</value>
+	</data>
+    <data name="NoGraphicalSession" xml:space="preserve">
+		<value>Tidak ada sesi grafis yang terdeteksi (tidak ada WAYLAND_DISPLAY atau DISPLAY). Papan klip tidak tersedia di sesi headless/SSH.</value>
+	</data>
+    <data name="NoClipboardTool" xml:space="preserve">
+		<value>Alat papan klip tidak ditemukan. Pasang wl-clipboard (Wayland), xclip, atau xsel.</value>
+	</data>
+    <data name="ProcessExitedFormat" xml:space="preserve">
+		<value>'{0}' keluar dengan kode {1}. {2}</value>
+	</data>
+    <data name="HelpOptionHelp" xml:space="preserve">
+		<value>Menampilkan layar bantuan ini.</value>
+	</data>
+    <data name="HelpOptionVersion" xml:space="preserve">
+		<value>Menampilkan informasi versi.</value>
+	</data>
+    <data name="HelpOptionTerminator" xml:space="preserve">
+		<value>Mengakhiri penguraian opsi; sisanya adalah prompt.</value>
+	</data>
+    <data name="HelpPrompt" xml:space="preserve">
+		<value>Deskripsi perintah. Jika tidak diisi, Anda akan ditanya.</value>
+	</data>
+    <data name="ResponseLanguage" xml:space="preserve">
+		<value>Indonesian</value>
+	</data>
+</root>

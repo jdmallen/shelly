@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="WhatToDo" xml:space="preserve">
+		<value>¿Qué quieres hacer?</value>
+	</data>
+    <data name="Thinking" xml:space="preserve">
+		<value>Pensando...</value>
+	</data>
+    <data name="ErrorFormat" xml:space="preserve">
+		<value>Error: {0}</value>
+	</data>
+    <data name="NoSuggestion" xml:space="preserve">
+		<value>No se recibió ninguna sugerencia de la API</value>
+	</data>
+    <data name="SuggestionHeader" xml:space="preserve">
+		<value>Sugerencia:</value>
+	</data>
+    <data name="Explaining" xml:space="preserve">
+		<value>Explicando...</value>
+	</data>
+    <data name="ExplanationHeader" xml:space="preserve">
+		<value>Explicación:</value>
+	</data>
+    <data name="CopiedToClipboard" xml:space="preserve">
+		<value>Copiado al portapapeles</value>
+	</data>
+    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+		<value>Portapapeles no disponible: {0}</value>
+	</data>
+    <data name="InstallClipboardToolLinux" xml:space="preserve">
+		<value>Instala xclip, xsel o wl-clipboard para poder copiar en Linux.</value>
+	</data>
+    <data name="WhatShouldBeDifferent" xml:space="preserve">
+		<value>¿Qué debería cambiar?</value>
+	</data>
+    <data name="Goodbye" xml:space="preserve">
+		<value>¡Adiós!</value>
+	</data>
+    <data name="InvalidChoice" xml:space="preserve">
+		<value>Opción no válida</value>
+	</data>
+    <data name="MenuExecute" xml:space="preserve">
+		<value>[x] ejecutar</value>
+	</data>
+    <data name="MenuEdit" xml:space="preserve">
+		<value>[e] editar</value>
+	</data>
+    <data name="MenuExplain" xml:space="preserve">
+		<value>[p] explicar</value>
+	</data>
+    <data name="MenuCopy" xml:space="preserve">
+		<value>[c] copiar</value>
+	</data>
+    <data name="MenuRetry" xml:space="preserve">
+		<value>[r] reintentar</value>
+	</data>
+    <data name="MenuQuit" xml:space="preserve">
+		<value>[q] salir</value>
+	</data>
+    <data name="Executing" xml:space="preserve">
+		<value>Ejecutando...</value>
+	</data>
+    <data name="FailedToStartShell" xml:space="preserve">
+		<value>no se pudo iniciar la shell</value>
+	</data>
+    <data name="UnknownProviderFormat" xml:space="preserve">
+		<value>Proveedor desconocido '{0}' en {1}. Se esperaba 'anthropic', 'azure' u 'openai'.</value>
+	</data>
+    <data name="EnvVarNotSetFormat" xml:space="preserve">
+		<value>La variable de entorno {0} no está definida</value>
+	</data>
+    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+		<value>Proveedor de OpenAI mal configurado. Define {0} en {1}.</value>
+	</data>
+    <data name="ListConjunction" xml:space="preserve">
+		<value>y</value>
+	</data>
+    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+		<value>{0} debe ser mayor que 0 (se obtuvo {1}).</value>
+	</data>
+    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+		<value>Proveedor de Azure mal configurado. Faltan variables de entorno: {0}.</value>
+	</data>
+    <data name="UnknownOptionFormat" xml:space="preserve">
+		<value>La opción '{0}' es desconocida.</value>
+	</data>
+    <data name="ConfigParseWarningFormat" xml:space="preserve">
+		<value>Advertencia: no se pudo analizar {0}: {1}. Se usarán los valores predeterminados.</value>
+	</data>
+    <data name="NoGraphicalSession" xml:space="preserve">
+		<value>No se detectó una sesión gráfica (ni WAYLAND_DISPLAY ni DISPLAY). El portapapeles no está disponible en una sesión sin interfaz gráfica o por SSH.</value>
+	</data>
+    <data name="NoClipboardTool" xml:space="preserve">
+		<value>No se encontró ninguna herramienta de portapapeles. Instala wl-clipboard (Wayland), xclip o xsel.</value>
+	</data>
+    <data name="ProcessExitedFormat" xml:space="preserve">
+		<value>'{0}' terminó con el código {1}. {2}</value>
+	</data>
+    <data name="HelpOptionHelp" xml:space="preserve">
+		<value>Muestra esta pantalla de ayuda.</value>
+	</data>
+    <data name="HelpOptionVersion" xml:space="preserve">
+		<value>Muestra la información de versión.</value>
+	</data>
+    <data name="HelpOptionTerminator" xml:space="preserve">
+		<value>Termina el análisis de opciones; el resto es el prompt.</value>
+	</data>
+    <data name="HelpPrompt" xml:space="preserve">
+		<value>Descripción del comando. Si se omite, se te preguntará.</value>
+	</data>
+    <data name="ResponseLanguage" xml:space="preserve">
+		<value>Spanish</value>
+	</data>
+</root>

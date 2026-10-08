@@ -7,6 +7,8 @@
         <RootNamespace>JDMallen.Shelly</RootNamespace>
         <RollForward>LatestMajor</RollForward>
         <IsAotCompatible>true</IsAotCompatible>
+        <!-- Resources/Prompts.resx is en-US; skips a satellite lookup for it. -->
+        <NeutralLanguage>en-US</NeutralLanguage>
     </PropertyGroup>
 
     <!-- Publish settings: only apply during `dotnet publish` for a specific RID,

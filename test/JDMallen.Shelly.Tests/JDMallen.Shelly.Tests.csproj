@@ -13,6 +13,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <!-- Pins tests to the invariant (English) UI culture regardless of LANG,
+             so assertions on user-facing text hold on any machine. -->
+        <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\..\src\JDMallen.Shelly\JDMallen.Shelly.csproj"/>
     </ItemGroup>
 

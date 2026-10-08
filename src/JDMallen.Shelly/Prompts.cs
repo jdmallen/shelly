@@ -1,5 +1,13 @@
+using System.Globalization;
+
 namespace JDMallen.Shelly;
 
+/// <summary>
+/// System prompts. They stay in English, which models follow most reliably;
+/// for a translated UI culture, <see cref="Explain" /> asks for the
+/// explanation in that language. Suggestions are commands, so they need no
+/// language instruction.
+/// </summary>
 internal static class Prompts
 {
 	public static string Suggestion(string context) =>
@@ -20,10 +28,17 @@ internal static class Prompts
 		 Context: {context}
 		 """;
 
-	public static string Explain(string context) =>
-		$"""
-		 You are a shell command expert. The user will give you a shell command. Explain in 1-3 short sentences what it does, including what each pipe stage or flag contributes. Plain text only — no markdown, no code fences, no bullet lists. Be concise.
+	public static string Explain(string context, CultureInfo? culture = null)
+	{
+		string responseLanguage = Strings.ResponseLanguage(culture);
+		string languageInstruction = responseLanguage.Length == 0
+			? string.Empty
+			: $" Write your explanation in {responseLanguage}.";
 
-		 Context: {context}
-		 """;
+		return $"""
+		        You are a shell command expert. The user will give you a shell command. Explain in 1-3 short sentences what it does, including what each pipe stage or flag contributes. Plain text only — no markdown, no code fences, no bullet lists. Be concise.{languageInstruction}
+
+		        Context: {context}
+		        """;
+	}
 }

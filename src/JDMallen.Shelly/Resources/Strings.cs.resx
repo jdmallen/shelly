@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="WhatToDo" xml:space="preserve">
+		<value>Co chceš udělat?</value>
+	</data>
+    <data name="Thinking" xml:space="preserve">
+		<value>Přemýšlím...</value>
+	</data>
+    <data name="ErrorFormat" xml:space="preserve">
+		<value>Chyba: {0}</value>
+	</data>
+    <data name="NoSuggestion" xml:space="preserve">
+		<value>Z API nepřišel žádný návrh</value>
+	</data>
+    <data name="SuggestionHeader" xml:space="preserve">
+		<value>Návrh:</value>
+	</data>
+    <data name="Explaining" xml:space="preserve">
+		<value>Vysvětluji...</value>
+	</data>
+    <data name="ExplanationHeader" xml:space="preserve">
+		<value>Vysvětlení:</value>
+	</data>
+    <data name="CopiedToClipboard" xml:space="preserve">
+		<value>Zkopírováno do schránky</value>
+	</data>
+    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+		<value>Schránka není k dispozici: {0}</value>
+	</data>
+    <data name="InstallClipboardToolLinux" xml:space="preserve">
+		<value>Pro kopírování v Linuxu nainstaluj xclip, xsel nebo wl-clipboard.</value>
+	</data>
+    <data name="WhatShouldBeDifferent" xml:space="preserve">
+		<value>Co má být jinak?</value>
+	</data>
+    <data name="Goodbye" xml:space="preserve">
+		<value>Na shledanou!</value>
+	</data>
+    <data name="InvalidChoice" xml:space="preserve">
+		<value>Neplatná volba</value>
+	</data>
+    <data name="MenuExecute" xml:space="preserve">
+		<value>[x] spustit</value>
+	</data>
+    <data name="MenuEdit" xml:space="preserve">
+		<value>[e] upravit</value>
+	</data>
+    <data name="MenuExplain" xml:space="preserve">
+		<value>[p] vysvětlit</value>
+	</data>
+    <data name="MenuCopy" xml:space="preserve">
+		<value>[c] kopírovat</value>
+	</data>
+    <data name="MenuRetry" xml:space="preserve">
+		<value>[r] znovu</value>
+	</data>
+    <data name="MenuQuit" xml:space="preserve">
+		<value>[q] konec</value>
+	</data>
+    <data name="Executing" xml:space="preserve">
+		<value>Spouštím...</value>
+	</data>
+    <data name="FailedToStartShell" xml:space="preserve">
+		<value>nepodařilo se spustit shell</value>
+	</data>
+    <data name="UnknownProviderFormat" xml:space="preserve">
+		<value>Neznámý poskytovatel '{0}' v {1}. Očekáváno 'anthropic', 'azure' nebo 'openai'.</value>
+	</data>
+    <data name="EnvVarNotSetFormat" xml:space="preserve">
+		<value>Proměnná prostředí {0} není nastavena</value>
+	</data>
+    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+		<value>Poskytovatel OpenAI je špatně nakonfigurován. Nastav {0} v {1}.</value>
+	</data>
+    <data name="ListConjunction" xml:space="preserve">
+		<value>a</value>
+	</data>
+    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+		<value>{0} musí být větší než 0 (zadáno {1}).</value>
+	</data>
+    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+		<value>Poskytovatel Azure je špatně nakonfigurován. Chybějící proměnné prostředí: {0}.</value>
+	</data>
+    <data name="UnknownOptionFormat" xml:space="preserve">
+		<value>Přepínač '{0}' je neznámý.</value>
+	</data>
+    <data name="ConfigParseWarningFormat" xml:space="preserve">
+		<value>Upozornění: nepodařilo se zpracovat {0}: {1}. Použijí se výchozí hodnoty.</value>
+	</data>
+    <data name="NoGraphicalSession" xml:space="preserve">
+		<value>Nebyla zjištěna grafická relace (chybí WAYLAND_DISPLAY i DISPLAY). Schránka není v relaci bez grafického rozhraní ani přes SSH k dispozici.</value>
+	</data>
+    <data name="NoClipboardTool" xml:space="preserve">
+		<value>Nebyl nalezen žádný nástroj pro schránku. Nainstaluj wl-clipboard (Wayland), xclip nebo xsel.</value>
+	</data>
+    <data name="ProcessExitedFormat" xml:space="preserve">
+		<value>'{0}' skončil s kódem {1}. {2}</value>
+	</data>
+    <data name="HelpOptionHelp" xml:space="preserve">
+		<value>Zobrazí tuto nápovědu.</value>
+	</data>
+    <data name="HelpOptionVersion" xml:space="preserve">
+		<value>Zobrazí informace o verzi.</value>
+	</data>
+    <data name="HelpOptionTerminator" xml:space="preserve">
+		<value>Ukončí zpracování přepínačů; zbytek je prompt.</value>
+	</data>
+    <data name="HelpPrompt" xml:space="preserve">
+		<value>Popis příkazu. Pokud ho vynecháš, budeš na něj dotázán.</value>
+	</data>
+    <data name="ResponseLanguage" xml:space="preserve">
+		<value>Czech</value>
+	</data>
+</root>

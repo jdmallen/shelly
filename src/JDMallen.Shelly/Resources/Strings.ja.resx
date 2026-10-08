@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="WhatToDo" xml:space="preserve">
+		<value>何をしたいですか？</value>
+	</data>
+    <data name="Thinking" xml:space="preserve">
+		<value>考え中...</value>
+	</data>
+    <data name="ErrorFormat" xml:space="preserve">
+		<value>エラー：{0}</value>
+	</data>
+    <data name="NoSuggestion" xml:space="preserve">
+		<value>API から提案を受け取れませんでした</value>
+	</data>
+    <data name="SuggestionHeader" xml:space="preserve">
+		<value>提案：</value>
+	</data>
+    <data name="Explaining" xml:space="preserve">
+		<value>説明を生成中...</value>
+	</data>
+    <data name="ExplanationHeader" xml:space="preserve">
+		<value>説明：</value>
+	</data>
+    <data name="CopiedToClipboard" xml:space="preserve">
+		<value>クリップボードにコピーしました</value>
+	</data>
+    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+		<value>クリップボードを使用できません：{0}</value>
+	</data>
+    <data name="InstallClipboardToolLinux" xml:space="preserve">
+		<value>Linux でコピーを有効にするには、xclip、xsel、または wl-clipboard をインストールしてください。</value>
+	</data>
+    <data name="WhatShouldBeDifferent" xml:space="preserve">
+		<value>何を変更しますか？</value>
+	</data>
+    <data name="Goodbye" xml:space="preserve">
+		<value>さようなら！</value>
+	</data>
+    <data name="InvalidChoice" xml:space="preserve">
+		<value>無効な選択です</value>
+	</data>
+    <data name="MenuExecute" xml:space="preserve">
+		<value>[x] 実行</value>
+	</data>
+    <data name="MenuEdit" xml:space="preserve">
+		<value>[e] 編集</value>
+	</data>
+    <data name="MenuExplain" xml:space="preserve">
+		<value>[p] 説明</value>
+	</data>
+    <data name="MenuCopy" xml:space="preserve">
+		<value>[c] コピー</value>
+	</data>
+    <data name="MenuRetry" xml:space="preserve">
+		<value>[r] 再試行</value>
+	</data>
+    <data name="MenuQuit" xml:space="preserve">
+		<value>[q] 終了</value>
+	</data>
+    <data name="Executing" xml:space="preserve">
+		<value>実行中...</value>
+	</data>
+    <data name="FailedToStartShell" xml:space="preserve">
+		<value>シェルを起動できませんでした</value>
+	</data>
+    <data name="UnknownProviderFormat" xml:space="preserve">
+		<value>{1} に不明なプロバイダー '{0}' が指定されています。'anthropic'、'azure'、'openai' のいずれかを指定してください。</value>
+	</data>
+    <data name="EnvVarNotSetFormat" xml:space="preserve">
+		<value>環境変数 {0} が設定されていません</value>
+	</data>
+    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+		<value>OpenAI プロバイダーの設定が正しくありません。{1} で {0} を設定してください。</value>
+	</data>
+    <data name="ListConjunction" xml:space="preserve">
+		<value>と</value>
+	</data>
+    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+		<value>{0} は 0 より大きい値にしてください（現在の値：{1}）。</value>
+	</data>
+    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+		<value>Azure プロバイダーの設定が正しくありません。不足している環境変数：{0}。</value>
+	</data>
+    <data name="UnknownOptionFormat" xml:space="preserve">
+		<value>オプション '{0}' は不明です。</value>
+	</data>
+    <data name="ConfigParseWarningFormat" xml:space="preserve">
+		<value>警告：{0} を解析できませんでした：{1}。既定値を使用します。</value>
+	</data>
+    <data name="NoGraphicalSession" xml:space="preserve">
+		<value>グラフィカルセッションが検出されません（WAYLAND_DISPLAY も DISPLAY もありません）。ヘッドレスまたは SSH セッションではクリップボードを使用できません。</value>
+	</data>
+    <data name="NoClipboardTool" xml:space="preserve">
+		<value>クリップボードツールが見つかりません。wl-clipboard (Wayland)、xclip、または xsel をインストールしてください。</value>
+	</data>
+    <data name="ProcessExitedFormat" xml:space="preserve">
+		<value>'{0}' はコード {1} で終了しました。{2}</value>
+	</data>
+    <data name="HelpOptionHelp" xml:space="preserve">
+		<value>このヘルプ画面を表示します。</value>
+	</data>
+    <data name="HelpOptionVersion" xml:space="preserve">
+		<value>バージョン情報を表示します。</value>
+	</data>
+    <data name="HelpOptionTerminator" xml:space="preserve">
+		<value>オプションの解析を終了します。残りはプロンプトとして扱われます。</value>
+	</data>
+    <data name="HelpPrompt" xml:space="preserve">
+		<value>コマンドの説明。省略すると入力を求められます。</value>
+	</data>
+    <data name="ResponseLanguage" xml:space="preserve">
+		<value>Japanese</value>
+	</data>
+</root>

@@ -85,11 +85,14 @@ dotnet publish src/JDMallen.Shelly -c Release -r <rid> -o ./out
 Native AOT links with the platform's own toolchain and cannot cross-compile
 between operating systems, so build each OS on that OS:
 
-- **Linux:** `clang` and `zlib1g-dev` (`sudo apt install clang zlib1g-dev`).
-- **Windows:** Visual Studio 2022 (or Build Tools) with the "Desktop
-  development with C++" workload. For `win-arm64`, also add "MSVC v143 ARM64
-  build tools".
-- **macOS:** Xcode command line tools (`xcode-select --install`).
+-
+**Linux:** `clang` and `zlib1g-dev` (`sudo apt install clang zlib1g-dev`).
+-
+**Windows:** Visual Studio 2022 (or Build Tools) with the "Desktop
+development with C++" workload. For `win-arm64`, also add "MSVC v143 ARM64
+build tools".
+-
+**macOS:** Xcode command line tools (`xcode-select --install`).
 
 Replace `<rid>` with one of `linux-x64`, `linux-arm64`, `osx-x64`,
 `osx-arm64`, `win-x64`, `win-arm64`.
@@ -146,9 +149,12 @@ export OPENAI_API_KEY_SHELLY="..."
 A config file is auto-created on first run at:
 
 -
+
 **Linux /
 macOS:** `~/.config/shelly/config.json`
+
 -
+
 **Windows:** `%APPDATA%\shelly\config.json`
 
 Default contents:
@@ -257,6 +263,34 @@ At the suggestion menu:
 The `[e]dit` and `[c]opy` options only appear when they can actually work:
 `edit` requires the shell wrapper below, and `copy` requires a graphical
 session with a clipboard tool (so it's hidden over headless/SSH sessions).
+
+### Language
+
+shelly's interface is translated into 19 languages, and in those languages
+`[p]` (explain) answers in your language too. The menu keys (`x`, `e`, `p`,
+`c`, `r`, `q`) are the same in every language. shelly picks the language from
+your UI culture: `LC_ALL`, then `LC_MESSAGES`, then `LANG` on Linux and macOS;
+the display language on Windows. Anything without a translation uses English.
+
+| Culture   | Language              | Culture | Language   |
+|-----------|-----------------------|---------|------------|
+| `zh-Hans` | Chinese (Simplified)  | `it`    | Italian    |
+| `zh-Hant` | Chinese (Traditional) | `pl`    | Polish     |
+| `es`      | Spanish               | `tr`    | Turkish    |
+| `pt-BR`   | Portuguese (Brazil)   | `uk`    | Ukrainian  |
+| `de`      | German                | `vi`    | Vietnamese |
+| `ja`      | Japanese              | `nl`    | Dutch      |
+| `fr`      | French                | `cs`    | Czech      |
+| `ru`      | Russian               | `sv`    | Swedish    |
+| `ko`      | Korean                | `th`    | Thai       |
+| `id`      | Indonesian            |         |            |
+
+`LC_ALL` overrides `LANG`, so `LC_ALL=C.UTF-8` keeps shelly in English even
+with `LANG=ja_JP.UTF-8`. To try another language for one run:
+
+```sh
+LC_ALL=ja_JP.UTF-8 shelly list files by size
+```
 
 ### Edit on the command line (shell integration)
 
