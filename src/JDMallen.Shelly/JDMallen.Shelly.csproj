@@ -6,18 +6,16 @@
         <AssemblyName>shelly</AssemblyName>
         <RootNamespace>JDMallen.Shelly</RootNamespace>
         <RollForward>LatestMajor</RollForward>
+        <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
     <!-- Publish settings: only apply during `dotnet publish` for a specific RID,
          so the test project can still reference the main project in Release builds. -->
     <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
-        <PublishSingleFile>true</PublishSingleFile>
+        <PublishAot>true</PublishAot>
         <SelfContained>true</SelfContained>
-        <PublishTrimmed>true</PublishTrimmed>
-        <TrimMode>partial</TrimMode>
-        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-        <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
-        <DebugType>embedded</DebugType>
+        <OptimizationPreference>Size</OptimizationPreference>
+        <DebugType>none</DebugType>
         <DebuggerSupport>false</DebuggerSupport>
         <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
         <EventSourceSupport>false</EventSourceSupport>
@@ -31,7 +29,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommandLineParser" Version="2.9.1"/>
         <PackageReference Include="JetBrains.Annotations" Version="2025.2.4"/>
         <PackageReference Include="JDMallen.Toolbox.AI" Version="3.1.0"/>
     </ItemGroup>

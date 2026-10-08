@@ -5,6 +5,30 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0]
+
+### Added
+
+- **`--` ends option parsing**, so a prompt may start with a dash, e.g.
+  `shelly -- -la but sorted by size`. `-h` and `-?` are also accepted as
+  aliases for `--help`.
+
+### Changed
+
+- **Release binaries are now Native AOT.** The linux-x64 binary drops from
+  13,973,876 to 6,886,504 bytes (archive 6,995,595 to about 3.2 MB), `--version`
+  from about 0.12 s to under 0.01 s, and peak memory from about 23.5 MB to about
+  12.9 MB.
+- **`--help` and `--version` now exit 0** (they used to exit 1). Unknown options
+  still exit 1.
+- **Release workflow builds per OS on native runners** (AOT cannot cross-compile
+  between operating systems) and gains a `dry_run` dispatch input that builds
+  and uploads per-RID artifacts without tagging or releasing.
+
+### Removed
+
+- The `CommandLineParser` dependency, replaced by a small built-in parser.
+
 ## [1.1.0]
 
 Adds a third backend: any endpoint speaking the OpenAI `/v1/chat/completions`

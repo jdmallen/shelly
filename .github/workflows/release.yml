@@ -1,14 +1,24 @@
 # Releases a new version whenever a commit lands on main (e.g. a merged PR)
 # with a <Version> in Directory.Build.props that hasn't been tagged yet:
-#   1. builds the release archives with scripts/publish.sh (default runtimes,
-#      including shelly.zsh in the non-Windows archives),
-#   2. tags the pushed commit with the raw semver (no 'v' prefix), and
-#   3. creates a GitHub release whose notes are that version's CHANGELOG.md
-#      section, with the archives and a SHA256SUMS.txt attached.
-# (Tagging and release creation are one atomic gh call, ordered after the
-# build so a failed publish never leaves a dangling tag.)
+#   1. `check` reads the version and looks for an existing tag,
+#   2. `build` publishes Native AOT binaries with scripts/publish.sh. AOT
+#      can't cross-compile between operating systems, so each OS builds its
+#      own RIDs on a native runner (linux-x64, linux-arm64, win-x64 +
+#      win-arm64, osx-arm64 + osx-x64) and uploads one artifact per RID,
+#   3. `release` downloads every artifact, writes SHA256SUMS.txt, and creates
+#      a GitHub release (and the raw semver tag, no 'v' prefix) whose notes
+#      are that version's CHANGELOG.md section.
+# (Tagging and release creation are one atomic gh call, ordered after all
+# builds so a failed publish never leaves a dangling tag.)
 # If the version's tag already exists, the run is a no-op, so routine merges
 # that don't bump <Version> never re-release.
+#
+# Dry run: dispatch manually with dry_run=true (the default) to build every
+# RID and upload the artifacts without tagging or releasing, even when the
+# version is already tagged. Download a RID's artifact from the run page, e.g.
+# to test the Windows exe. Dry-run condition used below:
+#   github.event_name == 'workflow_dispatch' && inputs.dry_run
+# On a push event inputs.dry_run is empty, so pushes behave as before.
 name: Release
 
 on:
@@ -16,13 +26,22 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build and upload artifacts only; no tag, no release"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
 
 jobs:
-  release:
+  check:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      exists: ${{ steps.tag_check.outputs.exists }}
+      should_build: ${{ steps.decide.outputs.should_build }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -51,27 +70,101 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Decide whether to build
+        id: decide
+        env:
+          EXISTS: ${{ steps.tag_check.outputs.exists }}
+          IS_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: |
+          if [[ "$EXISTS" == "false" || "$IS_DRY_RUN" == "true" ]]; then
+            echo "should_build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_build=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    needs: check
+    if: needs.check.outputs.should_build == 'true'
+    name: build (${{ matrix.primary_rid }}${{ matrix.secondary_rid && format(' + {0}', matrix.secondary_rid) || '' }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            primary_rid: linux-x64
+            secondary_rid: ''
+          - os: ubuntu-24.04-arm
+            primary_rid: linux-arm64
+            secondary_rid: ''
+          - os: windows-latest
+            primary_rid: win-x64
+            secondary_rid: win-arm64
+          - os: macos-latest
+            primary_rid: osx-arm64
+            secondary_rid: osx-x64
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
       - name: Set up .NET SDK
-        if: steps.tag_check.outputs.exists == 'false'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
 
+      # -v is passed explicitly so the engine never has to grep the props file
+      # (grep -oP isn't reliable in Git Bash / BSD userlands).
       - name: Publish release binaries
-        if: steps.tag_check.outputs.exists == 'false'
-        run: scripts/publish.sh
+        shell: bash
+        env:
+          VERSION: ${{ needs.check.outputs.version }}
+          PRIMARY_RID: ${{ matrix.primary_rid }}
+          SECONDARY_RID: ${{ matrix.secondary_rid }}
+        run: scripts/publish.sh -v "$VERSION" "$PRIMARY_RID" $SECONDARY_RID
+
+      - name: Upload ${{ matrix.primary_rid }} archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: shelly-${{ needs.check.outputs.version }}-${{ matrix.primary_rid }}
+          path: dist/shelly-${{ needs.check.outputs.version }}-${{ matrix.primary_rid }}.*
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload ${{ matrix.secondary_rid }} archive
+        if: matrix.secondary_rid != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: shelly-${{ needs.check.outputs.version }}-${{ matrix.secondary_rid }}
+          path: dist/shelly-${{ needs.check.outputs.version }}-${{ matrix.secondary_rid }}.*
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    needs: [check, build]
+    if: >-
+      needs.check.outputs.exists == 'false'
+      && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Download archives
+        uses: actions/download-artifact@v4
+        with:
+          pattern: shelly-*
+          path: dist
+          merge-multiple: true
 
       - name: Generate checksums
-        if: steps.tag_check.outputs.exists == 'false'
         run: |
           cd dist
           sha256sum *.tar.gz *.zip > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
       - name: Extract changelog section for this version
-        if: steps.tag_check.outputs.exists == 'false'
         env:
-          VERSION: ${{ steps.version.outputs.version }}
+          VERSION: ${{ needs.check.outputs.version }}
         run: |
           awk -v ver="$VERSION" '
             $0 ~ "^## \\[" ver "\\]" { in_section = 1; next }
@@ -86,13 +179,12 @@ jobs:
           cat release_notes.md
 
       # Creating the release also creates the tag (raw semver, no 'v' prefix)
-      # on the pushed commit. Tagging happens here, after a successful build,
-      # so a failed publish never leaves a tag without a release.
+      # on the pushed commit. Tagging happens here, after every build job
+      # succeeded, so a failed publish never leaves a tag without a release.
       - name: Create GitHub release and tag
-        if: steps.tag_check.outputs.exists == 'false'
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ steps.version.outputs.version }}
+          VERSION: ${{ needs.check.outputs.version }}
         run: |
           gh release create "$VERSION" \
             --target "$GITHUB_SHA" \

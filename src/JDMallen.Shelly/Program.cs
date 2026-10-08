@@ -1,6 +1,5 @@
 using System.Diagnostics;
-using CommandLine;
-using JetBrains.Annotations;
+using System.Reflection;
 
 namespace JDMallen.Shelly;
 
@@ -12,12 +11,61 @@ public static class Program
 
 	public static async Task<int> Main(string[] args)
 	{
-		return await Parser.Default
-			.ParseArguments<Options>(args)
-			.MapResult(RunAsync, _ => Task.FromResult(1));
+		switch (CommandLineArgs.Parse(args))
+		{
+			case CommandLineArgs.ShowHelp:
+				Console.WriteLine(BuildHelpText());
+
+				return 0;
+			case CommandLineArgs.ShowVersion:
+				Console.WriteLine(BuildVersionLine());
+
+				return 0;
+			case CommandLineArgs.Error error:
+				await Console.Error.WriteLineAsync(error.Message);
+				await Console.Error.WriteLineAsync();
+				await Console.Error.WriteLineAsync(BuildHelpText());
+
+				return 1;
+			case CommandLineArgs.Run run:
+				return await RunAsync(run.Prompt);
+			default:
+				return 1;
+		}
 	}
 
-	private static async Task<int> RunAsync(Options opts)
+	private static string BuildVersionLine()
+	{
+		string? version = typeof(Program)
+			.Assembly
+			.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+			?.InformationalVersion;
+
+		return $"shelly {version}";
+	}
+
+	private static string BuildHelpText()
+	{
+		string? copyright = typeof(Program)
+			.Assembly
+			.GetCustomAttribute<AssemblyCopyrightAttribute>()
+			?.Copyright;
+
+		return $"""
+		        {BuildVersionLine()}
+		        {copyright}
+
+		          --help             Display this help screen.
+
+		          --version          Display version information.
+
+		          --                 End option parsing; the rest is the prompt.
+
+		          prompt (pos. 0)    Command description. If omitted, you'll be prompted.
+		        """;
+	}
+
+	private static async Task<int> RunAsync(string? prompt)
 	{
 		ShellyConfig config = ShellyConfig.Load();
 
@@ -26,9 +74,6 @@ public static class Program
 		{
 			return 1;
 		}
-
-		string[] words = opts.Prompt?.ToArray() ?? [];
-		string? prompt = words.Length > 0 ? string.Join(' ', words) : null;
 
 		ReplResult result = await new ReplLoop(provider).RunAsync(prompt);
 
@@ -205,17 +250,5 @@ public static class Program
 		await process.WaitForExitAsync();
 
 		return process.ExitCode;
-	}
-}
-
-[UsedImplicitly]
-public sealed class Options
-{
-	[Value(0, MetaName = "prompt", HelpText = "Command description. If omitted, you'll be prompted.")]
-	public IEnumerable<string>? Prompt
-	{
-		get;
-		[UsedImplicitly]
-		set;
 	}
 }

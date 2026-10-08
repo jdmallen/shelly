@@ -24,3 +24,20 @@ jobs:
 
       - name: Test
         run: dotnet test --configuration Release --no-build --verbosity normal
+
+  # Linux is enough to catch trim/AOT warnings; the Windows build is covered
+  # by the release workflow's dry run.
+  aot-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish Native AOT (linux-x64)
+        run: |
+          dotnet publish src/JDMallen.Shelly/JDMallen.Shelly.csproj \
+            -c Release -r linux-x64 -o aot-out 2>&1 | tee aot-publish.log
+          ! grep -q "warning IL" aot-publish.log

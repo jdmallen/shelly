@@ -75,11 +75,21 @@ cd shelly
 dotnet build -c Release
 ```
 
-For a single-file self-contained binary like the released ones:
+Release binaries are Native AOT: a single self-contained executable with no
+JIT and no .NET runtime to install. To build one like the released ones:
 
 ```sh
 dotnet publish src/JDMallen.Shelly -c Release -r <rid> -o ./out
 ```
+
+Native AOT links with the platform's own toolchain and cannot cross-compile
+between operating systems, so build each OS on that OS:
+
+- **Linux:** `clang` and `zlib1g-dev` (`sudo apt install clang zlib1g-dev`).
+- **Windows:** Visual Studio 2022 (or Build Tools) with the "Desktop
+  development with C++" workload. For `win-arm64`, also add "MSVC v143 ARM64
+  build tools".
+- **macOS:** Xcode command line tools (`xcode-select --install`).
 
 Replace `<rid>` with one of `linux-x64`, `linux-arm64`, `osx-x64`,
 `osx-arm64`, `win-x64`, `win-arm64`.
@@ -226,6 +236,13 @@ characters your shell would otherwise interpret (pipes, redirects, semicolons,
 shelly "find files modified in the last 24h and pipe to wc -l"
 ```
 
+A prompt that starts with a dash would be read as an option. Put `--` first to
+end option parsing; everything after it is the prompt:
+
+```sh
+shelly -- -la but sorted by size
+```
+
 At the suggestion menu:
 
 | Key       | Action                                                                                                                                                         |
@@ -291,17 +308,28 @@ scripts/publish.sh         # multi-RID release script
 
 ### Releasing
 
-CI builds release artifacts when a `v*` tag is pushed:
+A release happens when a commit lands on `main` with a `<Version>` in
+`Directory.Build.props` that hasn't been tagged yet. To cut one:
+
+1. Bump `<Version>` in `Directory.Build.props`.
+2. Rename the `Unreleased` heading in `CHANGELOG.md` to that version (for
+   example `## [1.2.0]`). Its section becomes the release notes.
+3. Merge to `main`.
+
+The `release.yml` workflow then builds Native AOT binaries on native
+Linux, Windows, and macOS runners (AOT can't cross-compile between operating
+systems), packages each RID, generates `SHA256SUMS.txt`, and creates the
+GitHub release and the tag (the raw version, no `v` prefix). If the version is
+already tagged, the run does nothing.
+
+To try the builds without releasing, run the workflow manually from the
+Actions tab (**workflow_dispatch**) with `dry_run` enabled, the default. It
+builds every RID and uploads one artifact per RID, without tagging or
+releasing, even if the version is already tagged:
 
 ```sh
-git tag v0.1.0
-git push origin v0.1.0
+gh workflow run release.yml --ref <branch> -f dry_run=true
 ```
-
-The `release.yml` workflow builds on Linux/Windows/macOS runners, packages
-each RID, generates `SHA256SUMS.txt`, and attaches everything to a GitHub
-release. You can also trigger it manually from the Actions tab via
-**workflow_dispatch**.
 
 ## License
 
