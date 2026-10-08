@@ -112,6 +112,19 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # The engine zips the Windows archives, and Git Bash on the Windows
+      # runner has no zip.
+      - name: Install zip (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: choco install zip -y --no-progress
+
+      # The engine uses an empty-array expansion that bash 3.2 (the macOS
+      # system bash) rejects under `set -u`; bash 4.4+ is fine.
+      - name: Install modern bash (macOS)
+        if: runner.os == 'macOS'
+        run: brew install bash
+
       # -v is passed explicitly so the engine never has to grep the props file
       # (grep -oP isn't reliable in Git Bash / BSD userlands).
       - name: Publish release binaries
@@ -120,7 +133,12 @@ jobs:
           VERSION: ${{ needs.check.outputs.version }}
           PRIMARY_RID: ${{ matrix.primary_rid }}
           SECONDARY_RID: ${{ matrix.secondary_rid }}
-        run: scripts/publish.sh -v "$VERSION" "$PRIMARY_RID" $SECONDARY_RID
+        run: |
+          publish_shell=bash
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            publish_shell="$(brew --prefix)/bin/bash"
+          fi
+          "$publish_shell" scripts/publish.sh -v "$VERSION" "$PRIMARY_RID" $SECONDARY_RID
 
       - name: Upload ${{ matrix.primary_rid }} archive
         uses: actions/upload-artifact@v4
