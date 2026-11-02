@@ -16,7 +16,7 @@ internal sealed class FakeChatProvider : IChatProvider
 
 	public Task<string> GetSuggestionAsync(
 		string prompt,
-		string context,
+		ShellContext context,
 		CancellationToken cancellationToken = default)
 	{
 		SuggestionPrompts.Add(prompt);
@@ -28,7 +28,7 @@ internal sealed class FakeChatProvider : IChatProvider
 
 	public Task<string> ExplainCommandAsync(
 		string command,
-		string context,
+		ShellContext context,
 		CancellationToken cancellationToken = default)
 	{
 		ExplanationCommands.Add(command);

@@ -7,6 +7,8 @@
         <RootNamespace>JDMallen.Shelly</RootNamespace>
         <RollForward>LatestMajor</RollForward>
         <IsAotCompatible>true</IsAotCompatible>
+        <!-- LibraryImport (process-tree P/Invokes in ProcessTree.cs) requires it. -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <!-- Resources/Prompts.resx is en-US; skips a satellite lookup for it. -->
         <NeutralLanguage>en-US</NeutralLanguage>
     </PropertyGroup>

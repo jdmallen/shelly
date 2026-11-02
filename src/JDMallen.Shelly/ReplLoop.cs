@@ -7,26 +7,30 @@ public sealed class ReplLoop
 	private readonly IClipboard _clipboard;
 	private readonly bool _editEnabled;
 	private readonly bool _clipboardEnabled;
+	private readonly ShellContext _context;
 
 	internal ReplLoop(
 		IChatProvider provider,
 		IConsoleIO io,
 		IClipboard clipboard,
-		bool editEnabled = false)
+		bool editEnabled = false,
+		ShellContext? context = null)
 	{
 		_provider = provider;
+		_context = context ?? ShellContext.Detect();
 		_io = io;
 		_clipboard = clipboard;
 		_editEnabled = editEnabled;
 		_clipboardEnabled = clipboard.IsAvailable;
 	}
 
-	public ReplLoop(IChatProvider provider)
+	public ReplLoop(IChatProvider provider, ShellContext context)
 		: this(
 			provider,
 			new SystemConsoleIO(),
 			new SystemClipboard(),
-			EditHandoff.IsEnabled)
+			EditHandoff.IsEnabled,
+			context)
 	{
 	}
 
@@ -34,7 +38,7 @@ public sealed class ReplLoop
 		string? initialPrompt,
 		CancellationToken cancellationToken = default)
 	{
-		string context = ShellContext.Build();
+		ShellContext context = _context;
 		string? prompt = initialPrompt;
 
 		while (true)
@@ -104,7 +108,7 @@ public sealed class ReplLoop
 
 	private async Task<(ActionOutcome, string?)> ActOnSuggestionAsync(
 		string suggestion,
-		string context,
+		ShellContext context,
 		CancellationToken cancellationToken)
 	{
 		while (true)

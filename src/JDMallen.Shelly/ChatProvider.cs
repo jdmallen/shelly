@@ -27,7 +27,7 @@ public sealed class ChatProvider(
 
 	public Task<string> GetSuggestionAsync(
 		string prompt,
-		string context,
+		ShellContext context,
 		CancellationToken cancellationToken = default)
 		=> ChatAsync(
 			Prompts.Suggestion(context),
@@ -37,7 +37,7 @@ public sealed class ChatProvider(
 
 	public Task<string> ExplainCommandAsync(
 		string command,
-		string context,
+		ShellContext context,
 		CancellationToken cancellationToken = default)
 		=> ChatAsync(
 			Prompts.Explain(context),

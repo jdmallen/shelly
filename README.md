@@ -253,7 +253,7 @@ At the suggestion menu:
 
 | Key       | Action                                                                                                                                                         |
 |-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `x`       | Execute the suggested command in your `$SHELL` (or `cmd.exe` on Windows)                                                                                       |
+| `x`       | Execute the suggested command in the shell you ran `shelly` from ([see below](#shell-detection))                                                              |
 | `e`       | Edit — drop the command onto your next prompt, unexecuted, to tweak before running (requires [shell integration](#edit-on-the-command-line-shell-integration)) |
 | `p`       | Explain what the command does                                                                                                                                  |
 | `c`       | Copy the command to the clipboard and quit                                                                                                                     |
@@ -263,6 +263,30 @@ At the suggestion menu:
 The `[e]dit` and `[c]opy` options only appear when they can actually work:
 `edit` requires the shell wrapper below, and `copy` requires a graphical
 session with a clipboard tool (so it's hidden over headless/SSH sessions).
+
+### Shell detection
+
+shelly writes commands for the shell you run it from, and `[x]` executes them
+in that same shell. Run it from fish and you get fish syntax; from PowerShell,
+cmdlets; from `dash` or `sh`, POSIX-only commands with no bashisms. Detected
+shells: bash, zsh, POSIX sh (`sh`, `dash`, `ash`, `yash`, `posh`), KornShell,
+fish, tcsh/csh, PowerShell 7 (`pwsh`), Windows PowerShell 5.1, `cmd.exe`,
+Nushell and Elvish.
+
+shelly finds the shell by walking up its parent processes to the nearest known
+shell, so `sudo`, `env` or `dotnet run` in between don't hide it. This is the
+shell you're actually in, which can differ from your login shell: typing `bash`
+inside a zsh session makes shelly answer for bash. If no shell is found among
+its ancestors, it falls back to `$SHELL` (`%ComSpec%` on Windows).
+
+To force a shell, set `SHELLY_SHELL` to a name or path:
+
+```sh
+SHELLY_SHELL=fish shelly list files by size
+```
+
+A shell shelly doesn't know is still passed to the model by name and run with
+`-c`.
 
 ### Language
 

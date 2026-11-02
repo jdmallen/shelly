@@ -5,6 +5,25 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0]
+
+### Added
+
+- **Shell-aware suggestions.** shelly now detects the shell it was launched
+  from (bash, zsh, POSIX sh, KornShell, fish, tcsh, PowerShell 7, Windows
+  PowerShell 5.1, `cmd.exe`, Nushell, Elvish) by walking its parent
+  processes, and tells the model to write commands for that shell, with
+  syntax hints for the ones a model tends to answer in bash (fish, POSIX sh,
+  PowerShell, `cmd.exe`, csh, Nushell, Elvish). `[p]` explains the command
+  in terms of that shell. Set `SHELLY_SHELL` to override detection.
+
+### Changed
+
+- **`[x]` runs the command in the detected shell** instead of `$SHELL` (or
+  `cmd.exe` on Windows), so a command written for the shell you're in runs in
+  that shell. PowerShell runs with `-NoProfile -Command`. A shell that can't
+  be started now reports an error instead of crashing.
+
 ## [1.3.0]
 
 ### Added

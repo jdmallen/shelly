@@ -10,9 +10,11 @@ namespace JDMallen.Shelly;
 /// </summary>
 internal static class Prompts
 {
-	public static string Suggestion(string context) =>
+	public static string Suggestion(ShellContext context) =>
 		$"""
 		 You are a shell command expert. Given a description of what the user wants to do, output ONLY the shell command(s) that accomplish it. No explanations, no markdown, no code fences, no backticks, no language tags — just the raw command(s). If multiple commands are needed, separate them with && or use appropriate shell syntax.
+
+		 {ShellInstruction(context.Shell)}
 
 		 EXAMPLES:
 		 Bad:
@@ -25,10 +27,10 @@ internal static class Prompts
 		 Bad: `find . -name '*.cs'`
 		 Good: find . -name '*.cs'
 
-		 Context: {context}
+		 Context: {context.Describe()}
 		 """;
 
-	public static string Explain(string context, CultureInfo? culture = null)
+	public static string Explain(ShellContext context, CultureInfo? culture = null)
 	{
 		string responseLanguage = Strings.ResponseLanguage(culture);
 		string languageInstruction = responseLanguage.Length == 0
@@ -36,9 +38,20 @@ internal static class Prompts
 			: $" Write your explanation in {responseLanguage}.";
 
 		return $"""
-		        You are a shell command expert. The user will give you a shell command. Explain in 1-3 short sentences what it does, including what each pipe stage or flag contributes. Plain text only — no markdown, no code fences, no bullet lists. Be concise.{languageInstruction}
+		        You are a shell command expert. The user will give you a shell command. Explain in 1-3 short sentences what it does, including what each pipe stage or flag contributes. Plain text only — no markdown, no code fences, no bullet lists. Be concise. The command is for {context.Shell.DisplayName}; explain it in terms of that shell's syntax.{languageInstruction}
 
-		        Context: {context}
+		        Context: {context.Describe()}
 		        """;
+	}
+
+	/// <summary>
+	/// Names the user's shell, plus a syntax hint for shells whose syntax a
+	/// model tends to get wrong by defaulting to bash.
+	/// </summary>
+	private static string ShellInstruction(Shell shell)
+	{
+		string instruction = $"The user's shell is {shell.DisplayName}. Write the command(s) for {shell.DisplayName} specifically, using its syntax and builtins, so they run correctly when typed into it.";
+
+		return shell.PromptHint is null ? instruction : $"{instruction} {shell.PromptHint}";
 	}
 }

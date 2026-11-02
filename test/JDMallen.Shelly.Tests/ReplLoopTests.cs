@@ -13,7 +13,8 @@ public class ReplLoopTests
 		_provider,
 		_io,
 		_clipboard,
-		editEnabled);
+		editEnabled,
+		new ShellContext(Shell.FromNameOrPath("bash"), "os", "/pwd"));
 
 	[Fact]
 	public async Task Execute_ReturnsExecuteResultWithSuggestion()

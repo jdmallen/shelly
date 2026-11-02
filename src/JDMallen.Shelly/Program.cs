@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -75,7 +76,8 @@ public static class Program
 			return 1;
 		}
 
-		ReplResult result = await new ReplLoop(provider).RunAsync(prompt);
+		ShellContext context = ShellContext.Detect();
+		ReplResult result = await new ReplLoop(provider, context).RunAsync(prompt);
 
 		if (string.IsNullOrWhiteSpace(result.Command))
 		{
@@ -84,7 +86,7 @@ public static class Program
 
 		return result.Action switch
 		{
-			ReplAction.Execute => await ExecuteAsync(result.Command),
+			ReplAction.Execute => await ExecuteAsync(result.Command, context.Shell),
 			ReplAction.Edit    => WriteEditHandoff(result.Command),
 			_                  => 0,
 		};
@@ -223,25 +225,37 @@ public static class Program
 		return null;
 	}
 
-	private static async Task<int> ExecuteAsync(string command)
+	// Runs in the shell the command was written for, i.e. the one shelly was
+	// launched from, not $SHELL: a fish command fails under zsh.
+	private static async Task<int> ExecuteAsync(string command, Shell shell)
 	{
-		(string shell, string shellArg) = OperatingSystem.IsWindows()
-			? ("cmd.exe", "/c")
-			: (Environment.GetEnvironmentVariable("SHELL") ?? "/bin/bash", "-c");
-
 		var startInfo = new ProcessStartInfo
 		{
-			FileName = shell,
+			FileName = shell.Executable,
 			UseShellExecute = false,
 		};
-		startInfo.ArgumentList.Add(shellArg);
+		foreach (string flag in shell.CommandFlags)
+		{
+			startInfo.ArgumentList.Add(flag);
+		}
+
 		startInfo.ArgumentList.Add(command);
 
 		Console.ForegroundColor = ConsoleColor.Cyan;
 		Console.WriteLine(Strings.Executing);
 		Console.ResetColor();
 
-		Process? process = Process.Start(startInfo);
+		Process? process;
+		try
+		{
+			process = Process.Start(startInfo);
+		}
+		catch (Win32Exception)
+		{
+			// The shell isn't on PATH, e.g. a mistyped SHELLY_SHELL.
+			process = null;
+		}
+
 		if (process is null)
 		{
 			await Console.Error.WriteLineAsync(Strings.Error(Strings.FailedToStartShell));
