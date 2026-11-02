@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **`--info`** prints the active configuration without calling the model:
+  config file path, provider, endpoint, model or deployment, token budget,
+  whether the provider's API key variable is set (never its value), and the
+  detected shell.
+- **`azure.maxTokens`** in the config file sets the Azure generation budget
+  (default `500`, as before). Reasoning deployments spend their hidden
+  thinking from it, so they may need more to return an answer.
+
+### Fixed
+
+- **Errors exit non-zero.** A failed model request, or an empty suggestion,
+  now exits `1` instead of `0`.
+
 ## [1.4.0]
 
 ### Added

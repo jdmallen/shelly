@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>バージョン情報を表示します。</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>現在の設定（プロバイダー、エンドポイント、モデル、シェル）を表示します。</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>オプションの解析を終了します。残りはプロンプトとして扱われます。</value>
 	</data>

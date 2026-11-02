@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>แสดงข้อมูลเวอร์ชัน</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>แสดงการกำหนดค่าปัจจุบัน: ผู้ให้บริการ, ปลายทาง, โมเดล และเชลล์</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>สิ้นสุดการแยกวิเคราะห์ตัวเลือก ส่วนที่เหลือคือพรอมต์</value>
 	</data>

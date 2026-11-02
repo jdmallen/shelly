@@ -9,6 +9,8 @@ public sealed class ShellyConfig
 
 	public AnthropicConfig Anthropic { get; set; } = new();
 
+	public AzureConfig Azure { get; set; } = new();
+
 	[JsonPropertyName("openai")]
 	public OpenAIConfig OpenAI { get; set; } = new();
 
@@ -76,6 +78,19 @@ public sealed class ShellyConfig
 public sealed class AnthropicConfig
 {
 	public string Model { get; set; } = "claude-haiku-4-5-20251001";
+}
+
+/// <summary>
+/// Azure OpenAI settings that aren't secrets. The key, endpoint and deployment
+/// stay in environment variables.
+/// </summary>
+public sealed class AzureConfig
+{
+	/// <summary>
+	/// Generation budget. A reasoning deployment spends its hidden thinking from
+	/// this same budget, so raise it (e.g. to 2048) if answers come back empty.
+	/// </summary>
+	public int MaxTokens { get; set; } = ChatProvider.DefaultMaxTokens;
 }
 
 /// <summary>

@@ -196,23 +196,25 @@ public class ReplLoopTests
 	}
 
 	[Fact]
-	public async Task EmptySuggestionFromProvider_Quits()
+	public async Task EmptySuggestionFromProvider_Fails()
 	{
 		_provider.SuggestionResponses.Enqueue("");
 
 		ReplResult result = await NewLoop().RunAsync("anything", TestContext.Current.CancellationToken);
 
+		Assert.Equal(ReplAction.Failed, result.Action);
 		Assert.False(result.ShouldExecute);
 		Assert.Contains("No suggestion received", _io.Output.ToString());
 	}
 
 	[Fact]
-	public async Task ProviderThrowsOnSuggestion_QuitsWithError()
+	public async Task ProviderThrowsOnSuggestion_Fails()
 	{
 		_provider.SuggestionThrow = new InvalidOperationException("network down");
 
 		ReplResult result = await NewLoop().RunAsync("anything", TestContext.Current.CancellationToken);
 
+		Assert.Equal(ReplAction.Failed, result.Action);
 		Assert.False(result.ShouldExecute);
 		Assert.Contains("network down", _io.Output.ToString());
 	}

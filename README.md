@@ -165,6 +165,9 @@ Default contents:
   "anthropic": {
     "model": "claude-haiku-4-5-20251001"
   },
+  "azure": {
+    "maxTokens": 500
+  },
   "openai": {
     "baseUrl": "",
     "model": "",
@@ -174,8 +177,11 @@ Default contents:
 }
 ```
 
-To switch to Azure, change `provider` to `"azure"`. Azure has no other config
-file fields — all of its settings come from the environment variables above.
+To switch to Azure, change `provider` to `"azure"`. The key, endpoint and
+deployment come from the environment variables above; the config file only
+holds `azure.maxTokens`, the generation budget. A reasoning deployment spends
+its hidden thinking from that same budget, so if answers come back empty
+("No suggestion received"), raise it, e.g. to `2048`.
 
 You can also pin a different Anthropic model by editing `anthropic.model`.
 
@@ -248,6 +254,18 @@ end option parsing; everything after it is the prompt:
 ```sh
 shelly -- -la but sorted by size
 ```
+
+To check which provider, endpoint and model shelly will use (and which shell
+it detected) without sending anything:
+
+```sh
+shelly --info
+```
+
+API keys are reported only as set or not set, never shown.
+
+shelly exits `1` when the model request fails or returns no suggestion, so
+scripts can tell an error from a normal quit.
 
 At the suggestion menu:
 

@@ -9,6 +9,8 @@ internal abstract record CommandLineArgs
 
 	public sealed record ShowVersion : CommandLineArgs;
 
+	public sealed record ShowInfo : CommandLineArgs;
+
 	public sealed record Error(string Message) : CommandLineArgs;
 
 	public sealed record Run(string? Prompt) : CommandLineArgs;
@@ -16,7 +18,7 @@ internal abstract record CommandLineArgs
 	private const string OPTION_TERMINATOR = "--";
 
 	// Hand-written instead of a parsing library: one positional argument plus
-	// two flags, and reflection-free parsing keeps Native AOT publish clean.
+	// three flags, and reflection-free parsing keeps Native AOT publish clean.
 	public static CommandLineArgs Parse(string[] args)
 	{
 		var promptWords = new List<string>();
@@ -41,6 +43,8 @@ internal abstract record CommandLineArgs
 					return new ShowHelp();
 				case "--version":
 					return new ShowVersion();
+				case "--info":
+					return new ShowInfo();
 				default:
 					return new Error(
 						Strings.UnknownOption(argument.TrimStart('-')));

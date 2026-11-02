@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>Wyświetla informacje o wersji.</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>Wyświetl aktywną konfigurację: dostawcę, punkt końcowy, model i powłokę.</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>Kończy przetwarzanie opcji; reszta to prompt.</value>
 	</data>

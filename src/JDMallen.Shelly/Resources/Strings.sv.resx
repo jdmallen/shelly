@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>Visar versionsinformation.</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>Visa den aktiva konfigurationen: leverantör, slutpunkt, modell och skal.</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>Avslutar tolkningen av alternativ; resten är prompten.</value>
 	</data>

@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>버전 정보를 표시합니다.</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>현재 구성(공급자, 엔드포인트, 모델, 셸)을 표시합니다.</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>옵션 구문 분석을 끝냅니다. 나머지는 프롬프트로 처리됩니다.</value>
 	</data>

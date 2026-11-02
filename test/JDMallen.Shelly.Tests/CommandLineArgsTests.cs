@@ -35,6 +35,12 @@ public class CommandLineArgsTests
 	}
 
 	[Fact]
+	public void Parse_InfoFlag_ShowInfo()
+	{
+		Assert.IsType<CommandLineArgs.ShowInfo>(CommandLineArgs.Parse(["--info"]));
+	}
+
+	[Fact]
 	public void Parse_UnknownOption_ReturnsError()
 	{
 		var error = Assert.IsType<CommandLineArgs.Error>(

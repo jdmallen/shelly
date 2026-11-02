@@ -120,6 +120,20 @@ public class ProviderSelectionTests
 		Assert.Null(provider);
 		Assert.Contains("openai.maxTokens", error);
 	}
+
+	[Theory]
+	[InlineData(0)]
+	[InlineData(-1)]
+	public void CreateProvider_AzureNonPositiveMaxTokens_Fails(int maxTokens)
+	{
+		var config = new ShellyConfig { Provider = "azure" };
+		config.Azure.MaxTokens = maxTokens;
+
+		(IChatProvider? provider, string error) = Create(config);
+
+		Assert.Null(provider);
+		Assert.Contains("azure.maxTokens", error);
+	}
 }
 
 public class ShellyConfigTests
@@ -139,6 +153,15 @@ public class ShellyConfigTests
 		// of its budget on a thinking block that never reaches the caller.
 		Assert.Equal(300, config.TimeoutSeconds);
 		Assert.Equal(2048, config.MaxTokens);
+	}
+
+	[Fact]
+	public void Deserialize_ReadsAzureMaxTokens_DefaultsTo500()
+	{
+		Assert.Equal(500, Deserialize("{ \"provider\": \"azure\" }").Azure.MaxTokens);
+		Assert.Equal(
+			2048,
+			Deserialize("{ \"azure\": { \"maxTokens\": 2048 } }").Azure.MaxTokens);
 	}
 
 	[Fact]

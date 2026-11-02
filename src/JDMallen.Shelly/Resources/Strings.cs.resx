@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>Zobrazí informace o verzi.</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>Zobrazit aktivní konfiguraci: poskytovatele, koncový bod, model a shell.</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>Ukončí zpracování přepínačů; zbytek je prompt.</value>
 	</data>

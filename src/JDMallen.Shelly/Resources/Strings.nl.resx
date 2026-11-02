@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>Toont versie-informatie.</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>Actieve configuratie tonen: provider, endpoint, model en shell.</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>Beëindigt het verwerken van opties; de rest is de prompt.</value>
 	</data>

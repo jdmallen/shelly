@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>Menampilkan informasi versi.</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>Tampilkan konfigurasi aktif: penyedia, endpoint, model, dan shell.</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>Mengakhiri penguraian opsi; sisanya adalah prompt.</value>
 	</data>

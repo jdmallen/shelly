@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>Показати відомості про версію.</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>Показати поточну конфігурацію: постачальника, кінцеву точку, модель і оболонку.</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>Завершує розбір параметрів; решта вважається запитом.</value>
 	</data>

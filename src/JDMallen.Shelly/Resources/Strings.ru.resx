@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>Показать сведения о версии.</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>Показать текущую конфигурацию: провайдер, конечную точку, модель и оболочку.</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>Завершает разбор параметров; остальное считается запросом.</value>
 	</data>

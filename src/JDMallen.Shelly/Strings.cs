@@ -63,6 +63,8 @@ internal static class Strings
 
 	public static string HelpOptionVersion => Get(nameof(HelpOptionVersion));
 
+	public static string HelpOptionInfo => Get(nameof(HelpOptionInfo));
+
 	public static string HelpOptionTerminator => Get(nameof(HelpOptionTerminator));
 
 	public static string HelpPrompt => Get(nameof(HelpPrompt));

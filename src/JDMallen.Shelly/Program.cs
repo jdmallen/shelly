@@ -22,6 +22,16 @@ public static class Program
 				Console.WriteLine(BuildVersionLine());
 
 				return 0;
+			case CommandLineArgs.ShowInfo:
+				Console.WriteLine(
+					InfoReport.Build(
+						BuildVersionLine(),
+						ShellyConfig.ConfigPath(),
+						ShellyConfig.Load(),
+						ShellDetector.Detect(),
+						Environment.GetEnvironmentVariable));
+
+				return 0;
 			case CommandLineArgs.Error error:
 				await Console.Error.WriteLineAsync(error.Message);
 				await Console.Error.WriteLineAsync();
@@ -60,6 +70,8 @@ public static class Program
 
 		          --version          {Strings.HelpOptionVersion}
 
+		          --info             {Strings.HelpOptionInfo}
+
 		          --                 {Strings.HelpOptionTerminator}
 
 		          prompt (pos. 0)    {Strings.HelpPrompt}
@@ -78,6 +90,11 @@ public static class Program
 
 		ShellContext context = ShellContext.Detect();
 		ReplResult result = await new ReplLoop(provider, context).RunAsync(prompt);
+
+		if (result.Action == ReplAction.Failed)
+		{
+			return 1;
+		}
 
 		if (string.IsNullOrWhiteSpace(result.Command))
 		{
@@ -120,7 +137,7 @@ public static class Program
 	{
 		return config.Provider.ToLowerInvariant() switch
 		{
-			"azure"             => CreateAzureProvider(),
+			"azure"             => CreateAzureProvider(config.Azure),
 			"anthropic"         => CreateAnthropicProvider(config.Anthropic),
 			"openai" or "local" => CreateOpenAIProvider(config.OpenAI),
 			_ => Fail(
@@ -184,8 +201,13 @@ public static class Program
 			cfg.MaxTokens);
 	}
 
-	private static IChatProvider? CreateAzureProvider()
+	private static IChatProvider? CreateAzureProvider(AzureConfig cfg)
 	{
+		if (cfg.MaxTokens <= 0)
+		{
+			return Fail(Strings.MustBeGreaterThanZero("azure.maxTokens", cfg.MaxTokens));
+		}
+
 		string? apiKey = Environment.GetEnvironmentVariable(ChatProvider.AzureApiKeyEnvVar);
 		string? endpoint = Environment.GetEnvironmentVariable(ChatProvider.AzureEndpointEnvVar);
 		string? deployment = Environment.GetEnvironmentVariable(ChatProvider.AzureDeploymentEnvVar);
@@ -215,7 +237,8 @@ public static class Program
 		return new ChatProvider(
 			new AzureOpenAIChatClient(
 				CreateHttpClient(HOSTED_TIMEOUT_SECONDS),
-				new AzureOpenAIClientOptions(apiKey!, endpoint!, deployment!)));
+				new AzureOpenAIClientOptions(apiKey!, endpoint!, deployment!)),
+			cfg.MaxTokens);
 	}
 
 	private static IChatProvider? Fail(string message)

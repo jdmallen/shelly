@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>Hiển thị thông tin phiên bản.</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>Hiển thị cấu hình hiện hành: nhà cung cấp, điểm cuối, mô hình và shell.</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>Kết thúc phân tích tùy chọn; phần còn lại là prompt.</value>
 	</data>

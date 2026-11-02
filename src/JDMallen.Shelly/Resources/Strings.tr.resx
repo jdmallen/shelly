@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>Sürüm bilgisini gösterir.</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>Etkin yapılandırmayı göster: sağlayıcı, uç nokta, model ve kabuk.</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>Seçenek ayrıştırmayı bitirir; kalanı istemdir.</value>
 	</data>

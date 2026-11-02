@@ -65,14 +65,14 @@ public sealed class ReplLoop
 			{
 				_io.Write($"{Strings.Error(ex.Message)}\n", ConsoleColor.Red);
 
-				return ReplResult.Quit();
+				return ReplResult.Failed();
 			}
 
 			if (string.IsNullOrWhiteSpace(suggestion))
 			{
 				_io.Write($"{Strings.NoSuggestion}\n", ConsoleColor.Red);
 
-				return ReplResult.Quit();
+				return ReplResult.Failed();
 			}
 
 			(ActionOutcome outcome, string? refinement) = await ActOnSuggestionAsync(
@@ -253,6 +253,9 @@ public enum ReplAction
 	Quit,
 	Execute,
 	Edit,
+
+	/// <summary>The model call failed or gave no suggestion; exit non-zero.</summary>
+	Failed,
 }
 
 public readonly record struct ReplResult(ReplAction Action, string? Command)
@@ -264,4 +267,6 @@ public readonly record struct ReplResult(ReplAction Action, string? Command)
 	public static ReplResult Edit(string command) => new(ReplAction.Edit, command);
 
 	public static ReplResult Quit() => new(ReplAction.Quit, null);
+
+	public static ReplResult Failed() => new(ReplAction.Failed, null);
 }

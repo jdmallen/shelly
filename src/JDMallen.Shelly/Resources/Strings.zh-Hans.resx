@@ -148,6 +148,9 @@
     <data name="HelpOptionVersion" xml:space="preserve">
 		<value>显示版本信息。</value>
 	</data>
+    <data name="HelpOptionInfo" xml:space="preserve">
+		<value>显示当前配置：提供商、端点、模型和 shell。</value>
+	</data>
     <data name="HelpOptionTerminator" xml:space="preserve">
 		<value>结束选项解析；其余内容作为提示词。</value>
 	</data>
