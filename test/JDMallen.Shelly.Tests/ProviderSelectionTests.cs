@@ -158,7 +158,11 @@ public class ShellyConfigTests
 	[Fact]
 	public void Deserialize_ReadsAzureMaxTokens_DefaultsTo500()
 	{
-		Assert.Equal(500, Deserialize("{ \"provider\": \"azure\" }").Azure.MaxTokens);
+		AzureConfig defaults = Deserialize("{ \"provider\": \"azure\" }").Azure;
+		Assert.Equal(500, defaults.MaxTokens);
+		Assert.False(defaults.ReasoningModel);
+		Assert.True(
+			Deserialize("{ \"azure\": { \"reasoningModel\": true } }").Azure.ReasoningModel);
 		Assert.Equal(
 			2048,
 			Deserialize("{ \"azure\": { \"maxTokens\": 2048 } }").Azure.MaxTokens);

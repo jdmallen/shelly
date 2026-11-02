@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.4.1]
 
 ### Added
 
@@ -16,6 +16,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`azure.maxTokens`** in the config file sets the Azure generation budget
   (default `500`, as before). Reasoning deployments spend their hidden
   thinking from it, so they may need more to return an answer.
+- **`azure.reasoningModel`** (default `false`): for reasoning deployments,
+  stops sending `temperature`, which they reject.
+
+### Changed
+
+- **JDMallen.Toolbox.AI 3.1.0 → 4.2.1.** Azure requests now send
+  `max_completion_tokens` instead of `max_tokens`, and no longer send `top_p`
+  or the penalty parameters (they were the service defaults). Fixes `400
+  unsupported_parameter` from reasoning deployments such as `gpt-6-luna`.
 
 ### Fixed
 

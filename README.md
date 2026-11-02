@@ -166,7 +166,8 @@ Default contents:
     "model": "claude-haiku-4-5-20251001"
   },
   "azure": {
-    "maxTokens": 500
+    "maxTokens": 500,
+    "reasoningModel": false
   },
   "openai": {
     "baseUrl": "",
@@ -178,10 +179,17 @@ Default contents:
 ```
 
 To switch to Azure, change `provider` to `"azure"`. The key, endpoint and
-deployment come from the environment variables above; the config file only
-holds `azure.maxTokens`, the generation budget. A reasoning deployment spends
-its hidden thinking from that same budget, so if answers come back empty
-("No suggestion received"), raise it, e.g. to `2048`.
+deployment come from the environment variables above; the config file holds
+two Azure settings:
+
+- `azure.maxTokens`: the generation budget, sent as `max_completion_tokens`.
+- `azure.reasoningModel`: set `true` for a reasoning deployment (o-series,
+  gpt-5 and later reasoning models). These reject sampling parameters, so
+  shelly then stops sending `temperature`.
+
+A reasoning deployment spends its hidden thinking from the same budget, so
+pair `reasoningModel: true` with a larger `maxTokens`, e.g. `2048`; too small
+a budget returns an empty answer ("No suggestion received").
 
 You can also pin a different Anthropic model by editing `anthropic.model`.
 

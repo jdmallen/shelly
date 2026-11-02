@@ -24,7 +24,11 @@ public class InfoReportTests
 		_environment[ChatProvider.AzureApiKeyEnvVar] = SECRET;
 
 		string report = Build(
-			new ShellyConfig { Provider = "azure", Azure = new AzureConfig { MaxTokens = 2048 } });
+			new ShellyConfig
+			{
+				Provider = "azure",
+				Azure = new AzureConfig { MaxTokens = 2048, ReasoningModel = true },
+			});
 
 		Assert.StartsWith("shelly 9.9.9", report);
 		Assert.Contains("provider:   azure", report);
@@ -32,6 +36,7 @@ public class InfoReportTests
 			"endpoint:   https://example.openai.azure.com (from AZURE_OPENAI_ENDPOINT_HOST)",
 			report);
 		Assert.Contains("deployment: gpt-6-luna (from AZURE_OPENAI_DEPLOYMENT)", report);
+		Assert.Contains("reasoning:  yes (temperature not sent)", report);
 		Assert.Contains("max tokens: 2048", report);
 		Assert.Contains("api key:    AZURE_OPENAI_API_KEY is set", report);
 		Assert.Contains("shell:      Zsh (/usr/bin/zsh -c)", report);

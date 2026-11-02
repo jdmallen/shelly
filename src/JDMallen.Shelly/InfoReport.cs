@@ -31,6 +31,7 @@ internal static class InfoReport
 				string? deployment = getEnvironmentVariable(ChatProvider.AzureDeploymentEnvVar);
 				rows.Add(("endpoint", FromEnvironment(endpoint, ChatProvider.AzureEndpointEnvVar)));
 				rows.Add(("deployment", FromEnvironment(deployment, ChatProvider.AzureDeploymentEnvVar)));
+				rows.Add(("reasoning", config.Azure.ReasoningModel ? "yes (temperature not sent)" : "no"));
 				rows.Add(("max tokens", config.Azure.MaxTokens.ToString()));
 				rows.Add(("api key", KeyStatus(ChatProvider.AzureApiKeyEnvVar, getEnvironmentVariable)));
 

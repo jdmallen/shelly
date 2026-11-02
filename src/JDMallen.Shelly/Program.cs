@@ -237,7 +237,10 @@ public static class Program
 		return new ChatProvider(
 			new AzureOpenAIChatClient(
 				CreateHttpClient(HOSTED_TIMEOUT_SECONDS),
-				new AzureOpenAIClientOptions(apiKey!, endpoint!, deployment!)),
+				new AzureOpenAIClientOptions(apiKey!, endpoint!, deployment!)
+				{
+					IsReasoningModel = cfg.ReasoningModel,
+				}),
 			cfg.MaxTokens);
 	}
 

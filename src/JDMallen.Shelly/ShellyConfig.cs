@@ -91,6 +91,13 @@ public sealed class AzureConfig
 	/// this same budget, so raise it (e.g. to 2048) if answers come back empty.
 	/// </summary>
 	public int MaxTokens { get; set; } = ChatProvider.DefaultMaxTokens;
+
+	/// <summary>
+	/// Set for a reasoning deployment (o-series, gpt-5 and later reasoning
+	/// models): <c>temperature</c> is then not sent, because those models
+	/// reject sampling parameters.
+	/// </summary>
+	public bool ReasoningModel { get; set; }
 }
 
 /// <summary>
