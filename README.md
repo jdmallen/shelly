@@ -1,5 +1,7 @@
 # shelly
 
+[Video demo of shelly in use in a BASH shell](https://github.com/user-attachments/assets/393cd4bc-a8dd-453f-a964-23ec077d9aac)
+
 A tiny CLI that turns plain-English descriptions into shell commands using an
 LLM. Modeled on the (now-discontinued) GitHub Copilot `suggest` / `explain`
 CLI, with provider-swappable backends — Anthropic (Claude), Azure OpenAI, or any
