@@ -1,0 +1,101 @@
+using Xunit;
+
+namespace JDMallen.Shelly.Tests;
+
+public class ConfigCheckTests
+{
+	private readonly Dictionary<string, string> _environment = [];
+
+	private IReadOnlyList<string> FindMissing(ShellyConfig config, string? parseError = null) =>
+		ConfigCheck.FindMissing(config, parseError, name => _environment.GetValueOrDefault(name));
+
+	[Fact]
+	public void Anthropic_WithoutKey_NeedsKey()
+	{
+		Assert.Equal([ChatProvider.AnthropicApiKeyEnvVar], FindMissing(new ShellyConfig()));
+	}
+
+	[Fact]
+	public void Anthropic_WithKey_IsReady()
+	{
+		_environment[ChatProvider.AnthropicApiKeyEnvVar] = "x";
+
+		Assert.Empty(FindMissing(new ShellyConfig()));
+	}
+
+	[Fact]
+	public void ParseError_ListsConfigFileFirst()
+	{
+		_environment[ChatProvider.AnthropicApiKeyEnvVar] = "x";
+
+		Assert.Equal([ConfigCheck.CONFIG_FILE], FindMissing(new ShellyConfig(), "bad json"));
+	}
+
+	[Fact]
+	public void UnknownProvider_NeedsProvider()
+	{
+		Assert.Equal([ConfigCheck.PROVIDER_KEY], FindMissing(new ShellyConfig { Provider = "gemini" }));
+	}
+
+	[Theory]
+	[InlineData("openai")]
+	[InlineData("local")]
+	[InlineData("LOCAL")]
+	public void OpenAI_KeyIsOptional(string provider)
+	{
+		var config = new ShellyConfig
+		{
+			Provider = provider,
+			OpenAI = new OpenAIConfig { BaseUrl = "http://localhost:8080/v1", Model = "qwen" },
+		};
+
+		Assert.Empty(FindMissing(config));
+	}
+
+	[Fact]
+	public void OpenAI_ListsBlankAndNonPositiveSettings()
+	{
+		var config = new ShellyConfig
+		{
+			Provider = "openai",
+			OpenAI = new OpenAIConfig { BaseUrl = " ", Model = "", TimeoutSeconds = 0, MaxTokens = -1 },
+		};
+
+		Assert.Equal(
+			["openai.baseUrl", "openai.model", "openai.timeoutSeconds", "openai.maxTokens"],
+			FindMissing(config));
+	}
+
+	[Fact]
+	public void Azure_Unconfigured_ListsEverything()
+	{
+		Assert.Equal(
+			["azure.endpoint", "azure.deployment", ChatProvider.AzureApiKeyEnvVar],
+			FindMissing(new ShellyConfig { Provider = "azure" }));
+	}
+
+	[Fact]
+	public void Azure_FromDeprecatedVariables_StillNeedsMoving()
+	{
+		_environment[ChatProvider.AzureEndpointEnvVar] = "https://example.openai.azure.com";
+		_environment[ChatProvider.AzureDeploymentEnvVar] = "gpt-6-luna";
+		_environment[ChatProvider.AzureApiKeyEnvVar] = "x";
+
+		Assert.Equal(
+			["azure.endpoint", "azure.deployment"],
+			FindMissing(new ShellyConfig { Provider = "azure" }));
+	}
+
+	[Fact]
+	public void Azure_FullyConfigured_IsReady()
+	{
+		_environment[ChatProvider.AzureApiKeyEnvVar] = "x";
+		var config = new ShellyConfig
+		{
+			Provider = "azure",
+			Azure = new AzureConfig { Endpoint = "https://example.openai.azure.com", Deployment = "gpt-6-luna" },
+		};
+
+		Assert.Empty(FindMissing(config));
+	}
+}

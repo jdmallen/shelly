@@ -125,7 +125,7 @@
 		<value>{0} harus lebih besar dari 0 (diperoleh {1}).</value>
 	</data>
     <data name="AzureMisconfiguredFormat" xml:space="preserve">
-		<value>Penyedia Azure salah dikonfigurasi. Variabel lingkungan yang hilang: {0}.</value>
+		<value>Penyedia Azure salah dikonfigurasi. Atur {0} di {1}, atau jalankan 'shelly --config'.</value>
 	</data>
     <data name="UnknownOptionFormat" xml:space="preserve">
 		<value>Opsi '{0}' tidak dikenal.</value>
@@ -159,5 +159,113 @@
 	</data>
     <data name="ResponseLanguage" xml:space="preserve">
 		<value>Indonesian</value>
+	</data>
+    <data name="HelpOptionConfig" xml:space="preserve">
+		<value>Atur penyedia dan pengaturannya secara interaktif.</value>
+	</data>
+    <data name="MainMenuAsk" xml:space="preserve">
+		<value>Ajukan pertanyaan</value>
+	</data>
+    <data name="MainMenuConfigure" xml:space="preserve">
+		<value>Konfigurasi</value>
+	</data>
+    <data name="MainMenuInfo" xml:space="preserve">
+		<value>Info</value>
+	</data>
+    <data name="MainMenuExit" xml:space="preserve">
+		<value>Keluar</value>
+	</data>
+    <data name="DefaultMarker" xml:space="preserve">
+		<value>(bawaan)</value>
+	</data>
+    <data name="ChooseFormat" xml:space="preserve">
+		<value>Pilih (Enter = {0}):</value>
+	</data>
+    <data name="ConfigHeaderFormat" xml:space="preserve">
+		<value>Berkas konfigurasi: {0}</value>
+	</data>
+    <data name="ConfigUnreadableFormat" xml:space="preserve">
+		<value>{0} tidak dapat dibaca: {1}. Menyimpan akan menggantinya dengan nilai yang dimasukkan di sini; berkas saat ini dicadangkan terlebih dahulu.</value>
+	</data>
+    <data name="ContinuePrompt" xml:space="preserve">
+		<value>Lanjutkan?</value>
+	</data>
+    <data name="ProviderHeader" xml:space="preserve">
+		<value>Penyedia:</value>
+	</data>
+    <data name="ProviderOpenAICompatible" xml:space="preserve">
+		<value>Server yang kompatibel dengan OpenAI</value>
+	</data>
+    <data name="SettingsHeader" xml:space="preserve">
+		<value>Pengaturan (Enter mempertahankan nilai dalam kurung siku):</value>
+	</data>
+    <data name="ValueRequired" xml:space="preserve">
+		<value>Nilai wajib diisi.</value>
+	</data>
+    <data name="InvalidPositiveInteger" xml:space="preserve">
+		<value>Masukkan bilangan bulat yang lebih besar dari 0.</value>
+	</data>
+    <data name="InvalidHttpUrl" xml:space="preserve">
+		<value>Masukkan URL lengkap yang diawali http:// atau https://.</value>
+	</data>
+    <data name="ApiKeyHeader" xml:space="preserve">
+		<value>Kunci API:</value>
+	</data>
+    <data name="ApiKeySetFormat" xml:space="preserve">
+		<value>{0} sudah diatur.</value>
+	</data>
+    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+		<value>{0} belum diatur.</value>
+	</data>
+    <data name="ApiKeyOptional" xml:space="preserve">
+		<value>Opsional: sebagian besar server yang di-hosting sendiri tidak memeriksa kunci.</value>
+	</data>
+    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+		<value>Simpan {0} sebagai variabel lingkungan pengguna Windows sekarang?</value>
+	</data>
+    <data name="EnterApiKey" xml:space="preserve">
+		<value>Kunci API (Enter untuk melewati):</value>
+	</data>
+    <data name="Skipped" xml:space="preserve">
+		<value>Dilewati.</value>
+	</data>
+    <data name="UserVariableSavedFormat" xml:space="preserve">
+		<value>{0} disimpan. Terminal yang dibuka mulai sekarang akan melihatnya; yang sudah terbuka tidak.</value>
+	</data>
+    <data name="ShellStartupLineFormat" xml:space="preserve">
+		<value>Tambahkan baris ini ke {0}, ganti {1} dengan kunci Anda, lalu buka terminal baru:</value>
+	</data>
+    <data name="FishUniversalVariableFormat" xml:space="preserve">
+		<value>Jalankan ini sekali, ganti {0} dengan kunci Anda. Fish mengingatnya di semua sesi, jadi tidak perlu berkas startup:</value>
+	</data>
+    <data name="UnknownShellStartupFile" xml:space="preserve">
+		<value>berkas startup shell Anda</value>
+	</data>
+    <data name="SaveChangesPrompt" xml:space="preserve">
+		<value>Simpan perubahan?</value>
+	</data>
+    <data name="ConfigNotSaved" xml:space="preserve">
+		<value>Tidak ada perubahan yang disimpan.</value>
+	</data>
+    <data name="ConfigBackedUpFormat" xml:space="preserve">
+		<value>Berkas sebelumnya dicadangkan ke {0}.</value>
+	</data>
+    <data name="ConfigSavedFormat" xml:space="preserve">
+		<value>{0} disimpan.</value>
+	</data>
+    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+		<value>Tidak dapat menyimpan {0}: {1}</value>
+	</data>
+    <data name="InteractiveTerminalRequired" xml:space="preserve">
+		<value>--config memerlukan terminal interaktif.</value>
+	</data>
+    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+		<value>Peringatan: {0} sudah usang. Atur {1} di {2} sebagai gantinya, atau jalankan 'shelly --config'.</value>
+	</data>
+    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+		<value>perlu diatur: {0}</value>
+	</data>
+    <data name="MenuBackToMainMenu" xml:space="preserve">
+		<value>Kembali ke menu utama</value>
 	</data>
 </root>

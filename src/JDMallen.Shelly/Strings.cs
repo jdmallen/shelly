@@ -69,6 +69,92 @@ internal static class Strings
 
 	public static string HelpPrompt => Get(nameof(HelpPrompt));
 
+	public static string HelpOptionConfig => Get(nameof(HelpOptionConfig));
+
+	public static string MainMenuAsk => Get(nameof(MainMenuAsk));
+
+	public static string MainMenuConfigure => Get(nameof(MainMenuConfigure));
+
+	public static string MainMenuInfo => Get(nameof(MainMenuInfo));
+
+	public static string MainMenuExit => Get(nameof(MainMenuExit));
+
+	public static string MenuBackToMainMenu => Get(nameof(MenuBackToMainMenu));
+
+	public static string DefaultMarker => Get(nameof(DefaultMarker));
+
+	public static string ContinuePrompt => Get(nameof(ContinuePrompt));
+
+	public static string ProviderHeader => Get(nameof(ProviderHeader));
+
+	public static string ProviderOpenAICompatible => Get(nameof(ProviderOpenAICompatible));
+
+	public static string SettingsHeader => Get(nameof(SettingsHeader));
+
+	public static string ValueRequired => Get(nameof(ValueRequired));
+
+	public static string InvalidPositiveInteger => Get(nameof(InvalidPositiveInteger));
+
+	public static string InvalidHttpUrl => Get(nameof(InvalidHttpUrl));
+
+	public static string ApiKeyHeader => Get(nameof(ApiKeyHeader));
+
+	public static string ApiKeyOptional => Get(nameof(ApiKeyOptional));
+
+	public static string EnterApiKey => Get(nameof(EnterApiKey));
+
+	public static string Skipped => Get(nameof(Skipped));
+
+	public static string UnknownShellStartupFile => Get(nameof(UnknownShellStartupFile));
+
+	public static string SaveChangesPrompt => Get(nameof(SaveChangesPrompt));
+
+	public static string ConfigNotSaved => Get(nameof(ConfigNotSaved));
+
+	public static string InteractiveTerminalRequired => Get(nameof(InteractiveTerminalRequired));
+
+	public static string Choose(int defaultNumber) =>
+		Format("ChooseFormat", defaultNumber);
+
+	public static string ConfigHeader(string configPath) =>
+		Format("ConfigHeaderFormat", configPath);
+
+	public static string ConfigUnreadable(string configPath, string message) =>
+		Format("ConfigUnreadableFormat", configPath, message);
+
+	public static string ApiKeySet(string variableName) =>
+		Format("ApiKeySetFormat", variableName);
+
+	public static string ApiKeyNotSet(string variableName) =>
+		Format("ApiKeyNotSetFormat", variableName);
+
+	public static string SetUserVariablePrompt(string variableName) =>
+		Format("SetUserVariablePromptFormat", variableName);
+
+	public static string UserVariableSaved(string variableName) =>
+		Format("UserVariableSavedFormat", variableName);
+
+	public static string ShellStartupLine(string startupFile, string placeholder) =>
+		Format("ShellStartupLineFormat", startupFile, placeholder);
+
+	public static string FishUniversalVariable(string placeholder) =>
+		Format("FishUniversalVariableFormat", placeholder);
+
+	public static string MainMenuNeedsSetup(string missingSettings) =>
+		Format("MainMenuNeedsSetupFormat", missingSettings);
+
+	public static string ConfigBackedUp(string backupPath) =>
+		Format("ConfigBackedUpFormat", backupPath);
+
+	public static string ConfigSaved(string configPath) =>
+		Format("ConfigSavedFormat", configPath);
+
+	public static string ConfigSaveFailed(string configPath, string message) =>
+		Format("ConfigSaveFailedFormat", configPath, message);
+
+	public static string DeprecatedEnvVar(string variableName, string configKey, string configPath) =>
+		Format("DeprecatedEnvVarFormat", variableName, configKey, configPath);
+
 	public static string Error(string message) =>
 		Format("ErrorFormat", message);
 
@@ -87,8 +173,8 @@ internal static class Strings
 	public static string MustBeGreaterThanZero(string settingName, int actualValue) =>
 		Format("MustBeGreaterThanZeroFormat", settingName, actualValue);
 
-	public static string AzureMisconfigured(string missingVariables) =>
-		Format("AzureMisconfiguredFormat", missingVariables);
+	public static string AzureMisconfigured(string missingKeys, string configPath) =>
+		Format("AzureMisconfiguredFormat", missingKeys, configPath);
 
 	public static string UnknownOption(string option) =>
 		Format("UnknownOptionFormat", option);

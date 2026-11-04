@@ -26,24 +26,26 @@ internal static class InfoReport
 
 		switch (config.Provider.ToLowerInvariant())
 		{
-			case "azure":
-				string? endpoint = getEnvironmentVariable(ChatProvider.AzureEndpointEnvVar);
-				string? deployment = getEnvironmentVariable(ChatProvider.AzureDeploymentEnvVar);
-				rows.Add(("endpoint", FromEnvironment(endpoint, ChatProvider.AzureEndpointEnvVar)));
-				rows.Add(("deployment", FromEnvironment(deployment, ChatProvider.AzureDeploymentEnvVar)));
+			case ShellyConfig.AZURE_PROVIDER:
+				rows.Add((
+					"endpoint",
+					Describe(config.Azure.ResolveEndpoint(getEnvironmentVariable), "azure.endpoint")));
+				rows.Add((
+					"deployment",
+					Describe(config.Azure.ResolveDeployment(getEnvironmentVariable), "azure.deployment")));
 				rows.Add(("reasoning", config.Azure.ReasoningModel ? "yes (temperature not sent)" : "no"));
 				rows.Add(("max tokens", config.Azure.MaxTokens.ToString()));
 				rows.Add(("api key", KeyStatus(ChatProvider.AzureApiKeyEnvVar, getEnvironmentVariable)));
 
 				break;
-			case "anthropic":
+			case ShellyConfig.ANTHROPIC_PROVIDER:
 				rows.Add(("endpoint", ANTHROPIC_ENDPOINT));
 				rows.Add(("model", config.Anthropic.Model));
 				rows.Add(("max tokens", ChatProvider.DefaultMaxTokens.ToString()));
 				rows.Add(("api key", KeyStatus(ChatProvider.AnthropicApiKeyEnvVar, getEnvironmentVariable)));
 
 				break;
-			case "openai" or "local":
+			case ShellyConfig.OPENAI_PROVIDER or ShellyConfig.LOCAL_PROVIDER_ALIAS:
 				rows.Add(("endpoint", OrNotSet(config.OpenAI.BaseUrl, "openai.baseUrl")));
 				rows.Add(("model", OrNotSet(config.OpenAI.Model, "openai.model")));
 				rows.Add(("max tokens", config.OpenAI.MaxTokens.ToString()));
@@ -71,10 +73,12 @@ internal static class InfoReport
 		return report.ToString().TrimEnd();
 	}
 
-	private static string FromEnvironment(string? value, string variable) =>
-		string.IsNullOrWhiteSpace(value)
-			? $"(not set: {variable})"
-			: $"{value} (from {variable})";
+	private static string Describe(AzureSetting setting, string configKey) =>
+		!setting.IsSet
+			? $"(not set: {configKey})"
+			: setting.DeprecatedVariable is null
+				? setting.Value!
+				: $"{setting.Value} (deprecated: from {setting.DeprecatedVariable})";
 
 	private static string OrNotSet(string value, string setting) =>
 		string.IsNullOrWhiteSpace(value) ? $"(not set: {setting})" : value;

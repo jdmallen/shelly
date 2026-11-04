@@ -125,7 +125,7 @@
 		<value>{0} musí být větší než 0 (zadáno {1}).</value>
 	</data>
     <data name="AzureMisconfiguredFormat" xml:space="preserve">
-		<value>Poskytovatel Azure je špatně nakonfigurován. Chybějící proměnné prostředí: {0}.</value>
+		<value>Poskytovatel Azure je špatně nakonfigurován. Nastav {0} v {1}, nebo spusť 'shelly --config'.</value>
 	</data>
     <data name="UnknownOptionFormat" xml:space="preserve">
 		<value>Přepínač '{0}' je neznámý.</value>
@@ -159,5 +159,113 @@
 	</data>
     <data name="ResponseLanguage" xml:space="preserve">
 		<value>Czech</value>
+	</data>
+    <data name="HelpOptionConfig" xml:space="preserve">
+		<value>Interaktivně nastavit poskytovatele a jeho nastavení.</value>
+	</data>
+    <data name="MainMenuAsk" xml:space="preserve">
+		<value>Položit otázku</value>
+	</data>
+    <data name="MainMenuConfigure" xml:space="preserve">
+		<value>Nastavit</value>
+	</data>
+    <data name="MainMenuInfo" xml:space="preserve">
+		<value>Informace</value>
+	</data>
+    <data name="MainMenuExit" xml:space="preserve">
+		<value>Konec</value>
+	</data>
+    <data name="DefaultMarker" xml:space="preserve">
+		<value>(výchozí)</value>
+	</data>
+    <data name="ChooseFormat" xml:space="preserve">
+		<value>Vyber (Enter = {0}):</value>
+	</data>
+    <data name="ConfigHeaderFormat" xml:space="preserve">
+		<value>Konfigurační soubor: {0}</value>
+	</data>
+    <data name="ConfigUnreadableFormat" xml:space="preserve">
+		<value>{0} nelze zpracovat: {1}. Uložením ho nahradíš zde zadanými hodnotami; stávající soubor se nejprve zazálohuje.</value>
+	</data>
+    <data name="ContinuePrompt" xml:space="preserve">
+		<value>Pokračovat?</value>
+	</data>
+    <data name="ProviderHeader" xml:space="preserve">
+		<value>Poskytovatel:</value>
+	</data>
+    <data name="ProviderOpenAICompatible" xml:space="preserve">
+		<value>Server kompatibilní s OpenAI</value>
+	</data>
+    <data name="SettingsHeader" xml:space="preserve">
+		<value>Nastavení (Enter ponechá hodnotu v hranatých závorkách):</value>
+	</data>
+    <data name="ValueRequired" xml:space="preserve">
+		<value>Hodnota je povinná.</value>
+	</data>
+    <data name="InvalidPositiveInteger" xml:space="preserve">
+		<value>Zadej celé číslo větší než 0.</value>
+	</data>
+    <data name="InvalidHttpUrl" xml:space="preserve">
+		<value>Zadej úplnou adresu URL začínající http:// nebo https://.</value>
+	</data>
+    <data name="ApiKeyHeader" xml:space="preserve">
+		<value>Klíč API:</value>
+	</data>
+    <data name="ApiKeySetFormat" xml:space="preserve">
+		<value>{0} je nastavena.</value>
+	</data>
+    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+		<value>{0} není nastavena.</value>
+	</data>
+    <data name="ApiKeyOptional" xml:space="preserve">
+		<value>Volitelné: většina serverů provozovaných na vlastním hardwaru klíč nekontroluje.</value>
+	</data>
+    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+		<value>Uložit {0} jako uživatelskou proměnnou prostředí Windows?</value>
+	</data>
+    <data name="EnterApiKey" xml:space="preserve">
+		<value>Klíč API (Enter = přeskočit):</value>
+	</data>
+    <data name="Skipped" xml:space="preserve">
+		<value>Přeskočeno.</value>
+	</data>
+    <data name="UserVariableSavedFormat" xml:space="preserve">
+		<value>{0} uložena. Uvidí ji terminály otevřené od teď; ty už otevřené ne.</value>
+	</data>
+    <data name="ShellStartupLineFormat" xml:space="preserve">
+		<value>Přidej tento řádek do {0}, nahraď {1} svým klíčem a otevři nový terminál:</value>
+	</data>
+    <data name="FishUniversalVariableFormat" xml:space="preserve">
+		<value>Spusť jednou, s {0} nahrazeným tvým klíčem. Fish si ho pamatuje napříč relacemi, takže žádný spouštěcí soubor není potřeba:</value>
+	</data>
+    <data name="UnknownShellStartupFile" xml:space="preserve">
+		<value>spouštěcího souboru tvého shellu</value>
+	</data>
+    <data name="SaveChangesPrompt" xml:space="preserve">
+		<value>Uložit změny?</value>
+	</data>
+    <data name="ConfigNotSaved" xml:space="preserve">
+		<value>Žádné změny nebyly uloženy.</value>
+	</data>
+    <data name="ConfigBackedUpFormat" xml:space="preserve">
+		<value>Předchozí soubor zazálohován do {0}.</value>
+	</data>
+    <data name="ConfigSavedFormat" xml:space="preserve">
+		<value>Uloženo: {0}.</value>
+	</data>
+    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+		<value>Nelze uložit {0}: {1}</value>
+	</data>
+    <data name="InteractiveTerminalRequired" xml:space="preserve">
+		<value>--config vyžaduje interaktivní terminál.</value>
+	</data>
+    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+		<value>Upozornění: {0} je zastaralá. Místo toho nastav {1} v {2}, nebo spusť 'shelly --config'.</value>
+	</data>
+    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+		<value>vyžaduje nastavení: {0}</value>
+	</data>
+    <data name="MenuBackToMainMenu" xml:space="preserve">
+		<value>Zpět do hlavní nabídky</value>
 	</data>
 </root>

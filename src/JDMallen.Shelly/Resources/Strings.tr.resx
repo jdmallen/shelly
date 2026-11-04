@@ -125,7 +125,7 @@
 		<value>{0} 0'dan büyük olmalı (alınan: {1}).</value>
 	</data>
     <data name="AzureMisconfiguredFormat" xml:space="preserve">
-		<value>Azure sağlayıcısı yanlış yapılandırılmış. Eksik ortam değişken(ler)i: {0}.</value>
+		<value>Azure sağlayıcısı yanlış yapılandırılmış. {1} içinde {0} ayarla veya 'shelly --config' çalıştır.</value>
 	</data>
     <data name="UnknownOptionFormat" xml:space="preserve">
 		<value>'{0}' seçeneği bilinmiyor.</value>
@@ -159,5 +159,113 @@
 	</data>
     <data name="ResponseLanguage" xml:space="preserve">
 		<value>Turkish</value>
+	</data>
+    <data name="HelpOptionConfig" xml:space="preserve">
+		<value>Sağlayıcıyı ve ayarlarını etkileşimli olarak yapılandır.</value>
+	</data>
+    <data name="MainMenuAsk" xml:space="preserve">
+		<value>Soru sor</value>
+	</data>
+    <data name="MainMenuConfigure" xml:space="preserve">
+		<value>Yapılandır</value>
+	</data>
+    <data name="MainMenuInfo" xml:space="preserve">
+		<value>Bilgi</value>
+	</data>
+    <data name="MainMenuExit" xml:space="preserve">
+		<value>Çık</value>
+	</data>
+    <data name="DefaultMarker" xml:space="preserve">
+		<value>(varsayılan)</value>
+	</data>
+    <data name="ChooseFormat" xml:space="preserve">
+		<value>Seç (Enter = {0}):</value>
+	</data>
+    <data name="ConfigHeaderFormat" xml:space="preserve">
+		<value>Yapılandırma dosyası: {0}</value>
+	</data>
+    <data name="ConfigUnreadableFormat" xml:space="preserve">
+		<value>{0} ayrıştırılamadı: {1}. Kaydetmek onu burada girilen değerlerle değiştirir; mevcut dosyanın önce yedeği alınır.</value>
+	</data>
+    <data name="ContinuePrompt" xml:space="preserve">
+		<value>Devam edilsin mi?</value>
+	</data>
+    <data name="ProviderHeader" xml:space="preserve">
+		<value>Sağlayıcı:</value>
+	</data>
+    <data name="ProviderOpenAICompatible" xml:space="preserve">
+		<value>OpenAI uyumlu sunucu</value>
+	</data>
+    <data name="SettingsHeader" xml:space="preserve">
+		<value>Ayarlar (Enter köşeli parantez içindeki değeri korur):</value>
+	</data>
+    <data name="ValueRequired" xml:space="preserve">
+		<value>Bir değer gerekli.</value>
+	</data>
+    <data name="InvalidPositiveInteger" xml:space="preserve">
+		<value>0'dan büyük bir tam sayı gir.</value>
+	</data>
+    <data name="InvalidHttpUrl" xml:space="preserve">
+		<value>http:// veya https:// ile başlayan tam bir URL gir.</value>
+	</data>
+    <data name="ApiKeyHeader" xml:space="preserve">
+		<value>API anahtarı:</value>
+	</data>
+    <data name="ApiKeySetFormat" xml:space="preserve">
+		<value>{0} ayarlı.</value>
+	</data>
+    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+		<value>{0} ayarlı değil.</value>
+	</data>
+    <data name="ApiKeyOptional" xml:space="preserve">
+		<value>İsteğe bağlı: kendi barındırılan sunucuların çoğu anahtar denetlemez.</value>
+	</data>
+    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+		<value>{0} şimdi Windows kullanıcı ortam değişkeni olarak kaydedilsin mi?</value>
+	</data>
+    <data name="EnterApiKey" xml:space="preserve">
+		<value>API anahtarı (atlamak için Enter):</value>
+	</data>
+    <data name="Skipped" xml:space="preserve">
+		<value>Atlandı.</value>
+	</data>
+    <data name="UserVariableSavedFormat" xml:space="preserve">
+		<value>{0} kaydedildi. Bundan sonra açılan terminaller onu görür; zaten açık olanlar görmez.</value>
+	</data>
+    <data name="ShellStartupLineFormat" xml:space="preserve">
+		<value>{1} yerine anahtarını yazarak bu satırı {0} dosyasına ekle, sonra yeni bir terminal aç:</value>
+	</data>
+    <data name="FishUniversalVariableFormat" xml:space="preserve">
+		<value>{0} yerine anahtarını yazarak bunu bir kez çalıştır. Fish değeri oturumlar arasında hatırlar, bu yüzden başlangıç dosyası gerekmez:</value>
+	</data>
+    <data name="UnknownShellStartupFile" xml:space="preserve">
+		<value>kabuğunun başlangıç dosyası</value>
+	</data>
+    <data name="SaveChangesPrompt" xml:space="preserve">
+		<value>Değişiklikler kaydedilsin mi?</value>
+	</data>
+    <data name="ConfigNotSaved" xml:space="preserve">
+		<value>Hiçbir değişiklik kaydedilmedi.</value>
+	</data>
+    <data name="ConfigBackedUpFormat" xml:space="preserve">
+		<value>Önceki dosya {0} konumuna yedeklendi.</value>
+	</data>
+    <data name="ConfigSavedFormat" xml:space="preserve">
+		<value>{0} kaydedildi.</value>
+	</data>
+    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+		<value>{0} kaydedilemedi: {1}</value>
+	</data>
+    <data name="InteractiveTerminalRequired" xml:space="preserve">
+		<value>--config etkileşimli bir terminal gerektirir.</value>
+	</data>
+    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+		<value>Uyarı: {0} kullanımdan kaldırıldı. Bunun yerine {2} içinde {1} ayarla veya 'shelly --config' çalıştır.</value>
+	</data>
+    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+		<value>yapılandırma gerekli: {0}</value>
+	</data>
+    <data name="MenuBackToMainMenu" xml:space="preserve">
+		<value>Ana menüye dön</value>
 	</data>
 </root>

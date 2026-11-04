@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace JDMallen.Shelly;
 
 internal interface IConsoleIO
@@ -9,6 +11,12 @@ internal interface IConsoleIO
 	string? ReadLine();
 
 	ConsoleKey ReadKey();
+
+	/// <summary>
+	/// Reads a line without showing it: each character echoes as <c>*</c>.
+	/// Returns null if the user presses Esc.
+	/// </summary>
+	string? ReadSecret();
 }
 
 internal sealed class SystemConsoleIO : IConsoleIO
@@ -33,4 +41,40 @@ internal sealed class SystemConsoleIO : IConsoleIO
 	public string? ReadLine() => Console.ReadLine();
 
 	public ConsoleKey ReadKey() => Console.ReadKey(intercept: true).Key;
+
+	public string? ReadSecret()
+	{
+		var secret = new StringBuilder();
+		while (true)
+		{
+			ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+			switch (keyInfo.Key)
+			{
+				case ConsoleKey.Enter:
+					Console.WriteLine();
+
+					return secret.ToString();
+				case ConsoleKey.Escape:
+					Console.WriteLine();
+
+					return null;
+				case ConsoleKey.Backspace:
+					if (secret.Length > 0)
+					{
+						secret.Length--;
+						Console.Write("\b \b");
+					}
+
+					break;
+				default:
+					if (!char.IsControl(keyInfo.KeyChar))
+					{
+						secret.Append(keyInfo.KeyChar);
+						Console.Write('*');
+					}
+
+					break;
+			}
+		}
+	}
 }

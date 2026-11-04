@@ -125,7 +125,7 @@
 		<value>{0} должно быть больше 0 (получено {1}).</value>
 	</data>
     <data name="AzureMisconfiguredFormat" xml:space="preserve">
-		<value>Провайдер Azure настроен неверно. Отсутствуют переменные окружения: {0}.</value>
+		<value>Провайдер Azure настроен неверно. Задайте {0} в {1} или выполните 'shelly --config'.</value>
 	</data>
     <data name="UnknownOptionFormat" xml:space="preserve">
 		<value>Неизвестный параметр '{0}'.</value>
@@ -159,5 +159,113 @@
 	</data>
     <data name="ResponseLanguage" xml:space="preserve">
 		<value>Russian</value>
+	</data>
+    <data name="HelpOptionConfig" xml:space="preserve">
+		<value>Интерактивно настроить провайдера и его параметры.</value>
+	</data>
+    <data name="MainMenuAsk" xml:space="preserve">
+		<value>Задать вопрос</value>
+	</data>
+    <data name="MainMenuConfigure" xml:space="preserve">
+		<value>Настроить</value>
+	</data>
+    <data name="MainMenuInfo" xml:space="preserve">
+		<value>Сведения</value>
+	</data>
+    <data name="MainMenuExit" xml:space="preserve">
+		<value>Выход</value>
+	</data>
+    <data name="DefaultMarker" xml:space="preserve">
+		<value>(по умолчанию)</value>
+	</data>
+    <data name="ChooseFormat" xml:space="preserve">
+		<value>Выберите (Enter = {0}):</value>
+	</data>
+    <data name="ConfigHeaderFormat" xml:space="preserve">
+		<value>Файл конфигурации: {0}</value>
+	</data>
+    <data name="ConfigUnreadableFormat" xml:space="preserve">
+		<value>Не удалось разобрать {0}: {1}. При сохранении он будет заменён введёнными здесь значениями; перед этим будет создана резервная копия текущего файла.</value>
+	</data>
+    <data name="ContinuePrompt" xml:space="preserve">
+		<value>Продолжить?</value>
+	</data>
+    <data name="ProviderHeader" xml:space="preserve">
+		<value>Провайдер:</value>
+	</data>
+    <data name="ProviderOpenAICompatible" xml:space="preserve">
+		<value>Сервер, совместимый с OpenAI</value>
+	</data>
+    <data name="SettingsHeader" xml:space="preserve">
+		<value>Параметры (Enter оставляет значение в квадратных скобках):</value>
+	</data>
+    <data name="ValueRequired" xml:space="preserve">
+		<value>Значение обязательно.</value>
+	</data>
+    <data name="InvalidPositiveInteger" xml:space="preserve">
+		<value>Введите целое число больше 0.</value>
+	</data>
+    <data name="InvalidHttpUrl" xml:space="preserve">
+		<value>Введите полный URL, начинающийся с http:// или https://.</value>
+	</data>
+    <data name="ApiKeyHeader" xml:space="preserve">
+		<value>Ключ API:</value>
+	</data>
+    <data name="ApiKeySetFormat" xml:space="preserve">
+		<value>{0} задана.</value>
+	</data>
+    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+		<value>{0} не задана.</value>
+	</data>
+    <data name="ApiKeyOptional" xml:space="preserve">
+		<value>Необязательно: большинство самостоятельно размещённых серверов не проверяют ключ.</value>
+	</data>
+    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+		<value>Сохранить {0} как пользовательскую переменную окружения Windows?</value>
+	</data>
+    <data name="EnterApiKey" xml:space="preserve">
+		<value>Ключ API (Enter, чтобы пропустить):</value>
+	</data>
+    <data name="Skipped" xml:space="preserve">
+		<value>Пропущено.</value>
+	</data>
+    <data name="UserVariableSavedFormat" xml:space="preserve">
+		<value>{0} сохранена. Её увидят терминалы, открытые с этого момента; уже открытые не увидят.</value>
+	</data>
+    <data name="ShellStartupLineFormat" xml:space="preserve">
+		<value>Добавьте эту строку в {0}, заменив {1} своим ключом, затем откройте новый терминал:</value>
+	</data>
+    <data name="FishUniversalVariableFormat" xml:space="preserve">
+		<value>Выполните это один раз, заменив {0} своим ключом. Fish запоминает значение между сеансами, поэтому файл запуска не нужен:</value>
+	</data>
+    <data name="UnknownShellStartupFile" xml:space="preserve">
+		<value>файл запуска вашей оболочки</value>
+	</data>
+    <data name="SaveChangesPrompt" xml:space="preserve">
+		<value>Сохранить изменения?</value>
+	</data>
+    <data name="ConfigNotSaved" xml:space="preserve">
+		<value>Изменения не сохранены.</value>
+	</data>
+    <data name="ConfigBackedUpFormat" xml:space="preserve">
+		<value>Резервная копия прежнего файла: {0}.</value>
+	</data>
+    <data name="ConfigSavedFormat" xml:space="preserve">
+		<value>{0} сохранён.</value>
+	</data>
+    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+		<value>Не удалось сохранить {0}: {1}</value>
+	</data>
+    <data name="InteractiveTerminalRequired" xml:space="preserve">
+		<value>Для --config нужен интерактивный терминал.</value>
+	</data>
+    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+		<value>Предупреждение: {0} устарела. Вместо неё задайте {1} в {2} или выполните 'shelly --config'.</value>
+	</data>
+    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+		<value>требуется настройка: {0}</value>
+	</data>
+    <data name="MenuBackToMainMenu" xml:space="preserve">
+		<value>Назад в главное меню</value>
 	</data>
 </root>

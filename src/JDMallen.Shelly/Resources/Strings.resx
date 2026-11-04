@@ -133,7 +133,7 @@
 		<value>{0} must be greater than 0 (got {1}).</value>
 	</data>
     <data name="AzureMisconfiguredFormat" xml:space="preserve">
-		<value>Azure provider misconfigured. Missing env var(s): {0}.</value>
+		<value>Azure provider misconfigured. Set {0} in {1}, or run 'shelly --config'.</value>
 	</data>
     <data name="UnknownOptionFormat" xml:space="preserve">
 		<value>Option '{0}' is unknown.</value>
@@ -169,4 +169,127 @@
         <value/>
         <comment>English name of this language, used in the model instruction 'Write your explanation in {language}.' Empty in the neutral (en-US) file.</comment>
     </data>
+    <data name="HelpOptionConfig" xml:space="preserve">
+		<value>Configure the provider and its settings interactively.</value>
+	</data>
+    <data name="MainMenuAsk" xml:space="preserve">
+		<value>Ask a question</value>
+	</data>
+    <data name="MainMenuConfigure" xml:space="preserve">
+		<value>Configure</value>
+	</data>
+    <data name="MainMenuInfo" xml:space="preserve">
+		<value>Info</value>
+	</data>
+    <data name="MainMenuExit" xml:space="preserve">
+		<value>Exit</value>
+	</data>
+    <data name="DefaultMarker" xml:space="preserve">
+		<value>(default)</value>
+        <comment>Shown after the menu option that Enter picks.</comment>
+	</data>
+    <data name="ChooseFormat" xml:space="preserve">
+		<value>Choose (Enter = {0}):</value>
+        <comment>Menu prompt; {0} is the number Enter picks. A space follows it.</comment>
+	</data>
+    <data name="ConfigHeaderFormat" xml:space="preserve">
+		<value>Config file: {0}</value>
+	</data>
+    <data name="ConfigUnreadableFormat" xml:space="preserve">
+		<value>{0} could not be parsed: {1}. Saving will replace it with the values entered here; the current file is backed up first.</value>
+        <comment>{0} is the config file path, {1} the JSON parser's message. Followed by ContinuePrompt and [y/N]; the y/n keys are fixed in every language.</comment>
+	</data>
+    <data name="ContinuePrompt" xml:space="preserve">
+		<value>Continue?</value>
+        <comment>Yes/no question; ' [y/N]' follows it. The y/n keys are fixed in every language.</comment>
+	</data>
+    <data name="ProviderHeader" xml:space="preserve">
+		<value>Provider:</value>
+	</data>
+    <data name="ProviderOpenAICompatible" xml:space="preserve">
+		<value>OpenAI-compatible server</value>
+        <comment>A provider choice; ' (openai.com, llama.cpp, Ollama, vLLM, ...)' is appended.</comment>
+	</data>
+    <data name="SettingsHeader" xml:space="preserve">
+		<value>Settings (Enter keeps the value in brackets):</value>
+	</data>
+    <data name="ValueRequired" xml:space="preserve">
+		<value>A value is required.</value>
+	</data>
+    <data name="InvalidPositiveInteger" xml:space="preserve">
+		<value>Enter a whole number greater than 0.</value>
+	</data>
+    <data name="InvalidHttpUrl" xml:space="preserve">
+		<value>Enter a full URL starting with http:// or https://.</value>
+	</data>
+    <data name="ApiKeyHeader" xml:space="preserve">
+		<value>API key:</value>
+	</data>
+    <data name="ApiKeySetFormat" xml:space="preserve">
+		<value>{0} is set.</value>
+	</data>
+    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+		<value>{0} is not set.</value>
+	</data>
+    <data name="ApiKeyOptional" xml:space="preserve">
+		<value>Optional: most self-hosted servers don't check a key.</value>
+	</data>
+    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+		<value>Save {0} as a Windows user environment variable now?</value>
+        <comment>Windows only. {0} is an environment variable name. Yes/no question; ' [Y/n]' follows it.</comment>
+	</data>
+    <data name="EnterApiKey" xml:space="preserve">
+		<value>API key (Enter to skip):</value>
+	</data>
+    <data name="Skipped" xml:space="preserve">
+		<value>Skipped.</value>
+	</data>
+    <data name="UserVariableSavedFormat" xml:space="preserve">
+		<value>Saved {0}. Terminals opened from now on will see it; ones already open won't.</value>
+	</data>
+    <data name="ShellStartupLineFormat" xml:space="preserve">
+		<value>Add this line to {0}, replacing {1} with your key, then open a new terminal:</value>
+        <comment>{0} is a startup file such as ~/.zshrc (or UnknownShellStartupFile), {1} the literal placeholder &lt;your-key&gt;. The shell line follows on its own line.</comment>
+	</data>
+    <data name="FishUniversalVariableFormat" xml:space="preserve">
+		<value>Run this once, replacing {0} with your key. Fish remembers it across sessions, so no startup file is needed:</value>
+        <comment>{0} is the literal placeholder &lt;your-key&gt;. A fish 'set -Ux' line follows.</comment>
+	</data>
+    <data name="UnknownShellStartupFile" xml:space="preserve">
+		<value>your shell's startup file</value>
+        <comment>Fills {0} of ShellStartupLineFormat when the shell is not recognized.</comment>
+	</data>
+    <data name="SaveChangesPrompt" xml:space="preserve">
+		<value>Save changes?</value>
+        <comment>Yes/no question; ' [Y/n]' follows it. The y/n keys are fixed in every language.</comment>
+	</data>
+    <data name="ConfigNotSaved" xml:space="preserve">
+		<value>No changes saved.</value>
+	</data>
+    <data name="ConfigBackedUpFormat" xml:space="preserve">
+		<value>Backed up the previous file to {0}.</value>
+	</data>
+    <data name="ConfigSavedFormat" xml:space="preserve">
+		<value>Saved {0}.</value>
+	</data>
+    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+		<value>Could not save {0}: {1}</value>
+        <comment>Wrapped in ErrorFormat. {0} is the config file path, {1} the OS error message.</comment>
+	</data>
+    <data name="InteractiveTerminalRequired" xml:space="preserve">
+		<value>--config needs an interactive terminal.</value>
+        <comment>Wrapped in ErrorFormat. Keep '--config' as is.</comment>
+	</data>
+    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+		<value>Warning: {0} is deprecated. Set {1} in {2} instead, or run 'shelly --config'.</value>
+        <comment>{0} is an environment variable, {1} a config key such as azure.endpoint, {2} the config file path. Keep 'shelly --config' as is.</comment>
+	</data>
+    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+		<value>needs setup: {0}</value>
+        <comment>Shown in parentheses after the main menu's Configure option. {0} is a comma-separated list of config keys and environment variable names (untranslated).</comment>
+	</data>
+    <data name="MenuBackToMainMenu" xml:space="preserve">
+		<value>Back to main menu</value>
+        <comment>Last option (0) of the configuration wizard's provider menu when it was opened from the main menu.</comment>
+	</data>
 </root>

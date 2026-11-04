@@ -35,6 +35,12 @@ public class CommandLineArgsTests
 	}
 
 	[Fact]
+	public void Parse_ConfigFlag_ShowConfig()
+	{
+		Assert.IsType<CommandLineArgs.ShowConfig>(CommandLineArgs.Parse(["--config"]));
+	}
+
+	[Fact]
 	public void Parse_InfoFlag_ShowInfo()
 	{
 		Assert.IsType<CommandLineArgs.ShowInfo>(CommandLineArgs.Parse(["--info"]));

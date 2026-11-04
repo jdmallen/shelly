@@ -8,6 +8,8 @@ internal sealed class FakeConsoleIO : IConsoleIO
 
 	public Queue<ConsoleKey> ReadKeys { get; } = new();
 
+	public Queue<string?> ReadSecrets { get; } = new();
+
 	public StringBuilder Output { get; } = new();
 
 	public void Write(string text, ConsoleColor? color = null) => Output.Append(text);
@@ -17,4 +19,6 @@ internal sealed class FakeConsoleIO : IConsoleIO
 	public string? ReadLine() => ReadLines.Count == 0 ? null : ReadLines.Dequeue();
 
 	public ConsoleKey ReadKey() => ReadKeys.Dequeue();
+
+	public string? ReadSecret() => ReadSecrets.Count == 0 ? null : ReadSecrets.Dequeue();
 }

@@ -125,7 +125,7 @@
 		<value>{0} は 0 より大きい値にしてください（現在の値：{1}）。</value>
 	</data>
     <data name="AzureMisconfiguredFormat" xml:space="preserve">
-		<value>Azure プロバイダーの設定が正しくありません。不足している環境変数：{0}。</value>
+		<value>Azure プロバイダーの設定が正しくありません。{1} の {0} を設定するか、'shelly --config' を実行してください。</value>
 	</data>
     <data name="UnknownOptionFormat" xml:space="preserve">
 		<value>オプション '{0}' は不明です。</value>
@@ -159,5 +159,113 @@
 	</data>
     <data name="ResponseLanguage" xml:space="preserve">
 		<value>Japanese</value>
+	</data>
+    <data name="HelpOptionConfig" xml:space="preserve">
+		<value>プロバイダーとその設定を対話的に構成します。</value>
+	</data>
+    <data name="MainMenuAsk" xml:space="preserve">
+		<value>質問する</value>
+	</data>
+    <data name="MainMenuConfigure" xml:space="preserve">
+		<value>設定</value>
+	</data>
+    <data name="MainMenuInfo" xml:space="preserve">
+		<value>情報</value>
+	</data>
+    <data name="MainMenuExit" xml:space="preserve">
+		<value>終了</value>
+	</data>
+    <data name="DefaultMarker" xml:space="preserve">
+		<value>(既定)</value>
+	</data>
+    <data name="ChooseFormat" xml:space="preserve">
+		<value>選択してください (Enter = {0}):</value>
+	</data>
+    <data name="ConfigHeaderFormat" xml:space="preserve">
+		<value>設定ファイル: {0}</value>
+	</data>
+    <data name="ConfigUnreadableFormat" xml:space="preserve">
+		<value>{0} を解析できませんでした: {1}。保存すると、ここで入力した値で置き換えられます。現在のファイルは先にバックアップされます。</value>
+	</data>
+    <data name="ContinuePrompt" xml:space="preserve">
+		<value>続行しますか?</value>
+	</data>
+    <data name="ProviderHeader" xml:space="preserve">
+		<value>プロバイダー:</value>
+	</data>
+    <data name="ProviderOpenAICompatible" xml:space="preserve">
+		<value>OpenAI 互換サーバー</value>
+	</data>
+    <data name="SettingsHeader" xml:space="preserve">
+		<value>設定 (Enter で角かっこ内の値を維持):</value>
+	</data>
+    <data name="ValueRequired" xml:space="preserve">
+		<value>値を入力してください。</value>
+	</data>
+    <data name="InvalidPositiveInteger" xml:space="preserve">
+		<value>0 より大きい整数を入力してください。</value>
+	</data>
+    <data name="InvalidHttpUrl" xml:space="preserve">
+		<value>http:// または https:// で始まる完全な URL を入力してください。</value>
+	</data>
+    <data name="ApiKeyHeader" xml:space="preserve">
+		<value>API キー:</value>
+	</data>
+    <data name="ApiKeySetFormat" xml:space="preserve">
+		<value>{0} は設定されています。</value>
+	</data>
+    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+		<value>{0} は設定されていません。</value>
+	</data>
+    <data name="ApiKeyOptional" xml:space="preserve">
+		<value>任意: ほとんどのセルフホスト型サーバーはキーを確認しません。</value>
+	</data>
+    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+		<value>{0} を Windows のユーザー環境変数として今すぐ保存しますか?</value>
+	</data>
+    <data name="EnterApiKey" xml:space="preserve">
+		<value>API キー (Enter でスキップ):</value>
+	</data>
+    <data name="Skipped" xml:space="preserve">
+		<value>スキップしました。</value>
+	</data>
+    <data name="UserVariableSavedFormat" xml:space="preserve">
+		<value>{0} を保存しました。これから開くターミナルでは有効になりますが、既に開いているターミナルでは有効になりません。</value>
+	</data>
+    <data name="ShellStartupLineFormat" xml:space="preserve">
+		<value>{1} を自分のキーに置き換えてこの行を {0} に追加し、新しいターミナルを開いてください:</value>
+	</data>
+    <data name="FishUniversalVariableFormat" xml:space="preserve">
+		<value>{0} を自分のキーに置き換えて一度だけ実行してください。fish はセッションをまたいで値を保持するため、起動ファイルは不要です:</value>
+	</data>
+    <data name="UnknownShellStartupFile" xml:space="preserve">
+		<value>シェルの起動ファイル</value>
+	</data>
+    <data name="SaveChangesPrompt" xml:space="preserve">
+		<value>変更を保存しますか?</value>
+	</data>
+    <data name="ConfigNotSaved" xml:space="preserve">
+		<value>変更は保存されませんでした。</value>
+	</data>
+    <data name="ConfigBackedUpFormat" xml:space="preserve">
+		<value>以前のファイルを {0} にバックアップしました。</value>
+	</data>
+    <data name="ConfigSavedFormat" xml:space="preserve">
+		<value>{0} を保存しました。</value>
+	</data>
+    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+		<value>{0} を保存できませんでした: {1}</value>
+	</data>
+    <data name="InteractiveTerminalRequired" xml:space="preserve">
+		<value>--config には対話型ターミナルが必要です。</value>
+	</data>
+    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+		<value>警告: {0} は非推奨です。代わりに {2} の {1} を設定するか、'shelly --config' を実行してください。</value>
+	</data>
+    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+		<value>設定が必要: {0}</value>
+	</data>
+    <data name="MenuBackToMainMenu" xml:space="preserve">
+		<value>メインメニューに戻る</value>
 	</data>
 </root>

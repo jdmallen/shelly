@@ -125,7 +125,7 @@
 		<value>{0} musi być większe od 0 (otrzymano {1}).</value>
 	</data>
     <data name="AzureMisconfiguredFormat" xml:space="preserve">
-		<value>Dostawca Azure jest źle skonfigurowany. Brakujące zmienne środowiskowe: {0}.</value>
+		<value>Dostawca Azure jest źle skonfigurowany. Ustaw {0} w {1} albo uruchom 'shelly --config'.</value>
 	</data>
     <data name="UnknownOptionFormat" xml:space="preserve">
 		<value>Opcja '{0}' jest nieznana.</value>
@@ -159,5 +159,113 @@
 	</data>
     <data name="ResponseLanguage" xml:space="preserve">
 		<value>Polish</value>
+	</data>
+    <data name="HelpOptionConfig" xml:space="preserve">
+		<value>Skonfiguruj dostawcę i jego ustawienia interaktywnie.</value>
+	</data>
+    <data name="MainMenuAsk" xml:space="preserve">
+		<value>Zadaj pytanie</value>
+	</data>
+    <data name="MainMenuConfigure" xml:space="preserve">
+		<value>Konfiguruj</value>
+	</data>
+    <data name="MainMenuInfo" xml:space="preserve">
+		<value>Informacje</value>
+	</data>
+    <data name="MainMenuExit" xml:space="preserve">
+		<value>Zakończ</value>
+	</data>
+    <data name="DefaultMarker" xml:space="preserve">
+		<value>(domyślna)</value>
+	</data>
+    <data name="ChooseFormat" xml:space="preserve">
+		<value>Wybierz (Enter = {0}):</value>
+	</data>
+    <data name="ConfigHeaderFormat" xml:space="preserve">
+		<value>Plik konfiguracyjny: {0}</value>
+	</data>
+    <data name="ConfigUnreadableFormat" xml:space="preserve">
+		<value>Nie można odczytać {0}: {1}. Zapisanie zastąpi go wartościami wprowadzonymi tutaj; najpierw zostanie utworzona kopia zapasowa bieżącego pliku.</value>
+	</data>
+    <data name="ContinuePrompt" xml:space="preserve">
+		<value>Kontynuować?</value>
+	</data>
+    <data name="ProviderHeader" xml:space="preserve">
+		<value>Dostawca:</value>
+	</data>
+    <data name="ProviderOpenAICompatible" xml:space="preserve">
+		<value>Serwer zgodny z OpenAI</value>
+	</data>
+    <data name="SettingsHeader" xml:space="preserve">
+		<value>Ustawienia (Enter zachowuje wartość w nawiasach kwadratowych):</value>
+	</data>
+    <data name="ValueRequired" xml:space="preserve">
+		<value>Wartość jest wymagana.</value>
+	</data>
+    <data name="InvalidPositiveInteger" xml:space="preserve">
+		<value>Wpisz liczbę całkowitą większą od 0.</value>
+	</data>
+    <data name="InvalidHttpUrl" xml:space="preserve">
+		<value>Wpisz pełny adres URL zaczynający się od http:// lub https://.</value>
+	</data>
+    <data name="ApiKeyHeader" xml:space="preserve">
+		<value>Klucz API:</value>
+	</data>
+    <data name="ApiKeySetFormat" xml:space="preserve">
+		<value>{0} jest ustawiona.</value>
+	</data>
+    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+		<value>{0} nie jest ustawiona.</value>
+	</data>
+    <data name="ApiKeyOptional" xml:space="preserve">
+		<value>Opcjonalny: większość serwerów hostowanych samodzielnie nie sprawdza klucza.</value>
+	</data>
+    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+		<value>Zapisać teraz {0} jako zmienną środowiskową użytkownika systemu Windows?</value>
+	</data>
+    <data name="EnterApiKey" xml:space="preserve">
+		<value>Klucz API (Enter, aby pominąć):</value>
+	</data>
+    <data name="Skipped" xml:space="preserve">
+		<value>Pominięto.</value>
+	</data>
+    <data name="UserVariableSavedFormat" xml:space="preserve">
+		<value>Zapisano {0}. Zobaczą ją terminale otwarte od teraz; te już otwarte nie.</value>
+	</data>
+    <data name="ShellStartupLineFormat" xml:space="preserve">
+		<value>Dodaj ten wiersz do {0}, zastępując {1} swoim kluczem, a potem otwórz nowy terminal:</value>
+	</data>
+    <data name="FishUniversalVariableFormat" xml:space="preserve">
+		<value>Uruchom to raz, zastępując {0} swoim kluczem. Fish pamięta wartość między sesjami, więc plik startowy nie jest potrzebny:</value>
+	</data>
+    <data name="UnknownShellStartupFile" xml:space="preserve">
+		<value>plik startowy twojej powłoki</value>
+	</data>
+    <data name="SaveChangesPrompt" xml:space="preserve">
+		<value>Zapisać zmiany?</value>
+	</data>
+    <data name="ConfigNotSaved" xml:space="preserve">
+		<value>Nie zapisano żadnych zmian.</value>
+	</data>
+    <data name="ConfigBackedUpFormat" xml:space="preserve">
+		<value>Utworzono kopię zapasową poprzedniego pliku: {0}.</value>
+	</data>
+    <data name="ConfigSavedFormat" xml:space="preserve">
+		<value>Zapisano {0}.</value>
+	</data>
+    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+		<value>Nie można zapisać {0}: {1}</value>
+	</data>
+    <data name="InteractiveTerminalRequired" xml:space="preserve">
+		<value>--config wymaga interaktywnego terminala.</value>
+	</data>
+    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+		<value>Ostrzeżenie: {0} jest przestarzała. Zamiast tego ustaw {1} w {2} albo uruchom 'shelly --config'.</value>
+	</data>
+    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+		<value>wymaga konfiguracji: {0}</value>
+	</data>
+    <data name="MenuBackToMainMenu" xml:space="preserve">
+		<value>Powrót do menu głównego</value>
 	</data>
 </root>

@@ -125,7 +125,7 @@
 		<value>{0} 必須大於 0（目前的值：{1}）。</value>
 	</data>
     <data name="AzureMisconfiguredFormat" xml:space="preserve">
-		<value>Azure 提供者設定有誤。缺少環境變數：{0}。</value>
+		<value>Azure 提供者設定有誤。請在 {1} 中設定 {0}，或執行 'shelly --config'。</value>
 	</data>
     <data name="UnknownOptionFormat" xml:space="preserve">
 		<value>不明的選項 '{0}'。</value>
@@ -159,5 +159,113 @@
 	</data>
     <data name="ResponseLanguage" xml:space="preserve">
 		<value>Traditional Chinese</value>
+	</data>
+    <data name="HelpOptionConfig" xml:space="preserve">
+		<value>以互動方式設定提供者及其設定。</value>
+	</data>
+    <data name="MainMenuAsk" xml:space="preserve">
+		<value>提問</value>
+	</data>
+    <data name="MainMenuConfigure" xml:space="preserve">
+		<value>設定</value>
+	</data>
+    <data name="MainMenuInfo" xml:space="preserve">
+		<value>資訊</value>
+	</data>
+    <data name="MainMenuExit" xml:space="preserve">
+		<value>結束</value>
+	</data>
+    <data name="DefaultMarker" xml:space="preserve">
+		<value>(預設)</value>
+	</data>
+    <data name="ChooseFormat" xml:space="preserve">
+		<value>請選擇 (Enter = {0})：</value>
+	</data>
+    <data name="ConfigHeaderFormat" xml:space="preserve">
+		<value>設定檔：{0}</value>
+	</data>
+    <data name="ConfigUnreadableFormat" xml:space="preserve">
+		<value>無法剖析 {0}：{1}。儲存後會以此處輸入的值取代該檔案；目前的檔案會先備份。</value>
+	</data>
+    <data name="ContinuePrompt" xml:space="preserve">
+		<value>要繼續嗎？</value>
+	</data>
+    <data name="ProviderHeader" xml:space="preserve">
+		<value>提供者：</value>
+	</data>
+    <data name="ProviderOpenAICompatible" xml:space="preserve">
+		<value>OpenAI 相容伺服器</value>
+	</data>
+    <data name="SettingsHeader" xml:space="preserve">
+		<value>設定 (按 Enter 保留方括號中的值)：</value>
+	</data>
+    <data name="ValueRequired" xml:space="preserve">
+		<value>必須輸入一個值。</value>
+	</data>
+    <data name="InvalidPositiveInteger" xml:space="preserve">
+		<value>請輸入大於 0 的整數。</value>
+	</data>
+    <data name="InvalidHttpUrl" xml:space="preserve">
+		<value>請輸入以 http:// 或 https:// 開頭的完整 URL。</value>
+	</data>
+    <data name="ApiKeyHeader" xml:space="preserve">
+		<value>API 金鑰：</value>
+	</data>
+    <data name="ApiKeySetFormat" xml:space="preserve">
+		<value>{0} 已設定。</value>
+	</data>
+    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+		<value>{0} 未設定。</value>
+	</data>
+    <data name="ApiKeyOptional" xml:space="preserve">
+		<value>選用：大多數自行架設的伺服器不會檢查金鑰。</value>
+	</data>
+    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+		<value>現在要將 {0} 儲存為 Windows 使用者環境變數嗎？</value>
+	</data>
+    <data name="EnterApiKey" xml:space="preserve">
+		<value>API 金鑰 (按 Enter 略過)：</value>
+	</data>
+    <data name="Skipped" xml:space="preserve">
+		<value>已略過。</value>
+	</data>
+    <data name="UserVariableSavedFormat" xml:space="preserve">
+		<value>已儲存 {0}。之後開啟的終端機可以看到它；已開啟的終端機看不到。</value>
+	</data>
+    <data name="ShellStartupLineFormat" xml:space="preserve">
+		<value>將 {1} 換成你的金鑰，把這一行加入 {0}，然後開啟新的終端機：</value>
+	</data>
+    <data name="FishUniversalVariableFormat" xml:space="preserve">
+		<value>將 {0} 換成你的金鑰後執行一次。fish 會跨工作階段記住這個值，因此不需要啟動檔：</value>
+	</data>
+    <data name="UnknownShellStartupFile" xml:space="preserve">
+		<value>你的 shell 啟動檔</value>
+	</data>
+    <data name="SaveChangesPrompt" xml:space="preserve">
+		<value>要儲存變更嗎？</value>
+	</data>
+    <data name="ConfigNotSaved" xml:space="preserve">
+		<value>未儲存任何變更。</value>
+	</data>
+    <data name="ConfigBackedUpFormat" xml:space="preserve">
+		<value>已將先前的檔案備份到 {0}。</value>
+	</data>
+    <data name="ConfigSavedFormat" xml:space="preserve">
+		<value>已儲存 {0}。</value>
+	</data>
+    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+		<value>無法儲存 {0}：{1}</value>
+	</data>
+    <data name="InteractiveTerminalRequired" xml:space="preserve">
+		<value>--config 需要互動式終端機。</value>
+	</data>
+    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+		<value>警告：{0} 已淘汰。請改為在 {2} 中設定 {1}，或執行 'shelly --config'。</value>
+	</data>
+    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+		<value>需要設定：{0}</value>
+	</data>
+    <data name="MenuBackToMainMenu" xml:space="preserve">
+		<value>返回主選單</value>
 	</data>
 </root>

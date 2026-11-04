@@ -107,55 +107,68 @@ Artifacts land in `dist/`.
 
 ## Configure
 
-### API credentials (environment variables)
-
-Set these in your shell profile (`~/.zshrc`, `~/.bashrc`, PowerShell
-`$PROFILE`, etc.).
-
-**Anthropic (
-Claude) —
-default
-provider:**
+### Interactive setup
 
 ```sh
-export ANTHROPIC_API_KEY_SHELLY="sk-ant-..."
+shelly --config
 ```
 
-> The key is named `ANTHROPIC_API_KEY_SHELLY` (not `ANTHROPIC_API_KEY`) so it
-> doesn't collide with other tools — notably Claude Code — that read the
-> generic name.
+The wizard asks which provider to use (Anthropic, an OpenAI-compatible
+server, or Azure OpenAI), then prompts for that provider's settings, showing
+each setting's current value in brackets: press Enter to keep it. It
+finishes by checking the provider's API key variable and asking before it
+saves. Running `shelly` with no arguments opens a menu that offers the same
+wizard, alongside asking a question (the default) and `--info`. If the
+active provider is missing anything (a setting or its API key variable), the
+menu lists it next to Configure:
 
-**Azure
-OpenAI:**
+```
+  2) Configure (needs setup: ANTHROPIC_API_KEY_SHELLY)
+```
+
+The wizard writes the config file described below; you can still edit that
+file by hand.
+
+### API keys (environment variables)
+
+API keys are never stored in the config file. Each provider reads its key from
+one environment variable:
+
+| Provider          | Variable                   |
+|-------------------|----------------------------|
+| Anthropic         | `ANTHROPIC_API_KEY_SHELLY` |
+| Azure OpenAI      | `AZURE_OPENAI_API_KEY`     |
+| OpenAI-compatible | `OPENAI_API_KEY_SHELLY` (optional: self-hosted runners usually accept anonymous requests) |
+
+> The Anthropic key is named `ANTHROPIC_API_KEY_SHELLY` (not
+> `ANTHROPIC_API_KEY`) so it doesn't collide with other tools, notably Claude
+> Code, that read the generic name.
+
+**Windows:** `shelly --config` offers to save the key as a user environment
+variable for you (typing shows `*`). It's saved along with the config, so
+answering no to "Save changes?" leaves it unset. Terminals opened afterwards
+see it.
+
+**Linux / macOS:** shelly doesn't edit your shell's startup files. If the key
+isn't set, the wizard prints the line for the shell you're running it from
+and the file it belongs in, for example:
 
 ```sh
-export AZURE_OPENAI_API_KEY="..."
-export AZURE_OPENAI_ENDPOINT_HOST="https://<your-resource>.openai.azure.com"
-export AZURE_OPENAI_DEPLOYMENT="<your-deployment-name>"
+# ~/.zshrc or ~/.bashrc
+export ANTHROPIC_API_KEY_SHELLY='<your-key>'
 ```
 
-**OpenAI-compatible /
-local
-models:** no environment variable is required —
-self-hosted runners normally accept anonymous requests. Set one only if your
-server checks a bearer token:
-
-```sh
-export OPENAI_API_KEY_SHELLY="..."
+```fish
+# fish: run once; universal variables persist without a startup file
+set -Ux ANTHROPIC_API_KEY_SHELLY '<your-key>'
 ```
 
-### Provider selection (config file)
+### Config file
 
 A config file is auto-created on first run at:
 
--
-
-**Linux /
-macOS:** `~/.config/shelly/config.json`
-
--
-
-**Windows:** `%APPDATA%\shelly\config.json`
+- **Linux / macOS:** `~/.config/shelly/config.json`
+- **Windows:** `%APPDATA%\shelly\config.json`
 
 Default contents:
 
@@ -166,6 +179,8 @@ Default contents:
     "model": "claude-haiku-4-5-20251001"
   },
   "azure": {
+    "endpoint": "",
+    "deployment": "",
     "maxTokens": 500,
     "reasoningModel": false
   },
@@ -178,10 +193,16 @@ Default contents:
 }
 ```
 
-To switch to Azure, change `provider` to `"azure"`. The key, endpoint and
-deployment come from the environment variables above; the config file holds
-two Azure settings:
+`provider` is `"anthropic"`, `"azure"` or `"openai"` (`"local"` is accepted
+as an alias). You can pin a different Anthropic model with `anthropic.model`.
 
+### Azure OpenAI
+
+Set `provider` to `"azure"` and fill in the `azure` block:
+
+- `azure.endpoint`: the resource endpoint, e.g.
+  `https://<your-resource>.openai.azure.com`.
+- `azure.deployment`: your deployment name.
 - `azure.maxTokens`: the generation budget, sent as `max_completion_tokens`.
 - `azure.reasoningModel`: set `true` for a reasoning deployment (o-series,
   gpt-5 and later reasoning models). These reject sampling parameters, so
@@ -191,7 +212,11 @@ A reasoning deployment spends its hidden thinking from the same budget, so
 pair `reasoningModel: true` with a larger `maxTokens`, e.g. `2048`; too small
 a budget returns an empty answer ("No suggestion received").
 
-You can also pin a different Anthropic model by editing `anthropic.model`.
+**Deprecated:** the `AZURE_OPENAI_ENDPOINT_HOST` and `AZURE_OPENAI_DEPLOYMENT`
+environment variables still work when `azure.endpoint` / `azure.deployment`
+are empty, but shelly prints a warning when it falls back to them. Running
+`shelly --config` once offers their values as the defaults, so saving moves
+them into the config file; you can then unset them.
 
 ### Local and other OpenAI-compatible models
 
@@ -245,7 +270,10 @@ Use `ex[p]lain` before `e[x]ecute` on anything you didn't expect.
 shelly describe what you want to do
 ```
 
-Or invoke with no arguments to be prompted.
+Or run `shelly` with no arguments for a menu: ask a question (the default;
+press Enter), configure, show `--info`, or exit (`0` or Esc). In the wizard,
+`0` or Esc at the provider menu goes back without changing anything. When input is piped in, the
+menu is skipped and shelly reads the prompt directly, as before.
 
 Quotation marks around the prompt are optional — `shelly` joins all positional
 arguments into a single prompt. Use quotes only when the prompt contains

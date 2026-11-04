@@ -125,7 +125,7 @@
 		<value>{0} moet groter zijn dan 0 (ontvangen: {1}).</value>
 	</data>
     <data name="AzureMisconfiguredFormat" xml:space="preserve">
-		<value>Azure-provider onjuist geconfigureerd. Ontbrekende omgevingsvariabele(n): {0}.</value>
+		<value>Azure-provider onjuist geconfigureerd. Stel {0} in {1} in, of voer 'shelly --config' uit.</value>
 	</data>
     <data name="UnknownOptionFormat" xml:space="preserve">
 		<value>Optie '{0}' is onbekend.</value>
@@ -159,5 +159,113 @@
 	</data>
     <data name="ResponseLanguage" xml:space="preserve">
 		<value>Dutch</value>
+	</data>
+    <data name="HelpOptionConfig" xml:space="preserve">
+		<value>Stel de provider en zijn instellingen interactief in.</value>
+	</data>
+    <data name="MainMenuAsk" xml:space="preserve">
+		<value>Een vraag stellen</value>
+	</data>
+    <data name="MainMenuConfigure" xml:space="preserve">
+		<value>Configureren</value>
+	</data>
+    <data name="MainMenuInfo" xml:space="preserve">
+		<value>Info</value>
+	</data>
+    <data name="MainMenuExit" xml:space="preserve">
+		<value>Afsluiten</value>
+	</data>
+    <data name="DefaultMarker" xml:space="preserve">
+		<value>(standaard)</value>
+	</data>
+    <data name="ChooseFormat" xml:space="preserve">
+		<value>Kies (Enter = {0}):</value>
+	</data>
+    <data name="ConfigHeaderFormat" xml:space="preserve">
+		<value>Configuratiebestand: {0}</value>
+	</data>
+    <data name="ConfigUnreadableFormat" xml:space="preserve">
+		<value>{0} kon niet worden gelezen: {1}. Opslaan vervangt het door de waarden die je hier invoert; van het huidige bestand wordt eerst een back-up gemaakt.</value>
+	</data>
+    <data name="ContinuePrompt" xml:space="preserve">
+		<value>Doorgaan?</value>
+	</data>
+    <data name="ProviderHeader" xml:space="preserve">
+		<value>Provider:</value>
+	</data>
+    <data name="ProviderOpenAICompatible" xml:space="preserve">
+		<value>OpenAI-compatibele server</value>
+	</data>
+    <data name="SettingsHeader" xml:space="preserve">
+		<value>Instellingen (Enter behoudt de waarde tussen vierkante haken):</value>
+	</data>
+    <data name="ValueRequired" xml:space="preserve">
+		<value>Een waarde is verplicht.</value>
+	</data>
+    <data name="InvalidPositiveInteger" xml:space="preserve">
+		<value>Voer een geheel getal groter dan 0 in.</value>
+	</data>
+    <data name="InvalidHttpUrl" xml:space="preserve">
+		<value>Voer een volledige URL in die begint met http:// of https://.</value>
+	</data>
+    <data name="ApiKeyHeader" xml:space="preserve">
+		<value>API-sleutel:</value>
+	</data>
+    <data name="ApiKeySetFormat" xml:space="preserve">
+		<value>{0} is ingesteld.</value>
+	</data>
+    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+		<value>{0} is niet ingesteld.</value>
+	</data>
+    <data name="ApiKeyOptional" xml:space="preserve">
+		<value>Optioneel: de meeste zelf gehoste servers controleren geen sleutel.</value>
+	</data>
+    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+		<value>{0} nu opslaan als Windows-gebruikersomgevingsvariabele?</value>
+	</data>
+    <data name="EnterApiKey" xml:space="preserve">
+		<value>API-sleutel (Enter om over te slaan):</value>
+	</data>
+    <data name="Skipped" xml:space="preserve">
+		<value>Overgeslagen.</value>
+	</data>
+    <data name="UserVariableSavedFormat" xml:space="preserve">
+		<value>{0} opgeslagen. Terminals die je vanaf nu opent zien hem; terminals die al open zijn niet.</value>
+	</data>
+    <data name="ShellStartupLineFormat" xml:space="preserve">
+		<value>Voeg deze regel toe aan {0}, vervang {1} door je sleutel en open een nieuwe terminal:</value>
+	</data>
+    <data name="FishUniversalVariableFormat" xml:space="preserve">
+		<value>Voer dit één keer uit en vervang {0} door je sleutel. Fish onthoudt het tussen sessies, dus er is geen opstartbestand nodig:</value>
+	</data>
+    <data name="UnknownShellStartupFile" xml:space="preserve">
+		<value>het opstartbestand van je shell</value>
+	</data>
+    <data name="SaveChangesPrompt" xml:space="preserve">
+		<value>Wijzigingen opslaan?</value>
+	</data>
+    <data name="ConfigNotSaved" xml:space="preserve">
+		<value>Geen wijzigingen opgeslagen.</value>
+	</data>
+    <data name="ConfigBackedUpFormat" xml:space="preserve">
+		<value>Back-up van het vorige bestand gemaakt in {0}.</value>
+	</data>
+    <data name="ConfigSavedFormat" xml:space="preserve">
+		<value>{0} opgeslagen.</value>
+	</data>
+    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+		<value>Kan {0} niet opslaan: {1}</value>
+	</data>
+    <data name="InteractiveTerminalRequired" xml:space="preserve">
+		<value>--config heeft een interactieve terminal nodig.</value>
+	</data>
+    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+		<value>Waarschuwing: {0} is verouderd. Stel in plaats daarvan {1} in {2} in, of voer 'shelly --config' uit.</value>
+	</data>
+    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+		<value>configuratie nodig: {0}</value>
+	</data>
+    <data name="MenuBackToMainMenu" xml:space="preserve">
+		<value>Terug naar hoofdmenu</value>
 	</data>
 </root>

@@ -5,6 +5,47 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0]
+
+### Added
+
+- **`shelly --config`**: an interactive setup wizard. Pick the provider
+  (Anthropic, OpenAI-compatible or Azure OpenAI), then fill in its settings;
+  each prompt shows the current value and Enter keeps it. Numbers and URLs
+  are validated as you type them. The wizard asks before saving
+  `config.json`, and writes it via a temporary file so an interrupted save
+  can't truncate it. A config file that fails to parse is backed up as
+  `config.json.bak_<UTC timestamp>` before it is replaced.
+- **API key help in the wizard.** It reports whether the provider's key
+  variable is set (never its value). On Windows it offers to save the key as
+  a user environment variable, with `*` shown while typing, saved only when
+  you save the config. On Linux and
+  macOS it prints the exact line for the detected shell and the startup file
+  it belongs in (`set -Ux` for fish, which needs no file), and edits nothing.
+- **Main menu.** `shelly` with no arguments now shows the version and a
+  numbered menu: Ask a question (default, Enter), Configure, Info, and
+  0 (or Esc) to exit. In the wizard, 0 (or Esc) at the provider menu goes
+  back to the main menu without changing anything.
+  When the active provider isn't ready, Configure is followed by what it
+  still needs, e.g. `(needs setup: ANTHROPIC_API_KEY_SHELLY)`.
+- **`azure.endpoint`** and **`azure.deployment`** config settings, so only
+  the API key stays in the environment.
+
+### Changed
+
+- `shelly` with no arguments shows the main menu instead of prompting
+  straight away. Piped input skips the menu, so scripts behave as before.
+- A missing Azure endpoint or deployment now names the config keys
+  (`azure.endpoint`, `azure.deployment`) and suggests `shelly --config`.
+
+### Deprecated
+
+- **`AZURE_OPENAI_ENDPOINT_HOST`** and **`AZURE_OPENAI_DEPLOYMENT`**. They
+  are still read when the matching config setting is empty, with a warning;
+  the config file wins when both are set. `shelly --config` pre-fills their
+  values, so saving once migrates them. `--info` marks values that came from
+  them as deprecated.
+
 ## [1.4.1]
 
 ### Added

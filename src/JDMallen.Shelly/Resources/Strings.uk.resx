@@ -125,7 +125,7 @@
 		<value>{0} має бути більше за 0 (отримано {1}).</value>
 	</data>
     <data name="AzureMisconfiguredFormat" xml:space="preserve">
-		<value>Провайдер Azure налаштовано неправильно. Відсутні змінні середовища: {0}.</value>
+		<value>Провайдер Azure налаштовано неправильно. Задайте {0} у {1} або виконайте 'shelly --config'.</value>
 	</data>
     <data name="UnknownOptionFormat" xml:space="preserve">
 		<value>Невідомий параметр '{0}'.</value>
@@ -159,5 +159,113 @@
 	</data>
     <data name="ResponseLanguage" xml:space="preserve">
 		<value>Ukrainian</value>
+	</data>
+    <data name="HelpOptionConfig" xml:space="preserve">
+		<value>Інтерактивно налаштувати провайдера та його параметри.</value>
+	</data>
+    <data name="MainMenuAsk" xml:space="preserve">
+		<value>Поставити запитання</value>
+	</data>
+    <data name="MainMenuConfigure" xml:space="preserve">
+		<value>Налаштувати</value>
+	</data>
+    <data name="MainMenuInfo" xml:space="preserve">
+		<value>Відомості</value>
+	</data>
+    <data name="MainMenuExit" xml:space="preserve">
+		<value>Вихід</value>
+	</data>
+    <data name="DefaultMarker" xml:space="preserve">
+		<value>(типово)</value>
+	</data>
+    <data name="ChooseFormat" xml:space="preserve">
+		<value>Виберіть (Enter = {0}):</value>
+	</data>
+    <data name="ConfigHeaderFormat" xml:space="preserve">
+		<value>Файл конфігурації: {0}</value>
+	</data>
+    <data name="ConfigUnreadableFormat" xml:space="preserve">
+		<value>Не вдалося розібрати {0}: {1}. Збереження замінить його введеними тут значеннями; спершу буде створено резервну копію поточного файлу.</value>
+	</data>
+    <data name="ContinuePrompt" xml:space="preserve">
+		<value>Продовжити?</value>
+	</data>
+    <data name="ProviderHeader" xml:space="preserve">
+		<value>Провайдер:</value>
+	</data>
+    <data name="ProviderOpenAICompatible" xml:space="preserve">
+		<value>Сервер, сумісний з OpenAI</value>
+	</data>
+    <data name="SettingsHeader" xml:space="preserve">
+		<value>Параметри (Enter залишає значення у квадратних дужках):</value>
+	</data>
+    <data name="ValueRequired" xml:space="preserve">
+		<value>Значення обов'язкове.</value>
+	</data>
+    <data name="InvalidPositiveInteger" xml:space="preserve">
+		<value>Введіть ціле число, більше за 0.</value>
+	</data>
+    <data name="InvalidHttpUrl" xml:space="preserve">
+		<value>Введіть повну URL-адресу, що починається з http:// або https://.</value>
+	</data>
+    <data name="ApiKeyHeader" xml:space="preserve">
+		<value>Ключ API:</value>
+	</data>
+    <data name="ApiKeySetFormat" xml:space="preserve">
+		<value>{0} задано.</value>
+	</data>
+    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+		<value>{0} не задано.</value>
+	</data>
+    <data name="ApiKeyOptional" xml:space="preserve">
+		<value>Необов'язково: більшість серверів із власним розміщенням не перевіряють ключ.</value>
+	</data>
+    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+		<value>Зберегти {0} як змінну середовища користувача Windows зараз?</value>
+	</data>
+    <data name="EnterApiKey" xml:space="preserve">
+		<value>Ключ API (Enter, щоб пропустити):</value>
+	</data>
+    <data name="Skipped" xml:space="preserve">
+		<value>Пропущено.</value>
+	</data>
+    <data name="UserVariableSavedFormat" xml:space="preserve">
+		<value>{0} збережено. Її побачать термінали, відкриті відтепер; уже відкриті не побачать.</value>
+	</data>
+    <data name="ShellStartupLineFormat" xml:space="preserve">
+		<value>Додайте цей рядок до {0}, замінивши {1} своїм ключем, і відкрийте новий термінал:</value>
+	</data>
+    <data name="FishUniversalVariableFormat" xml:space="preserve">
+		<value>Виконайте це один раз, замінивши {0} своїм ключем. Fish пам'ятає значення між сеансами, тож файл запуску не потрібен:</value>
+	</data>
+    <data name="UnknownShellStartupFile" xml:space="preserve">
+		<value>файл запуску вашої оболонки</value>
+	</data>
+    <data name="SaveChangesPrompt" xml:space="preserve">
+		<value>Зберегти зміни?</value>
+	</data>
+    <data name="ConfigNotSaved" xml:space="preserve">
+		<value>Зміни не збережено.</value>
+	</data>
+    <data name="ConfigBackedUpFormat" xml:space="preserve">
+		<value>Резервну копію попереднього файлу збережено в {0}.</value>
+	</data>
+    <data name="ConfigSavedFormat" xml:space="preserve">
+		<value>{0} збережено.</value>
+	</data>
+    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+		<value>Не вдалося зберегти {0}: {1}</value>
+	</data>
+    <data name="InteractiveTerminalRequired" xml:space="preserve">
+		<value>Для --config потрібен інтерактивний термінал.</value>
+	</data>
+    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+		<value>Попередження: {0} застаріла. Натомість задайте {1} у {2} або виконайте 'shelly --config'.</value>
+	</data>
+    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+		<value>потрібне налаштування: {0}</value>
+	</data>
+    <data name="MenuBackToMainMenu" xml:space="preserve">
+		<value>Назад до головного меню</value>
 	</data>
 </root>

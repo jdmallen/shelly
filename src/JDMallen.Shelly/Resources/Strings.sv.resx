@@ -125,7 +125,7 @@
 		<value>{0} måste vara större än 0 (fick {1}).</value>
 	</data>
     <data name="AzureMisconfiguredFormat" xml:space="preserve">
-		<value>Azure-leverantören är felkonfigurerad. Saknade miljövariabler: {0}.</value>
+		<value>Azure-leverantören är felkonfigurerad. Sätt {0} i {1}, eller kör 'shelly --config'.</value>
 	</data>
     <data name="UnknownOptionFormat" xml:space="preserve">
 		<value>Alternativet '{0}' är okänt.</value>
@@ -159,5 +159,113 @@
 	</data>
     <data name="ResponseLanguage" xml:space="preserve">
 		<value>Swedish</value>
+	</data>
+    <data name="HelpOptionConfig" xml:space="preserve">
+		<value>Konfigurera leverantören och dess inställningar interaktivt.</value>
+	</data>
+    <data name="MainMenuAsk" xml:space="preserve">
+		<value>Ställ en fråga</value>
+	</data>
+    <data name="MainMenuConfigure" xml:space="preserve">
+		<value>Konfigurera</value>
+	</data>
+    <data name="MainMenuInfo" xml:space="preserve">
+		<value>Info</value>
+	</data>
+    <data name="MainMenuExit" xml:space="preserve">
+		<value>Avsluta</value>
+	</data>
+    <data name="DefaultMarker" xml:space="preserve">
+		<value>(standard)</value>
+	</data>
+    <data name="ChooseFormat" xml:space="preserve">
+		<value>Välj (Enter = {0}):</value>
+	</data>
+    <data name="ConfigHeaderFormat" xml:space="preserve">
+		<value>Konfigurationsfil: {0}</value>
+	</data>
+    <data name="ConfigUnreadableFormat" xml:space="preserve">
+		<value>{0} kunde inte tolkas: {1}. När du sparar ersätts den med värdena du anger här; den nuvarande filen säkerhetskopieras först.</value>
+	</data>
+    <data name="ContinuePrompt" xml:space="preserve">
+		<value>Fortsätta?</value>
+	</data>
+    <data name="ProviderHeader" xml:space="preserve">
+		<value>Leverantör:</value>
+	</data>
+    <data name="ProviderOpenAICompatible" xml:space="preserve">
+		<value>OpenAI-kompatibel server</value>
+	</data>
+    <data name="SettingsHeader" xml:space="preserve">
+		<value>Inställningar (Enter behåller värdet inom hakparentes):</value>
+	</data>
+    <data name="ValueRequired" xml:space="preserve">
+		<value>Ett värde krävs.</value>
+	</data>
+    <data name="InvalidPositiveInteger" xml:space="preserve">
+		<value>Ange ett heltal större än 0.</value>
+	</data>
+    <data name="InvalidHttpUrl" xml:space="preserve">
+		<value>Ange en fullständig URL som börjar med http:// eller https://.</value>
+	</data>
+    <data name="ApiKeyHeader" xml:space="preserve">
+		<value>API-nyckel:</value>
+	</data>
+    <data name="ApiKeySetFormat" xml:space="preserve">
+		<value>{0} är satt.</value>
+	</data>
+    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+		<value>{0} är inte satt.</value>
+	</data>
+    <data name="ApiKeyOptional" xml:space="preserve">
+		<value>Valfritt: de flesta självhostade servrar kontrollerar ingen nyckel.</value>
+	</data>
+    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+		<value>Spara {0} som en användarmiljövariabel i Windows nu?</value>
+	</data>
+    <data name="EnterApiKey" xml:space="preserve">
+		<value>API-nyckel (Enter för att hoppa över):</value>
+	</data>
+    <data name="Skipped" xml:space="preserve">
+		<value>Överhoppat.</value>
+	</data>
+    <data name="UserVariableSavedFormat" xml:space="preserve">
+		<value>{0} sparad. Terminaler som öppnas från och med nu ser den; redan öppna gör det inte.</value>
+	</data>
+    <data name="ShellStartupLineFormat" xml:space="preserve">
+		<value>Lägg till den här raden i {0}, ersätt {1} med din nyckel och öppna sedan en ny terminal:</value>
+	</data>
+    <data name="FishUniversalVariableFormat" xml:space="preserve">
+		<value>Kör detta en gång och ersätt {0} med din nyckel. Fish kommer ihåg värdet mellan sessioner, så ingen startfil behövs:</value>
+	</data>
+    <data name="UnknownShellStartupFile" xml:space="preserve">
+		<value>ditt skals startfil</value>
+	</data>
+    <data name="SaveChangesPrompt" xml:space="preserve">
+		<value>Spara ändringarna?</value>
+	</data>
+    <data name="ConfigNotSaved" xml:space="preserve">
+		<value>Inga ändringar sparades.</value>
+	</data>
+    <data name="ConfigBackedUpFormat" xml:space="preserve">
+		<value>Den tidigare filen säkerhetskopierades till {0}.</value>
+	</data>
+    <data name="ConfigSavedFormat" xml:space="preserve">
+		<value>{0} sparad.</value>
+	</data>
+    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+		<value>Kunde inte spara {0}: {1}</value>
+	</data>
+    <data name="InteractiveTerminalRequired" xml:space="preserve">
+		<value>--config kräver en interaktiv terminal.</value>
+	</data>
+    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+		<value>Varning: {0} är föråldrad. Sätt {1} i {2} i stället, eller kör 'shelly --config'.</value>
+	</data>
+    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+		<value>behöver konfigureras: {0}</value>
+	</data>
+    <data name="MenuBackToMainMenu" xml:space="preserve">
+		<value>Tillbaka till huvudmenyn</value>
 	</data>
 </root>

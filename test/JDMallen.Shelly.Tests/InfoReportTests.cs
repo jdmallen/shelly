@@ -19,23 +19,25 @@ public class InfoReportTests
 	[Fact]
 	public void Azure_ReportsEndpointDeploymentAndKeyPresence()
 	{
-		_environment[ChatProvider.AzureEndpointEnvVar] = "https://example.openai.azure.com";
-		_environment[ChatProvider.AzureDeploymentEnvVar] = "gpt-6-luna";
 		_environment[ChatProvider.AzureApiKeyEnvVar] = SECRET;
 
 		string report = Build(
 			new ShellyConfig
 			{
 				Provider = "azure",
-				Azure = new AzureConfig { MaxTokens = 2048, ReasoningModel = true },
+				Azure = new AzureConfig
+				{
+					Endpoint = "https://example.openai.azure.com",
+					Deployment = "gpt-6-luna",
+					MaxTokens = 2048,
+					ReasoningModel = true,
+				},
 			});
 
 		Assert.StartsWith("shelly 9.9.9", report);
 		Assert.Contains("provider:   azure", report);
-		Assert.Contains(
-			"endpoint:   https://example.openai.azure.com (from AZURE_OPENAI_ENDPOINT_HOST)",
-			report);
-		Assert.Contains("deployment: gpt-6-luna (from AZURE_OPENAI_DEPLOYMENT)", report);
+		Assert.Contains("endpoint:   https://example.openai.azure.com\n", report.ReplaceLineEndings("\n"));
+		Assert.Contains("deployment: gpt-6-luna\n", report.ReplaceLineEndings("\n"));
 		Assert.Contains("reasoning:  yes (temperature not sent)", report);
 		Assert.Contains("max tokens: 2048", report);
 		Assert.Contains("api key:    AZURE_OPENAI_API_KEY is set", report);
@@ -44,12 +46,28 @@ public class InfoReportTests
 	}
 
 	[Fact]
-	public void Azure_MissingVariables_SaySo()
+	public void Azure_DeprecatedVariables_ReportedAsDeprecated()
+	{
+		_environment[ChatProvider.AzureEndpointEnvVar] = "https://example.openai.azure.com";
+		_environment[ChatProvider.AzureDeploymentEnvVar] = "gpt-6-luna";
+
+		string report = Build(new ShellyConfig { Provider = "azure" });
+
+		Assert.Contains(
+			"endpoint:   https://example.openai.azure.com (deprecated: from AZURE_OPENAI_ENDPOINT_HOST)",
+			report);
+		Assert.Contains(
+			"deployment: gpt-6-luna (deprecated: from AZURE_OPENAI_DEPLOYMENT)",
+			report);
+	}
+
+	[Fact]
+	public void Azure_MissingSettings_NameTheConfigKeys()
 	{
 		string report = Build(new ShellyConfig { Provider = "azure" });
 
-		Assert.Contains("(not set: AZURE_OPENAI_ENDPOINT_HOST)", report);
-		Assert.Contains("(not set: AZURE_OPENAI_DEPLOYMENT)", report);
+		Assert.Contains("(not set: azure.endpoint)", report);
+		Assert.Contains("(not set: azure.deployment)", report);
 		Assert.Contains("AZURE_OPENAI_API_KEY is not set", report);
 	}
 
