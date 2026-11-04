@@ -35,8 +35,7 @@ executable — no .NET runtime needed.
 
 Verify the download against `SHA256SUMS.txt` published alongside the release.
 
-**Linux /
-macOS:**
+**Linux / macOS:**
 
 ```sh
 tar -xzf shelly-<version>-<rid>.tar.gz
@@ -44,8 +43,7 @@ chmod +x shelly
 sudo mv shelly /usr/local/bin/
 ```
 
-**macOS
-only:** the first run will be blocked by Gatekeeper because the binary
+**macOS only:** the first run will be blocked by Gatekeeper because the binary
 is unsigned. Either right-click → Open once, or run:
 
 ```sh
@@ -54,8 +52,7 @@ xattr -d com.apple.quarantine /usr/local/bin/shelly
 
 **Windows:** extract `shelly.exe` and place it somewhere on `%PATH%`.
 
-**Linux
-clipboard:** the `[c]opy` action shells out to a system clipboard tool.
+**Linux clipboard:** the `[c]opy` action shells out to a system clipboard tool.
 Install one of `wl-clipboard` (Wayland), `xclip`, or `xsel` (X11) — whichever
 your desktop uses. The clipboard lives in the graphical session, so copy only
 works from a local desktop terminal where `WAYLAND_DISPLAY` or `DISPLAY` is set;
@@ -64,10 +61,7 @@ say so. Either way, every other action still works.
 
 ### Build from source
 
-Requires the
-**.NET
-10
-SDK** (https://dotnet.microsoft.com/download).
+Requires the **.NET 10 SDK** (https://dotnet.microsoft.com/download).
 
 ```sh
 git clone https://github.com/jdmallen/shelly.git
@@ -85,14 +79,11 @@ dotnet publish src/JDMallen.Shelly -c Release -r <rid> -o ./out
 Native AOT links with the platform's own toolchain and cannot cross-compile
 between operating systems, so build each OS on that OS:
 
--
-**Linux:** `clang` and `zlib1g-dev` (`sudo apt install clang zlib1g-dev`).
--
-**Windows:** Visual Studio 2022 (or Build Tools) with the "Desktop
-development with C++" workload. For `win-arm64`, also add "MSVC v143 ARM64
-build tools".
--
-**macOS:** Xcode command line tools (`xcode-select --install`).
+- **Linux:** `clang` and `zlib1g-dev` (`sudo apt install clang zlib1g-dev`).
+- **Windows:** Visual Studio 2022 (or Build Tools) with the "Desktop
+  development with C++" workload. For `win-arm64`, also add "MSVC v143 ARM64
+  build tools".
+- **macOS:** Xcode command line tools (`xcode-select --install`).
 
 Replace `<rid>` with one of `linux-x64`, `linux-arm64`, `osx-x64`,
 `osx-arm64`, `win-x64`, `win-arm64`.
@@ -244,13 +235,7 @@ llama.cpp, llama-swap, Ollama, vLLM, or LM Studio:
 | `timeoutSeconds` | Default `300`. A cold model has to load its weights from disk before generating, which can take minutes. |
 | `maxTokens`      | Default `2048`, versus `500` for the hosted providers. See the note on reasoning models below.           |
 
-**Reasoning ("
-thinking")
-models
-work,
-with
-two
-caveats.** Their thinking block
+**Reasoning ("thinking") models work, with two caveats.** Their thinking block
 is stripped before you see the suggestion, whether the server splits it into
 `reasoning_content` or inlines it as `<think>…</think>`. But the block is still
 generated, and it is spent from the same `maxTokens` budget — so if you set
@@ -258,9 +243,7 @@ generated, and it is spent from the same `maxTokens` budget — so if you set
 suggestion received from API" rather than passing raw reasoning off as a shell
 command. Raise `maxTokens` if you see that, or pick a non-reasoning model.
 
-**Note
-on
-quality:** output quality tracks the model you point at, and a small
+**Note on quality:** output quality tracks the model you point at, and a small
 quantized model follows instructions less reliably than the hosted providers.
 Use `ex[p]lain` before `e[x]ecute` on anything you didn't expect.
 
@@ -272,8 +255,9 @@ shelly describe what you want to do
 
 Or run `shelly` with no arguments for a menu: ask a question (the default;
 press Enter), configure, show `--info`, or exit (`0` or Esc). In the wizard,
-`0` or Esc at the provider menu goes back without changing anything. When input is piped in, the
-menu is skipped and shelly reads the prompt directly, as before.
+`0` or Esc at the provider menu goes back without changing anything. When
+input is piped in, the menu is skipped and shelly reads the prompt directly, as
+before.
 
 Quotation marks around the prompt are optional — `shelly` joins all positional
 arguments into a single prompt. Use quotes only when the prompt contains
@@ -372,9 +356,7 @@ LC_ALL=ja_JP.UTF-8 shelly list files by size
 
 ### Edit on the command line (shell integration)
 
-The `[e]dit` action puts the suggested command onto your
-**next
-prompt**
+The `[e]dit` action puts the suggested command onto your **next prompt**
 without running it, so you can adjust it first. A program can't type into its
 parent shell's input line on its own, so this needs a small wrapper function
 that shelly ships with.
@@ -390,8 +372,7 @@ wrapper runs the real `shelly`, and when you press `e` it pushes the command
 onto your next prompt via zsh's `print -z`. Once it's sourced, the `[e]dit`
 option appears automatically.
 
-**bash /
-fish:** not supported yet. Neither can reliably prefill the next
+**bash / fish:** not supported yet. Neither can reliably prefill the next
 prompt from a plain function call the way zsh's `print -z` does, so the edit
 option simply won't show. `copy` remains the portable alternative.
 
