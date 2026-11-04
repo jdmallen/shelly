@@ -443,6 +443,17 @@ releasing, even if the version is already tagged:
 gh workflow run release.yml --ref <branch> -f dry_run=true
 ```
 
+## LLM Usage Disclaimer
+Any prompt you send to the model is sent to your configured LLM provider
+(Anthropic, Azure OpenAI, or local) to generate a response. Be mindful of what
+you send: secrets or proprietary code in a prompt will be transmitted to that
+provider's API. Review your organization's data-handling policies before use.
+
+Generative LLM tools were used to help develop this project; mostly Claude Opus
+5.5. That said, every line of code, commit message, and documentation was
+reviewed and edited by a human (yours truly) before being committed to the
+repository.
+
 ## License
 
 MIT
