@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -6,7 +7,10 @@ namespace JDMallen.Shelly;
 /// <param name="ParentId">The parent's process id; 0 when it has none.</param>
 /// <param name="Name">The process name, e.g. <c>zsh</c> or <c>pwsh.exe</c>.</param>
 /// <param name="ExecutablePath">The full executable path, when readable.</param>
-internal readonly record struct ProcessEntry(int ParentId, string Name, string? ExecutablePath);
+internal readonly record struct ProcessEntry(
+	int ParentId,
+	string Name,
+	string? ExecutablePath);
 
 /// <summary>
 /// Reads one process's parent and name. .NET has no API for a process's
@@ -53,7 +57,7 @@ internal sealed class LinuxProcessTree : IProcessTree
 	{
 		try
 		{
-			string processDirectory = $"/proc/{processId}";
+			var processDirectory = $"/proc/{processId}";
 			string stat = File.ReadAllText($"{processDirectory}/stat");
 			string name = File.ReadAllText($"{processDirectory}/comm").Trim();
 
@@ -62,7 +66,9 @@ internal sealed class LinuxProcessTree : IProcessTree
 				name,
 				TryReadExecutable(processDirectory));
 		}
-		catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or FormatException)
+		catch (Exception ex) when (ex is IOException
+									   or UnauthorizedAccessException
+									   or FormatException)
 		{
 			return null;
 		}
@@ -76,11 +82,12 @@ internal sealed class LinuxProcessTree : IProcessTree
 	internal static int ParseParentId(string stat)
 	{
 		int commEnd = stat.LastIndexOf(')');
-		string[] fields = stat[(commEnd + 1)..].Split(
-			' ',
-			StringSplitOptions.RemoveEmptyEntries);
+		string[] fields = stat[(commEnd + 1)..]
+			.Split(
+				' ',
+				StringSplitOptions.RemoveEmptyEntries);
 
-		return int.Parse(fields[1]);
+		return int.Parse(fields[1], CultureInfo.CurrentCulture);
 	}
 
 	private static string? TryReadExecutable(string processDirectory)
@@ -89,7 +96,8 @@ internal sealed class LinuxProcessTree : IProcessTree
 		{
 			return new FileInfo($"{processDirectory}/exe").LinkTarget;
 		}
-		catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+		catch (Exception ex) when (ex is IOException
+									   or UnauthorizedAccessException)
 		{
 			// Another user's process (e.g. under sudo): the name still identifies it.
 			return null;
@@ -116,23 +124,36 @@ internal sealed partial class MacProcessTree : IProcessTree
 		try
 		{
 			var bsdInfo = new byte[BSD_INFO_SIZE];
-			if (ProcPidInfo(processId, PROC_PIDTBSDINFO, 0, bsdInfo, BSD_INFO_SIZE) != BSD_INFO_SIZE)
+			if (ProcPidInfo(
+					processId,
+					PROC_PIDTBSDINFO,
+					0,
+					bsdInfo,
+					BSD_INFO_SIZE)
+				!= BSD_INFO_SIZE)
 			{
 				return null;
 			}
 
-			int parentId = BitConverter.ToInt32(bsdInfo, PARENT_ID_OFFSET);
+			var parentId = BitConverter.ToInt32(bsdInfo, PARENT_ID_OFFSET);
 			string comm = ReadCString(bsdInfo.AsSpan(COMM_OFFSET, COMM_LENGTH));
 
 			var pathBuffer = new byte[PATH_MAX_LENGTH];
-			int pathLength = ProcPidPath(processId, pathBuffer, PATH_MAX_LENGTH);
+			int pathLength = ProcPidPath(
+				processId,
+				pathBuffer,
+				PATH_MAX_LENGTH);
 			string? path = pathLength > 0
 				? Encoding.UTF8.GetString(pathBuffer, 0, pathLength)
 				: null;
 
-			return new ProcessEntry(parentId, path is null ? comm : Path.GetFileName(path), path);
+			return new ProcessEntry(
+				parentId,
+				path is null ? comm : Path.GetFileName(path),
+				path);
 		}
-		catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException)
+		catch (Exception ex) when (ex is DllNotFoundException
+									   or EntryPointNotFoundException)
 		{
 			return null;
 		}
@@ -142,7 +163,8 @@ internal sealed partial class MacProcessTree : IProcessTree
 	{
 		int terminator = bytes.IndexOf((byte)0);
 
-		return Encoding.UTF8.GetString(terminator < 0 ? bytes : bytes[..terminator]);
+		return Encoding.UTF8.GetString(
+			terminator < 0 ? bytes : bytes[..terminator]);
 	}
 
 	[LibraryImport(LIB_PROC, EntryPoint = "proc_pidinfo")]
@@ -154,7 +176,10 @@ internal sealed partial class MacProcessTree : IProcessTree
 		int bufferSize);
 
 	[LibraryImport(LIB_PROC, EntryPoint = "proc_pidpath")]
-	private static partial int ProcPidPath(int processId, [Out] byte[] buffer, uint bufferSize);
+	private static partial int ProcPidPath(
+		int processId,
+		[Out] byte[] buffer,
+		uint bufferSize);
 }
 
 /// <summary>
@@ -172,7 +197,10 @@ internal sealed partial class WindowsProcessTree : IProcessTree
 	{
 		try
 		{
-			nint handle = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, (uint)processId);
+			nint handle = OpenProcess(
+				PROCESS_QUERY_LIMITED_INFORMATION,
+				false,
+				(uint)processId);
 			if (handle == 0)
 			{
 				return null;
@@ -194,8 +222,14 @@ internal sealed partial class WindowsProcessTree : IProcessTree
 
 				var pathBuffer = new ushort[MAX_PATH_LENGTH];
 				uint pathLength = MAX_PATH_LENGTH;
-				string? path = QueryFullProcessImageName(handle, 0, pathBuffer, ref pathLength)
-					? new string(MemoryMarshal.Cast<ushort, char>(pathBuffer.AsSpan(0, (int)pathLength)))
+				string? path = QueryFullProcessImageName(
+					handle,
+					0,
+					pathBuffer,
+					ref pathLength)
+					? new string(
+						MemoryMarshal.Cast<ushort, char>(
+							pathBuffer.AsSpan(0, (int)pathLength)))
 					: null;
 				if (path is null)
 				{
@@ -212,7 +246,8 @@ internal sealed partial class WindowsProcessTree : IProcessTree
 				CloseHandle(handle);
 			}
 		}
-		catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException)
+		catch (Exception ex) when (ex is DllNotFoundException
+									   or EntryPointNotFoundException)
 		{
 			return null;
 		}
@@ -237,9 +272,12 @@ internal sealed partial class WindowsProcessTree : IProcessTree
 
 	[LibraryImport("kernel32.dll")]
 	[return: MarshalAs(UnmanagedType.Bool)]
-	private static partial bool CloseHandle(nint handle);
+	private static partial void CloseHandle(IntPtr handle);
 
-	[LibraryImport("kernel32.dll", EntryPoint = "QueryFullProcessImageNameW", SetLastError = true)]
+	[LibraryImport(
+		"kernel32.dll",
+		EntryPoint = "QueryFullProcessImageNameW",
+		SetLastError = true)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	private static partial bool QueryFullProcessImageName(
 		nint process,

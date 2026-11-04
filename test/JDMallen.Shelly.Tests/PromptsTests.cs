@@ -1,4 +1,5 @@
 using System.Globalization;
+
 using Xunit;
 
 namespace JDMallen.Shelly.Tests;
@@ -13,30 +14,32 @@ public class PromptsTests
 	                                       Context: Shell: Bash, OS: os, PWD: /pwd
 	                                       """;
 
-	private static ShellContext ContextFor(string shellName, string workingDirectory = "/pwd") =>
+	private static ShellContext ContextFor(
+		string shellName,
+		string workingDirectory = "/pwd") =>
 		new(Shell.FromNameOrPath(shellName), "os", workingDirectory);
 
 	[Fact]
 	public void Suggestion_Bash_MatchesEnglishPrompt()
 	{
-		string expected = """
-		                  You are a shell command expert. Given a description of what the user wants to do, output ONLY the shell command(s) that accomplish it. No explanations, no markdown, no code fences, no backticks, no language tags — just the raw command(s). If multiple commands are needed, separate them with && or use appropriate shell syntax.
+		const string expected = """
+		                        You are a shell command expert. Given a description of what the user wants to do, output ONLY the shell command(s) that accomplish it. No explanations, no markdown, no code fences, no backticks, no language tags — just the raw command(s). If multiple commands are needed, separate them with && or use appropriate shell syntax.
 
-		                  The user's shell is Bash. Write the command(s) for Bash specifically, using its syntax and builtins, so they run correctly when typed into it.
+		                        The user's shell is Bash. Write the command(s) for Bash specifically, using its syntax and builtins, so they run correctly when typed into it.
 
-		                  EXAMPLES:
-		                  Bad:
-		                  ```bash
-		                  ls -la
-		                  ```
-		                  Good:
-		                  ls -la
+		                        EXAMPLES:
+		                        Bad:
+		                        ```bash
+		                        ls -la
+		                        ```
+		                        Good:
+		                        ls -la
 
-		                  Bad: `find . -name '*.cs'`
-		                  Good: find . -name '*.cs'
+		                        Bad: `find . -name '*.cs'`
+		                        Good: find . -name '*.cs'
 
-		                  Context: Shell: Bash, OS: os, PWD: /pwd
-		                  """;
+		                        Context: Shell: Bash, OS: os, PWD: /pwd
+		                        """;
 
 		Assert.Equal(expected, Prompts.Suggestion(ContextFor("bash")));
 	}
@@ -49,7 +52,9 @@ public class PromptsTests
 	[InlineData("cmd", "Use cmd.exe batch syntax")]
 	[InlineData("nu", "Use Nushell syntax")]
 	[InlineData("tcsh", "Use csh/tcsh syntax")]
-	public void Suggestion_ShellWithDistinctSyntax_IncludesItsHint(string shellName, string hint)
+	public void Suggestion_ShellWithDistinctSyntax_IncludesItsHint(
+		string shellName,
+		string hint)
 	{
 		string prompt = Prompts.Suggestion(ContextFor(shellName));
 
@@ -72,11 +77,14 @@ public class PromptsTests
 	[InlineData("bash")]
 	[InlineData("zsh")]
 	[InlineData("xonsh")]
-	public void Suggestion_ShellWithoutHint_HasOnlyTheShellSentence(string shellName)
+	public void Suggestion_ShellWithoutHint_HasOnlyTheShellSentence(
+		string shellName)
 	{
 		string prompt = Prompts.Suggestion(ContextFor(shellName));
 
-		Assert.Contains("so they run correctly when typed into it.\n\nEXAMPLES:", prompt);
+		Assert.Contains(
+			"so they run correctly when typed into it.\n\nEXAMPLES:",
+			prompt);
 	}
 
 	[Theory]
@@ -85,12 +93,12 @@ public class PromptsTests
 	[InlineData("en-GB")]
 	[InlineData("ar-SA")]
 	[InlineData("pt-PT")]
-	public void Explain_UntranslatedCulture_HasNoLanguageInstruction(string cultureName)
-	{
-		Assert.Equal(
-			ENGLISH_EXPLAIN,
-			Prompts.Explain(ContextFor("bash"), CultureInfo.GetCultureInfo(cultureName)));
-	}
+	public void Explain_UntranslatedCulture_HasNoLanguageInstruction(
+		string cultureName) => Assert.Equal(
+		ENGLISH_EXPLAIN,
+		Prompts.Explain(
+			ContextFor("bash"),
+			CultureInfo.GetCultureInfo(cultureName)));
 
 	[Theory]
 	[InlineData("de", "German")]
@@ -108,28 +116,26 @@ public class PromptsTests
 
 		Assert.Equal(
 			expected,
-			Prompts.Explain(ContextFor("bash"), CultureInfo.GetCultureInfo(cultureName)));
+			Prompts.Explain(
+				ContextFor("bash"),
+				CultureInfo.GetCultureInfo(cultureName)));
 	}
 
 	[Fact]
-	public void Explain_NamesTheShell()
-	{
-		Assert.Contains(
-			"The command is for fish;",
-			Prompts.Explain(ContextFor("fish"), CultureInfo.InvariantCulture));
-	}
+	public void Explain_NamesTheShell() => Assert.Contains(
+		"The command is for fish;",
+		Prompts.Explain(ContextFor("fish"), CultureInfo.InvariantCulture));
 
 	[Fact]
 	public void Explain_ContextWithBraces_IsInsertedVerbatim()
-	{
-		Assert.EndsWith(
+		=> Assert.EndsWith(
 			"PWD: /tmp/{a,b}",
-			Prompts.Explain(ContextFor("bash", "/tmp/{a,b}"), CultureInfo.GetCultureInfo("ja")));
-	}
+			Prompts.Explain(
+				ContextFor("bash", "/tmp/{a,b}"),
+				CultureInfo.GetCultureInfo("ja")));
 
 	[Fact]
-	public void ContextLine_DescribesShellOsAndDirectory()
-	{
-		Assert.Equal(CONTEXT_LINE, ContextFor("bash").Describe());
-	}
+	public void ContextLine_DescribesShellOsAndDirectory() => Assert.Equal(
+		CONTEXT_LINE,
+		ContextFor("bash").Describe());
 }

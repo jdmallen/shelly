@@ -5,46 +5,37 @@ namespace JDMallen.Shelly.Tests;
 public class CommandLineArgsTests
 {
 	[Fact]
-	public void Parse_NoArgs_RunsWithNullPrompt()
-	{
-		Assert.Equal(new CommandLineArgs.Run(null), CommandLineArgs.Parse([]));
-	}
+	public void Parse_NoArgs_RunsWithNullPrompt() => Assert.Equal(
+		new CommandLineArgs.Run(null),
+		CommandLineArgs.Parse([]));
 
 	[Fact]
-	public void Parse_PositionalWords_JoinedIntoPrompt()
-	{
-		Assert.Equal(
-			new CommandLineArgs.Run("list files"),
-			CommandLineArgs.Parse(["list", "files"]));
-	}
+	public void Parse_PositionalWords_JoinedIntoPrompt() => Assert.Equal(
+		new CommandLineArgs.Run("list files"),
+		CommandLineArgs.Parse(["list", "files"]));
 
 	[Theory]
 	[InlineData("--help")]
 	[InlineData("-h")]
 	[InlineData("-?")]
 	public void Parse_HelpFlags_ShowHelp(string flag)
-	{
-		Assert.IsType<CommandLineArgs.ShowHelp>(CommandLineArgs.Parse([flag]));
-	}
+		=> Assert.IsType<CommandLineArgs.ShowHelp>(
+			CommandLineArgs.Parse([flag]));
 
 	[Fact]
 	public void Parse_VersionFlag_ShowVersion()
-	{
-		Assert.IsType<CommandLineArgs.ShowVersion>(
+		=> Assert.IsType<CommandLineArgs.ShowVersion>(
 			CommandLineArgs.Parse(["--version"]));
-	}
 
 	[Fact]
 	public void Parse_ConfigFlag_ShowConfig()
-	{
-		Assert.IsType<CommandLineArgs.ShowConfig>(CommandLineArgs.Parse(["--config"]));
-	}
+		=> Assert.IsType<CommandLineArgs.ShowConfig>(
+			CommandLineArgs.Parse(["--config"]));
 
 	[Fact]
 	public void Parse_InfoFlag_ShowInfo()
-	{
-		Assert.IsType<CommandLineArgs.ShowInfo>(CommandLineArgs.Parse(["--info"]));
-	}
+		=> Assert.IsType<CommandLineArgs.ShowInfo>(
+			CommandLineArgs.Parse(["--info"]));
 
 	[Fact]
 	public void Parse_UnknownOption_ReturnsError()
@@ -56,31 +47,23 @@ public class CommandLineArgsTests
 	}
 
 	[Fact]
-	public void Parse_OptionTerminator_TreatsRestAsPrompt()
-	{
-		Assert.Equal(
-			new CommandLineArgs.Run("-la files"),
-			CommandLineArgs.Parse(["--", "-la", "files"]));
-	}
+	public void Parse_OptionTerminator_TreatsRestAsPrompt() => Assert.Equal(
+		new CommandLineArgs.Run("-la files"),
+		CommandLineArgs.Parse(["--", "-la", "files"]));
 
 	[Fact]
 	public void Parse_OptionTerminatorAlone_RunsWithNullPrompt()
-	{
-		Assert.Equal(new CommandLineArgs.Run(null), CommandLineArgs.Parse(["--"]));
-	}
+		=> Assert.Equal(
+			new CommandLineArgs.Run(null),
+			CommandLineArgs.Parse(["--"]));
 
 	[Fact]
 	public void Parse_HelpAfterPromptWords_StillShowsHelp()
-	{
-		Assert.IsType<CommandLineArgs.ShowHelp>(
+		=> Assert.IsType<CommandLineArgs.ShowHelp>(
 			CommandLineArgs.Parse(["list", "--help"]));
-	}
 
 	[Fact]
-	public void Parse_HelpAfterTerminator_IsPromptText()
-	{
-		Assert.Equal(
-			new CommandLineArgs.Run("--help"),
-			CommandLineArgs.Parse(["--", "--help"]));
-	}
+	public void Parse_HelpAfterTerminator_IsPromptText() => Assert.Equal(
+		new CommandLineArgs.Run("--help"),
+		CommandLineArgs.Parse(["--", "--help"]));
 }

@@ -27,7 +27,8 @@ public sealed class ShellyConfig
 		ShellyConfig config = Load(path, out string? parseError);
 		if (parseError is not null)
 		{
-			Console.Error.WriteLine(Strings.ConfigParseWarning(path, parseError));
+			Console.Error.WriteLine(
+				Strings.ConfigParseWarning(path, parseError));
 		}
 
 		return config;
@@ -84,10 +85,13 @@ public sealed class ShellyConfig
 		{
 			using (FileStream stream = File.Create(temporaryPath))
 			{
-				JsonSerializer.Serialize(stream, this, ShellyConfigJsonContext.Default.ShellyConfig);
+				JsonSerializer.Serialize(
+					stream,
+					this,
+					ShellyConfigJsonContext.Default.ShellyConfig);
 			}
 
-			File.Move(temporaryPath, path, overwrite: true);
+			File.Move(temporaryPath, path, true);
 		}
 		finally
 		{
@@ -101,18 +105,24 @@ public sealed class ShellyConfig
 	/// </summary>
 	internal static bool IsOpenAIProvider(string provider) =>
 		provider.Equals(OPENAI_PROVIDER, StringComparison.OrdinalIgnoreCase)
-		|| provider.Equals(LOCAL_PROVIDER_ALIAS, StringComparison.OrdinalIgnoreCase);
+		|| provider.Equals(
+			LOCAL_PROVIDER_ALIAS,
+			StringComparison.OrdinalIgnoreCase);
 
 	public static string ConfigPath()
 	{
-		string baseDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+		string baseDir =
+			Environment.GetFolderPath(
+				Environment.SpecialFolder.ApplicationData);
 		if (!string.IsNullOrEmpty(baseDir))
 		{
 			return Path.Combine(baseDir, "shelly", "config.json");
 		}
 
 		string? home = Environment.GetEnvironmentVariable("HOME");
-		baseDir = string.IsNullOrEmpty(home) ? "." : Path.Combine(home, ".config");
+		baseDir = string.IsNullOrEmpty(home)
+			? "."
+			: Path.Combine(home, ".config");
 
 		return Path.Combine(baseDir, "shelly", "config.json");
 	}
@@ -123,7 +133,10 @@ public sealed class ShellyConfig
 		{
 			Directory.CreateDirectory(Path.GetDirectoryName(path)!);
 			using FileStream stream = File.Create(path);
-			JsonSerializer.Serialize(stream, defaults, ShellyConfigJsonContext.Default.ShellyConfig);
+			JsonSerializer.Serialize(
+				stream,
+				defaults,
+				ShellyConfigJsonContext.Default.ShellyConfig);
 		}
 		catch (IOException)
 		{
@@ -163,21 +176,29 @@ public sealed class AzureConfig
 	/// <see cref="Endpoint" />, or the deprecated environment variable when it
 	/// is empty.
 	/// </summary>
-	internal AzureSetting ResolveEndpoint(Func<string, string?> getEnvironmentVariable) =>
-		AzureSetting.Resolve(Endpoint, ChatProvider.AzureEndpointEnvVar, getEnvironmentVariable);
+	internal AzureSetting ResolveEndpoint(
+		Func<string, string?> getEnvironmentVariable) =>
+		AzureSetting.Resolve(
+			Endpoint,
+			ChatProvider.AZURE_ENDPOINT_ENV_VAR,
+			getEnvironmentVariable);
 
 	/// <summary>
 	/// <see cref="Deployment" />, or the deprecated environment variable when
 	/// it is empty.
 	/// </summary>
-	internal AzureSetting ResolveDeployment(Func<string, string?> getEnvironmentVariable) =>
-		AzureSetting.Resolve(Deployment, ChatProvider.AzureDeploymentEnvVar, getEnvironmentVariable);
+	internal AzureSetting ResolveDeployment(
+		Func<string, string?> getEnvironmentVariable) =>
+		AzureSetting.Resolve(
+			Deployment,
+			ChatProvider.AZURE_DEPLOYMENT_ENV_VAR,
+			getEnvironmentVariable);
 
 	/// <summary>
 	/// Generation budget. A reasoning deployment spends its hidden thinking from
 	/// this same budget, so raise it (e.g. to 2048) if answers come back empty.
 	/// </summary>
-	public int MaxTokens { get; set; } = ChatProvider.DefaultMaxTokens;
+	public int MaxTokens { get; set; } = ChatProvider.DEFAULT_MAX_TOKENS;
 
 	/// <summary>
 	/// Set for a reasoning deployment (o-series, gpt-5 and later reasoning
@@ -228,7 +249,9 @@ public sealed class OpenAIConfig
 /// The environment variable the value came from, or null when it came from
 /// the config file (or is missing).
 /// </param>
-internal readonly record struct AzureSetting(string? Value, string? DeprecatedVariable)
+internal readonly record struct AzureSetting(
+	string? Value,
+	string? DeprecatedVariable)
 {
 	public bool IsSet => !string.IsNullOrWhiteSpace(Value);
 

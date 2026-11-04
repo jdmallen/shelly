@@ -35,7 +35,10 @@ internal sealed class SystemUserEnvironment : IUserEnvironment
 			throw new PlatformNotSupportedException();
 		}
 
-		Environment.SetEnvironmentVariable(name, value, EnvironmentVariableTarget.User);
+		Environment.SetEnvironmentVariable(
+			name,
+			value,
+			EnvironmentVariableTarget.User);
 		Environment.SetEnvironmentVariable(name, value);
 	}
 }

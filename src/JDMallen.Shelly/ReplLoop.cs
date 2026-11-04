@@ -38,7 +38,6 @@ public sealed class ReplLoop
 		string? initialPrompt,
 		CancellationToken cancellationToken = default)
 	{
-		ShellContext context = _context;
 		string? prompt = initialPrompt;
 
 		while (true)
@@ -59,7 +58,10 @@ public sealed class ReplLoop
 			string suggestion;
 			try
 			{
-				suggestion = await _provider.GetSuggestionAsync(prompt, context, cancellationToken);
+				suggestion = await _provider.GetSuggestionAsync(
+					prompt,
+					_context,
+					cancellationToken);
 			}
 			catch (Exception ex)
 			{
@@ -75,10 +77,11 @@ public sealed class ReplLoop
 				return ReplResult.Failed();
 			}
 
-			(ActionOutcome outcome, string? refinement) = await ActOnSuggestionAsync(
-				suggestion,
-				context,
-				cancellationToken);
+			(ActionOutcome outcome, string? refinement) =
+				await ActOnSuggestionAsync(
+					suggestion,
+					_context,
+					cancellationToken);
 
 			switch (outcome)
 			{
@@ -100,7 +103,7 @@ public sealed class ReplLoop
 					throw new ArgumentOutOfRangeException(
 						nameof(outcome),
 						outcome,
-						"Unexpected action outcome");
+						@"Unexpected action outcome");
 #pragma warning restore CA2208
 			}
 		}
@@ -143,13 +146,17 @@ public sealed class ReplLoop
 					}
 					catch (Exception ex)
 					{
-						_io.Write($"{Strings.Error(ex.Message)}\n", ConsoleColor.Red);
+						_io.Write(
+							$"{Strings.Error(ex.Message)}\n",
+							ConsoleColor.Red);
 
 						continue;
 					}
 
 					_io.WriteLine();
-					_io.Write($"{Strings.ExplanationHeader}\n", ConsoleColor.Green);
+					_io.Write(
+						$"{Strings.ExplanationHeader}\n",
+						ConsoleColor.Green);
 					_io.WriteLine(explanation);
 
 					continue;
@@ -157,14 +164,20 @@ public sealed class ReplLoop
 				case ConsoleKey.C when _clipboardEnabled:
 					try
 					{
-						await _clipboard.SetTextAsync(suggestion, cancellationToken);
-						_io.Write($"{Strings.CopiedToClipboard}\n", ConsoleColor.Green);
+						await _clipboard.SetTextAsync(
+							suggestion,
+							cancellationToken);
+						_io.Write(
+							$"{Strings.CopiedToClipboard}\n",
+							ConsoleColor.Green);
 
 						return (ActionOutcome.Quit, null);
 					}
 					catch (Exception ex)
 					{
-						_io.Write($"{Strings.ClipboardUnavailable(ex.Message)}\n", ConsoleColor.Red);
+						_io.Write(
+							$"{Strings.ClipboardUnavailable(ex.Message)}\n",
+							ConsoleColor.Red);
 						if (OperatingSystem.IsLinux())
 						{
 							_io.Write(
@@ -176,7 +189,9 @@ public sealed class ReplLoop
 					}
 
 				case ConsoleKey.R:
-					_io.Write($"{Strings.WhatShouldBeDifferent} ", ConsoleColor.Cyan);
+					_io.Write(
+						$"{Strings.WhatShouldBeDifferent} ",
+						ConsoleColor.Cyan);
 					string? refinement = _io.ReadLine();
 
 					return (ActionOutcome.Retry, refinement);
@@ -188,7 +203,9 @@ public sealed class ReplLoop
 					return (ActionOutcome.Quit, null);
 
 				default:
-					_io.Write($"{Strings.InvalidChoice}\n", ConsoleColor.Yellow);
+					_io.Write(
+						$"{Strings.InvalidChoice}\n",
+						ConsoleColor.Yellow);
 
 					continue;
 			}
@@ -227,11 +244,12 @@ public sealed class ReplLoop
 			}
 
 			first = false;
-			string marker = $"[{key}]";
+			var marker = $"[{key}]";
 			int markerIndex = label.IndexOf(marker, StringComparison.Ordinal);
 			(string before, string after) = markerIndex < 0
 				? (string.Empty, $" {label}")
-				: (label[..markerIndex], label[(markerIndex + marker.Length)..]);
+				: (label[..markerIndex],
+					label[(markerIndex + marker.Length)..]);
 
 			_io.Write($"{before}[");
 			_io.Write(key.ToString(), ConsoleColor.Green);
@@ -262,9 +280,11 @@ public readonly record struct ReplResult(ReplAction Action, string? Command)
 {
 	public bool ShouldExecute => Action == ReplAction.Execute;
 
-	public static ReplResult Execute(string command) => new(ReplAction.Execute, command);
+	public static ReplResult Execute(string command)
+		=> new(ReplAction.Execute, command);
 
-	public static ReplResult Edit(string command) => new(ReplAction.Edit, command);
+	public static ReplResult Edit(string command)
+		=> new(ReplAction.Edit, command);
 
 	public static ReplResult Quit() => new(ReplAction.Quit, null);
 

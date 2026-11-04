@@ -1,4 +1,5 @@
 using JDMallen.Shelly.Tests.Fakes;
+
 using Xunit;
 
 namespace JDMallen.Shelly.Tests;
@@ -38,9 +39,7 @@ public class ConsolePromptsTests
 
 	[Fact]
 	public void Text_EndOfInput_KeepsCurrentValue()
-	{
-		Assert.Equal("", Prompts.Text("openai.model", ""));
-	}
+		=> Assert.Equal("", Prompts.Text("openai.model", ""));
 
 	[Theory]
 	[InlineData("0")]
@@ -64,7 +63,9 @@ public class ConsolePromptsTests
 		_io.ReadLines.Enqueue(invalid);
 		_io.ReadLines.Enqueue("http://localhost:8080/v1");
 
-		Assert.Equal("http://localhost:8080/v1", Prompts.HttpUrl("openai.baseUrl", ""));
+		Assert.Equal(
+			"http://localhost:8080/v1",
+			Prompts.HttpUrl("openai.baseUrl", ""));
 		Assert.Contains(Strings.InvalidHttpUrl, _io.Output.ToString());
 	}
 
@@ -74,7 +75,10 @@ public class ConsolePromptsTests
 	[InlineData(ConsoleKey.Enter, true, true)]
 	[InlineData(ConsoleKey.Enter, false, false)]
 	[InlineData(ConsoleKey.Escape, true, false)]
-	public void YesNo_KeyAndDefault(ConsoleKey key, bool defaultYes, bool expected)
+	public void YesNo_KeyAndDefault(
+		ConsoleKey key,
+		bool defaultYes,
+		bool expected)
 	{
 		_io.ReadKeys.Enqueue(key);
 
@@ -88,7 +92,7 @@ public class ConsolePromptsTests
 		_io.ReadKeys.Enqueue(ConsoleKey.D4);
 		_io.ReadKeys.Enqueue(ConsoleKey.D3);
 
-		Assert.Equal(2, Prompts.Choose(["a", "b", "c"], defaultIndex: 1));
+		Assert.Equal(2, Prompts.Choose(["a", "b", "c"], 1));
 		Assert.Contains("  2) b (default)", _io.Output.ToString());
 		Assert.Contains(Strings.InvalidChoice, _io.Output.ToString());
 	}
@@ -98,8 +102,12 @@ public class ConsolePromptsTests
 	{
 		_io.ReadKeys.Enqueue(ConsoleKey.D0);
 
-		Assert.Equal(ConsolePrompts.CANCELLED, Prompts.Choose(["a", "b"], defaultIndex: 0, zeroOption: "Back"));
-		Assert.Contains("  2) b\n  0) Back\n", _io.Output.ToString().ReplaceLineEndings("\n"));
+		Assert.Equal(
+			ConsolePrompts.CANCELLED,
+			Prompts.Choose(["a", "b"], 0, zeroOption: "Back"));
+		Assert.Contains(
+			"  2) b\n  0) Back\n",
+			_io.Output.ToString().ReplaceLineEndings("\n"));
 	}
 
 	[Fact]
@@ -108,7 +116,7 @@ public class ConsolePromptsTests
 		_io.ReadKeys.Enqueue(ConsoleKey.D0);
 		_io.ReadKeys.Enqueue(ConsoleKey.D1);
 
-		Assert.Equal(0, Prompts.Choose(["a", "b"], defaultIndex: 1));
+		Assert.Equal(0, Prompts.Choose(["a", "b"], 1));
 		Assert.Contains(Strings.InvalidChoice, _io.Output.ToString());
 	}
 
@@ -117,11 +125,16 @@ public class ConsolePromptsTests
 	[InlineData("", false, false)]
 	[InlineData("N", true, false)]
 	[InlineData("yes", false, true)]
-	public void Boolean_EnterKeepsCurrent(string typed, bool current, bool expected)
+	public void Boolean_EnterKeepsCurrent(
+		string typed,
+		bool current,
+		bool expected)
 	{
 		_io.ReadLines.Enqueue(typed);
 
 		Assert.Equal(expected, Prompts.Boolean("flag", current));
-		Assert.Contains($"  flag (y/n) [{(current ? "y" : "n")}]: ", _io.Output.ToString());
+		Assert.Contains(
+			$"  flag (y/n) [{(current ? "y" : "n")}]: ",
+			_io.Output.ToString());
 	}
 }

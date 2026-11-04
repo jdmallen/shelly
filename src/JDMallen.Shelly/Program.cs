@@ -27,23 +27,26 @@ public static class Program
 
 				return 0;
 			case CommandLineArgs.ShowConfig:
-				if (Console.IsInputRedirected)
+				if (!Console.IsInputRedirected)
 				{
-					await Console.Error.WriteLineAsync(
-						Strings.Error(Strings.InteractiveTerminalRequired));
-
-					return 1;
+					return RunConfigWizard();
 				}
 
-				return RunConfigWizard();
+				await Console.Error.WriteLineAsync(
+					Strings.Error(Strings.InteractiveTerminalRequired));
+
+				return 1;
+
 			case CommandLineArgs.Error error:
 				await Console.Error.WriteLineAsync(error.Message);
 				await Console.Error.WriteLineAsync();
 				await Console.Error.WriteLineAsync(BuildHelpText());
 
 				return 1;
+
 			// Piped input keeps going straight to the prompt, as before the menu.
-			case CommandLineArgs.Run { Prompt: null } when !Console.IsInputRedirected:
+			case CommandLineArgs.Run { Prompt: null }
+				when !Console.IsInputRedirected:
 				return await RunMainMenuAsync();
 			case CommandLineArgs.Run run:
 				return await RunAsync(run.Prompt);
@@ -58,7 +61,9 @@ public static class Program
 		while (true)
 		{
 			// Re-checked on every pass, so the warning clears after Configure.
-			ShellyConfig config = ShellyConfig.Load(ShellyConfig.ConfigPath(), out string? parseError);
+			ShellyConfig config = ShellyConfig.Load(
+				ShellyConfig.ConfigPath(),
+				out string? parseError);
 			IReadOnlyList<string> missingSettings = ConfigCheck.FindMissing(
 				config,
 				parseError,
@@ -72,7 +77,7 @@ public static class Program
 					return await RunAsync(null);
 				case MainMenuChoice.Configure:
 					io.WriteLine();
-					new ConfigWizard().Run(fromMainMenu: true);
+					new ConfigWizard().Run(true);
 					io.WriteLine();
 
 					continue;
@@ -82,6 +87,7 @@ public static class Program
 					io.WriteLine();
 
 					continue;
+				case MainMenuChoice.Exit:
 				default:
 					return 0;
 			}
@@ -145,7 +151,8 @@ public static class Program
 		}
 
 		ShellContext context = ShellContext.Detect();
-		ReplResult result = await new ReplLoop(provider, context).RunAsync(prompt);
+		ReplResult result =
+			await new ReplLoop(provider, context).RunAsync(prompt);
 
 		if (result.Action == ReplAction.Failed)
 		{
@@ -159,9 +166,11 @@ public static class Program
 
 		return result.Action switch
 		{
-			ReplAction.Execute => await ExecuteAsync(result.Command, context.Shell),
-			ReplAction.Edit    => WriteEditHandoff(result.Command),
-			_                  => 0,
+			ReplAction.Execute => await ExecuteAsync(
+				result.Command,
+				context.Shell),
+			ReplAction.Edit => WriteEditHandoff(result.Command),
+			_ => 0,
 		};
 	}
 
@@ -190,24 +199,29 @@ public static class Program
 		};
 
 	internal static IChatProvider? CreateProvider(ShellyConfig config)
-	{
-		return config.Provider.ToLowerInvariant() switch
+		=> config.Provider.ToLowerInvariant() switch
 		{
-			ShellyConfig.AZURE_PROVIDER     => CreateAzureProvider(config.Azure),
-			ShellyConfig.ANTHROPIC_PROVIDER => CreateAnthropicProvider(config.Anthropic),
+			ShellyConfig.AZURE_PROVIDER => CreateAzureProvider(config.Azure),
+			ShellyConfig.ANTHROPIC_PROVIDER => CreateAnthropicProvider(
+				config.Anthropic),
 			ShellyConfig.OPENAI_PROVIDER
-				or ShellyConfig.LOCAL_PROVIDER_ALIAS => CreateOpenAIProvider(config.OpenAI),
+				or ShellyConfig.LOCAL_PROVIDER_ALIAS => CreateOpenAIProvider(
+					config.OpenAI),
 			_ => Fail(
-				Strings.UnknownProvider(config.Provider, ShellyConfig.ConfigPath())),
+				Strings.UnknownProvider(
+					config.Provider,
+					ShellyConfig.ConfigPath())),
 		};
-	}
 
 	private static IChatProvider? CreateAnthropicProvider(AnthropicConfig cfg)
 	{
-		string? apiKey = Environment.GetEnvironmentVariable(ChatProvider.AnthropicApiKeyEnvVar);
+		string? apiKey =
+			Environment.GetEnvironmentVariable(
+				ChatProvider.ANTHROPIC_API_KEY_ENV_VAR);
 		if (string.IsNullOrEmpty(apiKey))
 		{
-			return Fail(Strings.EnvVarNotSet(ChatProvider.AnthropicApiKeyEnvVar));
+			return Fail(
+				Strings.EnvVarNotSet(ChatProvider.ANTHROPIC_API_KEY_ENV_VAR));
 		}
 
 		return new ChatProvider(
@@ -239,22 +253,33 @@ public static class Program
 
 		if (cfg.TimeoutSeconds <= 0)
 		{
-			return Fail(Strings.MustBeGreaterThanZero("openai.timeoutSeconds", cfg.TimeoutSeconds));
+			return Fail(
+				Strings.MustBeGreaterThanZero(
+					"openai.timeoutSeconds",
+					cfg.TimeoutSeconds));
 		}
 
 		if (cfg.MaxTokens <= 0)
 		{
-			return Fail(Strings.MustBeGreaterThanZero("openai.maxTokens", cfg.MaxTokens));
+			return Fail(
+				Strings.MustBeGreaterThanZero(
+					"openai.maxTokens",
+					cfg.MaxTokens));
 		}
 
 		// Self-hosted runners usually accept anonymous requests, so the key is
 		// optional: supply it only if the env var is set.
-		string? apiKey = Environment.GetEnvironmentVariable(ChatProvider.OpenAIApiKeyEnvVar);
+		string? apiKey =
+			Environment.GetEnvironmentVariable(
+				ChatProvider.OPEN_AI_API_KEY_ENV_VAR);
 
 		return new ChatProvider(
 			new OpenAICompatibleChatClient(
 				CreateHttpClient(cfg.TimeoutSeconds),
-				new OpenAICompatibleClientOptions(cfg.BaseUrl, cfg.Model, apiKey)),
+				new OpenAICompatibleClientOptions(
+					cfg.BaseUrl,
+					cfg.Model,
+					apiKey)),
 			cfg.MaxTokens);
 	}
 
@@ -262,11 +287,16 @@ public static class Program
 	{
 		if (cfg.MaxTokens <= 0)
 		{
-			return Fail(Strings.MustBeGreaterThanZero("azure.maxTokens", cfg.MaxTokens));
+			return Fail(
+				Strings.MustBeGreaterThanZero(
+					"azure.maxTokens",
+					cfg.MaxTokens));
 		}
 
-		AzureSetting endpoint = cfg.ResolveEndpoint(Environment.GetEnvironmentVariable);
-		AzureSetting deployment = cfg.ResolveDeployment(Environment.GetEnvironmentVariable);
+		AzureSetting endpoint =
+			cfg.ResolveEndpoint(Environment.GetEnvironmentVariable);
+		AzureSetting deployment =
+			cfg.ResolveDeployment(Environment.GetEnvironmentVariable);
 
 		var missing = new List<string>();
 		if (!endpoint.IsSet)
@@ -290,16 +320,22 @@ public static class Program
 		WarnIfDeprecated(endpoint, "azure.endpoint");
 		WarnIfDeprecated(deployment, "azure.deployment");
 
-		string? apiKey = Environment.GetEnvironmentVariable(ChatProvider.AzureApiKeyEnvVar);
+		string? apiKey =
+			Environment.GetEnvironmentVariable(
+				ChatProvider.AZURE_API_KEY_ENV_VAR);
 		if (string.IsNullOrEmpty(apiKey))
 		{
-			return Fail(Strings.EnvVarNotSet(ChatProvider.AzureApiKeyEnvVar));
+			return Fail(
+				Strings.EnvVarNotSet(ChatProvider.AZURE_API_KEY_ENV_VAR));
 		}
 
 		return new ChatProvider(
 			new AzureOpenAIChatClient(
 				CreateHttpClient(HOSTED_TIMEOUT_SECONDS),
-				new AzureOpenAIClientOptions(apiKey, endpoint.Value!, deployment.Value!)
+				new AzureOpenAIClientOptions(
+					apiKey,
+					endpoint.Value!,
+					deployment.Value!)
 				{
 					IsReasoningModel = cfg.ReasoningModel,
 				}),
@@ -358,7 +394,8 @@ public static class Program
 
 		if (process is null)
 		{
-			await Console.Error.WriteLineAsync(Strings.Error(Strings.FailedToStartShell));
+			await Console.Error.WriteLineAsync(
+				Strings.Error(Strings.FailedToStartShell));
 
 			return 1;
 		}

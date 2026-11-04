@@ -14,16 +14,18 @@ namespace JDMallen.Shelly;
 /// </param>
 public sealed class ChatProvider(
 	IChatCompletionClient client,
-	int maxTokens = ChatProvider.DefaultMaxTokens) : IChatProvider
+	int maxTokens = ChatProvider.DEFAULT_MAX_TOKENS) : IChatProvider
 {
-	internal const string AnthropicApiKeyEnvVar = "ANTHROPIC_API_KEY_SHELLY";
-	internal const string AzureApiKeyEnvVar = "AZURE_OPENAI_API_KEY";
-	internal const string AzureDeploymentEnvVar = "AZURE_OPENAI_DEPLOYMENT";
-	internal const string AzureEndpointEnvVar = "AZURE_OPENAI_ENDPOINT_HOST";
-	internal const string OpenAIApiKeyEnvVar = "OPENAI_API_KEY_SHELLY";
+	internal const string
+		ANTHROPIC_API_KEY_ENV_VAR = "ANTHROPIC_API_KEY_SHELLY";
+
+	internal const string AZURE_API_KEY_ENV_VAR = "AZURE_OPENAI_API_KEY";
+	internal const string AZURE_DEPLOYMENT_ENV_VAR = "AZURE_OPENAI_DEPLOYMENT";
+	internal const string AZURE_ENDPOINT_ENV_VAR = "AZURE_OPENAI_ENDPOINT_HOST";
+	internal const string OPEN_AI_API_KEY_ENV_VAR = "OPENAI_API_KEY_SHELLY";
 
 	// ReSharper disable once MemberCanBePrivate.Global
-	internal const int DefaultMaxTokens = 500;
+	internal const int DEFAULT_MAX_TOKENS = 500;
 
 	public Task<string> GetSuggestionAsync(
 		string prompt,
@@ -32,7 +34,7 @@ public sealed class ChatProvider(
 		=> ChatAsync(
 			Prompts.Suggestion(context),
 			prompt,
-			sanitize: true,
+			true,
 			cancellationToken);
 
 	public Task<string> ExplainCommandAsync(
@@ -42,7 +44,7 @@ public sealed class ChatProvider(
 		=> ChatAsync(
 			Prompts.Explain(context),
 			command,
-			sanitize: false,
+			false,
 			cancellationToken);
 
 	private async Task<string> ChatAsync(

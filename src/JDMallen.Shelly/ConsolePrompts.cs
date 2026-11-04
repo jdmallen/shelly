@@ -15,6 +15,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 	/// Lists <paramref name="options" /> numbered from 1 and reads one key.
 	/// Enter picks <paramref name="defaultIndex" />.
 	/// </summary>
+	/// <param name="defaultIndex">The zero-based index of the default option.</param>
 	/// <param name="warnings">
 	/// Optional, by option index: text shown in yellow after that option.
 	/// </param>
@@ -22,6 +23,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 	/// Optional label listed last as <c>0)</c>, for leaving the menu (Exit,
 	/// Back). Pressing 0 returns <see cref="CANCELLED" />, as Esc does.
 	/// </param>
+	/// <param name="options">The options to display.</param>
 	/// <returns>The zero-based index chosen, or <see cref="CANCELLED" />.</returns>
 	public int Choose(
 		IReadOnlyList<string> options,
@@ -42,7 +44,8 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 				io.Write($" {Strings.DefaultMarker}");
 			}
 
-			if (warnings is not null && warnings.TryGetValue(index, out string? warning))
+			if (warnings is not null
+				&& warnings.TryGetValue(index, out string? warning))
 			{
 				io.Write($" ({warning})", ConsoleColor.Yellow);
 			}
@@ -65,31 +68,33 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 
 			int chosen = key switch
 			{
-				ConsoleKey.Enter                              => defaultIndex,
-				ConsoleKey.Escape                             => CANCELLED,
-				ConsoleKey.D0 or ConsoleKey.NumPad0 when zeroOption is not null => CANCELLED,
-				>= ConsoleKey.D1 and <= ConsoleKey.D9         => key - ConsoleKey.D1,
-				>= ConsoleKey.NumPad1 and <= ConsoleKey.NumPad9 => key - ConsoleKey.NumPad1,
-				_                                             => int.MinValue,
+				ConsoleKey.Enter => defaultIndex,
+				ConsoleKey.Escape => CANCELLED,
+				ConsoleKey.D0 or ConsoleKey.NumPad0 when zeroOption is not null
+					=> CANCELLED,
+				>= ConsoleKey.D1 and <= ConsoleKey.D9 => key - ConsoleKey.D1,
+				>= ConsoleKey.NumPad1 and <= ConsoleKey.NumPad9 => key
+					- ConsoleKey.NumPad1,
+				_ => int.MinValue,
 			};
 
-			if (chosen == CANCELLED)
+			switch (chosen)
 			{
-				// Echo the 0 like any other number; Esc leaves the line blank.
-				io.WriteLine(key == ConsoleKey.Escape ? string.Empty : "0");
+				case CANCELLED:
+					// Echo the 0 like any other number; Esc leaves the line blank.
+					io.WriteLine(key == ConsoleKey.Escape ? string.Empty : "0");
 
-				return CANCELLED;
+					return CANCELLED;
+				case >= 0 when chosen < options.Count:
+					io.WriteLine($"{chosen + 1}");
+
+					return chosen;
+				default:
+					io.WriteLine();
+					io.Write($"{Strings.InvalidChoice}\n", ConsoleColor.Yellow);
+
+					break;
 			}
-
-			if (chosen >= 0 && chosen < options.Count)
-			{
-				io.WriteLine($"{chosen + 1}");
-
-				return chosen;
-			}
-
-			io.WriteLine();
-			io.Write($"{Strings.InvalidChoice}\n", ConsoleColor.Yellow);
 		}
 	}
 
@@ -114,7 +119,9 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 				return current;
 			}
 
-			string value = string.IsNullOrWhiteSpace(line) ? current : line.Trim();
+			string value = string.IsNullOrWhiteSpace(line)
+				? current
+				: line.Trim();
 			string? error = string.IsNullOrWhiteSpace(value)
 				? Strings.ValueRequired
 				: validate?.Invoke(value);
@@ -143,7 +150,10 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 
 	/// <summary>Reads an absolute http:// or https:// URL.</summary>
 	public string HttpUrl(string label, string current) =>
-		Text(label, current, value => IsHttpUrl(value) ? null : Strings.InvalidHttpUrl);
+		Text(
+			label,
+			current,
+			value => IsHttpUrl(value) ? null : Strings.InvalidHttpUrl);
 
 	/// <summary>
 	/// Reads a yes/no setting the way <see cref="Text" /> reads others:
@@ -163,8 +173,8 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 		value.ToLowerInvariant() switch
 		{
 			"y" or "yes" => true,
-			"n" or "no"  => false,
-			_            => null,
+			"n" or "no" => false,
+			_ => null,
 		};
 
 	/// <summary>
@@ -176,16 +186,18 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 		string hint = defaultYes ? "[Y/n]" : "[y/N]";
 		while (true)
 		{
-			io.Write($"{(indent ? INDENT : string.Empty)}{question} {hint} ", ConsoleColor.Cyan);
+			io.Write(
+				$"{(indent ? INDENT : string.Empty)}{question} {hint} ",
+				ConsoleColor.Cyan);
 			ConsoleKey key = io.ReadKey();
 
 			bool? answer = key switch
 			{
-				ConsoleKey.Y      => true,
-				ConsoleKey.N      => false,
-				ConsoleKey.Enter  => defaultYes,
+				ConsoleKey.Y => true,
+				ConsoleKey.N => false,
+				ConsoleKey.Enter => defaultYes,
 				ConsoleKey.Escape => false,
-				_                 => null,
+				_ => null,
 			};
 
 			if (answer is not null)
@@ -208,9 +220,10 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 		return io.ReadSecret();
 	}
 
-	internal static bool IsHttpUrl(string value) =>
+	private static bool IsHttpUrl(string value) =>
 		Uri.TryCreate(value, UriKind.Absolute, out Uri? uri)
-		&& (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+		&& (uri.Scheme == Uri.UriSchemeHttp
+			|| uri.Scheme == Uri.UriSchemeHttps);
 
 	private void WriteLabel(string label, string current)
 	{

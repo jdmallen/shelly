@@ -1,4 +1,5 @@
 using JDMallen.Shelly.Tests.Fakes;
+
 using Xunit;
 
 namespace JDMallen.Shelly.Tests;
@@ -43,7 +44,10 @@ public class MainMenuTests
 	{
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter);
 
-		MainMenu.Show(_io, "shelly 9.9.9", ["azure.endpoint", "AZURE_OPENAI_API_KEY"]);
+		MainMenu.Show(
+			_io,
+			"shelly 9.9.9",
+			["azure.endpoint", "AZURE_OPENAI_API_KEY"]);
 
 		Assert.Contains(
 			"  2) Configure (needs setup: azure.endpoint, AZURE_OPENAI_API_KEY)\n",
@@ -67,7 +71,9 @@ public class MainMenuTests
 		_io.ReadKeys.Enqueue(ConsoleKey.Z);
 		_io.ReadKeys.Enqueue(ConsoleKey.D2);
 
-		Assert.Equal(MainMenuChoice.Configure, MainMenu.Show(_io, "shelly 9.9.9"));
+		Assert.Equal(
+			MainMenuChoice.Configure,
+			MainMenu.Show(_io, "shelly 9.9.9"));
 		Assert.Contains(Strings.InvalidChoice, _io.Output.ToString());
 	}
 }

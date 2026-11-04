@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 
 namespace JDMallen.Shelly;
@@ -9,7 +10,8 @@ namespace JDMallen.Shelly;
 /// </summary>
 internal static class InfoReport
 {
-	internal const string ANTHROPIC_ENDPOINT = "https://api.anthropic.com/v1/messages";
+	internal const string ANTHROPIC_ENDPOINT =
+		"https://api.anthropic.com/v1/messages";
 
 	public static string Build(
 		string versionLine,
@@ -27,47 +29,88 @@ internal static class InfoReport
 		switch (config.Provider.ToLowerInvariant())
 		{
 			case ShellyConfig.AZURE_PROVIDER:
-				rows.Add((
-					"endpoint",
-					Describe(config.Azure.ResolveEndpoint(getEnvironmentVariable), "azure.endpoint")));
-				rows.Add((
-					"deployment",
-					Describe(config.Azure.ResolveDeployment(getEnvironmentVariable), "azure.deployment")));
-				rows.Add(("reasoning", config.Azure.ReasoningModel ? "yes (temperature not sent)" : "no"));
-				rows.Add(("max tokens", config.Azure.MaxTokens.ToString()));
-				rows.Add(("api key", KeyStatus(ChatProvider.AzureApiKeyEnvVar, getEnvironmentVariable)));
+				rows.Add(
+					(
+						"endpoint",
+						Describe(
+							config.Azure.ResolveEndpoint(
+								getEnvironmentVariable),
+							"azure.endpoint")));
+				rows.Add(
+					(
+						"deployment",
+						Describe(
+							config.Azure.ResolveDeployment(
+								getEnvironmentVariable),
+							"azure.deployment")));
+				rows.Add(
+					("reasoning",
+						config.Azure.ReasoningModel
+							? "yes (temperature not sent)"
+							: "no"));
+				rows.Add(
+					("max tokens",
+						config.Azure.MaxTokens.ToString(
+							CultureInfo.CurrentCulture)));
+				rows.Add(
+					("api key",
+						KeyStatus(
+							ChatProvider.AZURE_API_KEY_ENV_VAR,
+							getEnvironmentVariable)));
 
 				break;
 			case ShellyConfig.ANTHROPIC_PROVIDER:
 				rows.Add(("endpoint", ANTHROPIC_ENDPOINT));
 				rows.Add(("model", config.Anthropic.Model));
-				rows.Add(("max tokens", ChatProvider.DefaultMaxTokens.ToString()));
-				rows.Add(("api key", KeyStatus(ChatProvider.AnthropicApiKeyEnvVar, getEnvironmentVariable)));
+				rows.Add(
+					("max tokens",
+						ChatProvider.DEFAULT_MAX_TOKENS.ToString(
+							CultureInfo.CurrentCulture)));
+				rows.Add(
+					("api key",
+						KeyStatus(
+							ChatProvider.ANTHROPIC_API_KEY_ENV_VAR,
+							getEnvironmentVariable)));
 
 				break;
-			case ShellyConfig.OPENAI_PROVIDER or ShellyConfig.LOCAL_PROVIDER_ALIAS:
-				rows.Add(("endpoint", OrNotSet(config.OpenAI.BaseUrl, "openai.baseUrl")));
-				rows.Add(("model", OrNotSet(config.OpenAI.Model, "openai.model")));
-				rows.Add(("max tokens", config.OpenAI.MaxTokens.ToString()));
+			case ShellyConfig.OPENAI_PROVIDER
+				or ShellyConfig.LOCAL_PROVIDER_ALIAS:
+				rows.Add(
+					("endpoint",
+						OrNotSet(config.OpenAI.BaseUrl, "openai.baseUrl")));
+				rows.Add(
+					("model", OrNotSet(config.OpenAI.Model, "openai.model")));
+				rows.Add(
+					("max tokens",
+						config.OpenAI.MaxTokens.ToString(
+							CultureInfo.CurrentCulture)));
 				rows.Add(("timeout", $"{config.OpenAI.TimeoutSeconds}s"));
-				rows.Add((
-					"api key",
-					$"{KeyStatus(ChatProvider.OpenAIApiKeyEnvVar, getEnvironmentVariable)} (optional)"));
+				rows.Add(
+					(
+						"api key",
+						$"{KeyStatus(ChatProvider.OPEN_AI_API_KEY_ENV_VAR, getEnvironmentVariable)} (optional)"));
 
 				break;
 			default:
-				rows.Add(("error", "unknown provider; expected anthropic, azure, openai or local"));
+				rows.Add(
+					("error",
+						"unknown provider; expected anthropic, azure, openai or local"));
 
 				break;
 		}
 
-		rows.Add(("shell", $"{shell.DisplayName} ({string.Join(' ', [shell.Executable, .. shell.CommandFlags])})"));
+		rows.Add(
+			("shell",
+				$"{shell.DisplayName} ({string.Join(' ', [shell.Executable, .. shell.CommandFlags])})"));
 
 		int labelWidth = rows.Max(row => row.Label.Length) + 1;
-		var report = new StringBuilder(versionLine).AppendLine().AppendLine();
+		StringBuilder report =
+			new StringBuilder(versionLine).AppendLine().AppendLine();
 		foreach ((string label, string value) in rows)
 		{
-			report.AppendLine($"  {$"{label}:".PadRight(labelWidth)} {value}");
+			report.AppendLine(
+				CultureInfo.CurrentCulture,
+				$"  {$"{label}:".PadRight(labelWidth)} {value}");
 		}
 
 		return report.ToString().TrimEnd();
@@ -83,7 +126,9 @@ internal static class InfoReport
 	private static string OrNotSet(string value, string setting) =>
 		string.IsNullOrWhiteSpace(value) ? $"(not set: {setting})" : value;
 
-	private static string KeyStatus(string variable, Func<string, string?> getEnvironmentVariable) =>
+	private static string KeyStatus(
+		string variable,
+		Func<string, string?> getEnvironmentVariable) =>
 		string.IsNullOrEmpty(getEnvironmentVariable(variable))
 			? $"{variable} is not set"
 			: $"{variable} is set";

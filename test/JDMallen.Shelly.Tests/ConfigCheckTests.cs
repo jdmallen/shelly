@@ -6,19 +6,23 @@ public class ConfigCheckTests
 {
 	private readonly Dictionary<string, string> _environment = [];
 
-	private IReadOnlyList<string> FindMissing(ShellyConfig config, string? parseError = null) =>
-		ConfigCheck.FindMissing(config, parseError, name => _environment.GetValueOrDefault(name));
+	private IReadOnlyList<string> FindMissing(
+		ShellyConfig config,
+		string? parseError = null) =>
+		ConfigCheck.FindMissing(
+			config,
+			parseError,
+			name => _environment.GetValueOrDefault(name));
 
 	[Fact]
-	public void Anthropic_WithoutKey_NeedsKey()
-	{
-		Assert.Equal([ChatProvider.AnthropicApiKeyEnvVar], FindMissing(new ShellyConfig()));
-	}
+	public void Anthropic_WithoutKey_NeedsKey() => Assert.Equal(
+		[ChatProvider.ANTHROPIC_API_KEY_ENV_VAR],
+		FindMissing(new ShellyConfig()));
 
 	[Fact]
 	public void Anthropic_WithKey_IsReady()
 	{
-		_environment[ChatProvider.AnthropicApiKeyEnvVar] = "x";
+		_environment[ChatProvider.ANTHROPIC_API_KEY_ENV_VAR] = "x";
 
 		Assert.Empty(FindMissing(new ShellyConfig()));
 	}
@@ -26,16 +30,17 @@ public class ConfigCheckTests
 	[Fact]
 	public void ParseError_ListsConfigFileFirst()
 	{
-		_environment[ChatProvider.AnthropicApiKeyEnvVar] = "x";
+		_environment[ChatProvider.ANTHROPIC_API_KEY_ENV_VAR] = "x";
 
-		Assert.Equal([ConfigCheck.CONFIG_FILE], FindMissing(new ShellyConfig(), "bad json"));
+		Assert.Equal(
+			[ConfigCheck.CONFIG_FILE],
+			FindMissing(new ShellyConfig(), "bad json"));
 	}
 
 	[Fact]
-	public void UnknownProvider_NeedsProvider()
-	{
-		Assert.Equal([ConfigCheck.PROVIDER_KEY], FindMissing(new ShellyConfig { Provider = "gemini" }));
-	}
+	public void UnknownProvider_NeedsProvider() => Assert.Equal(
+		[ConfigCheck.PROVIDER_KEY],
+		FindMissing(new ShellyConfig { Provider = "gemini" }));
 
 	[Theory]
 	[InlineData("openai")]
@@ -46,7 +51,11 @@ public class ConfigCheckTests
 		var config = new ShellyConfig
 		{
 			Provider = provider,
-			OpenAI = new OpenAIConfig { BaseUrl = "http://localhost:8080/v1", Model = "qwen" },
+			OpenAI = new OpenAIConfig
+			{
+				BaseUrl = "http://localhost:8080/v1",
+				Model = "qwen",
+			},
 		};
 
 		Assert.Empty(FindMissing(config));
@@ -58,28 +67,38 @@ public class ConfigCheckTests
 		var config = new ShellyConfig
 		{
 			Provider = "openai",
-			OpenAI = new OpenAIConfig { BaseUrl = " ", Model = "", TimeoutSeconds = 0, MaxTokens = -1 },
+			OpenAI = new OpenAIConfig
+			{
+				BaseUrl = " ",
+				Model = "",
+				TimeoutSeconds = 0,
+				MaxTokens = -1,
+			},
 		};
 
 		Assert.Equal(
-			["openai.baseUrl", "openai.model", "openai.timeoutSeconds", "openai.maxTokens"],
+			[
+				"openai.baseUrl", "openai.model", "openai.timeoutSeconds",
+				"openai.maxTokens",
+			],
 			FindMissing(config));
 	}
 
 	[Fact]
-	public void Azure_Unconfigured_ListsEverything()
-	{
-		Assert.Equal(
-			["azure.endpoint", "azure.deployment", ChatProvider.AzureApiKeyEnvVar],
-			FindMissing(new ShellyConfig { Provider = "azure" }));
-	}
+	public void Azure_Unconfigured_ListsEverything() => Assert.Equal(
+		[
+			"azure.endpoint", "azure.deployment",
+			ChatProvider.AZURE_API_KEY_ENV_VAR,
+		],
+		FindMissing(new ShellyConfig { Provider = "azure" }));
 
 	[Fact]
 	public void Azure_FromDeprecatedVariables_StillNeedsMoving()
 	{
-		_environment[ChatProvider.AzureEndpointEnvVar] = "https://example.openai.azure.com";
-		_environment[ChatProvider.AzureDeploymentEnvVar] = "gpt-6-luna";
-		_environment[ChatProvider.AzureApiKeyEnvVar] = "x";
+		_environment[ChatProvider.AZURE_ENDPOINT_ENV_VAR] =
+			"https://example.openai.azure.com";
+		_environment[ChatProvider.AZURE_DEPLOYMENT_ENV_VAR] = "gpt-6-luna";
+		_environment[ChatProvider.AZURE_API_KEY_ENV_VAR] = "x";
 
 		Assert.Equal(
 			["azure.endpoint", "azure.deployment"],
@@ -89,11 +108,15 @@ public class ConfigCheckTests
 	[Fact]
 	public void Azure_FullyConfigured_IsReady()
 	{
-		_environment[ChatProvider.AzureApiKeyEnvVar] = "x";
+		_environment[ChatProvider.AZURE_API_KEY_ENV_VAR] = "x";
 		var config = new ShellyConfig
 		{
 			Provider = "azure",
-			Azure = new AzureConfig { Endpoint = "https://example.openai.azure.com", Deployment = "gpt-6-luna" },
+			Azure = new AzureConfig
+			{
+				Endpoint = "https://example.openai.azure.com",
+				Deployment = "gpt-6-luna",
+			},
 		};
 
 		Assert.Empty(FindMissing(config));

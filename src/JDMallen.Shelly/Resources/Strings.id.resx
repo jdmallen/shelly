@@ -1,271 +1,272 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
-            <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
-            </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <data name="WhatToDo" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+				xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+							<xsd:attribute ref="xml:space"/>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required"/>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+			PublicKeyToken=b77a5c561934e089
+		</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+			PublicKeyToken=b77a5c561934e089
+		</value>
+	</resheader>
+	<data name="WhatToDo" xml:space="preserve">
 		<value>Apa yang ingin Anda lakukan?</value>
 	</data>
-    <data name="Thinking" xml:space="preserve">
+	<data name="Thinking" xml:space="preserve">
 		<value>Sedang berpikir...</value>
 	</data>
-    <data name="ErrorFormat" xml:space="preserve">
+	<data name="ErrorFormat" xml:space="preserve">
 		<value>Kesalahan: {0}</value>
 	</data>
-    <data name="NoSuggestion" xml:space="preserve">
+	<data name="NoSuggestion" xml:space="preserve">
 		<value>Tidak ada saran yang diterima dari API</value>
 	</data>
-    <data name="SuggestionHeader" xml:space="preserve">
+	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Saran:</value>
 	</data>
-    <data name="Explaining" xml:space="preserve">
+	<data name="Explaining" xml:space="preserve">
 		<value>Sedang menjelaskan...</value>
 	</data>
-    <data name="ExplanationHeader" xml:space="preserve">
+	<data name="ExplanationHeader" xml:space="preserve">
 		<value>Penjelasan:</value>
 	</data>
-    <data name="CopiedToClipboard" xml:space="preserve">
+	<data name="CopiedToClipboard" xml:space="preserve">
 		<value>Disalin ke papan klip</value>
 	</data>
-    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+	<data name="ClipboardUnavailableFormat" xml:space="preserve">
 		<value>Papan klip tidak tersedia: {0}</value>
 	</data>
-    <data name="InstallClipboardToolLinux" xml:space="preserve">
+	<data name="InstallClipboardToolLinux" xml:space="preserve">
 		<value>Pasang xclip, xsel, atau wl-clipboard untuk mengaktifkan penyalinan di Linux.</value>
 	</data>
-    <data name="WhatShouldBeDifferent" xml:space="preserve">
+	<data name="WhatShouldBeDifferent" xml:space="preserve">
 		<value>Apa yang harus berbeda?</value>
 	</data>
-    <data name="Goodbye" xml:space="preserve">
+	<data name="Goodbye" xml:space="preserve">
 		<value>Sampai jumpa!</value>
 	</data>
-    <data name="InvalidChoice" xml:space="preserve">
+	<data name="InvalidChoice" xml:space="preserve">
 		<value>Pilihan tidak valid</value>
 	</data>
-    <data name="MenuExecute" xml:space="preserve">
+	<data name="MenuExecute" xml:space="preserve">
 		<value>[x] jalankan</value>
 	</data>
-    <data name="MenuEdit" xml:space="preserve">
+	<data name="MenuEdit" xml:space="preserve">
 		<value>[e] sunting</value>
 	</data>
-    <data name="MenuExplain" xml:space="preserve">
+	<data name="MenuExplain" xml:space="preserve">
 		<value>[p] jelaskan</value>
 	</data>
-    <data name="MenuCopy" xml:space="preserve">
+	<data name="MenuCopy" xml:space="preserve">
 		<value>[c] salin</value>
 	</data>
-    <data name="MenuRetry" xml:space="preserve">
+	<data name="MenuRetry" xml:space="preserve">
 		<value>[r] coba lagi</value>
 	</data>
-    <data name="MenuQuit" xml:space="preserve">
+	<data name="MenuQuit" xml:space="preserve">
 		<value>[q] keluar</value>
 	</data>
-    <data name="Executing" xml:space="preserve">
+	<data name="Executing" xml:space="preserve">
 		<value>Menjalankan...</value>
 	</data>
-    <data name="FailedToStartShell" xml:space="preserve">
+	<data name="FailedToStartShell" xml:space="preserve">
 		<value>gagal memulai shell</value>
 	</data>
-    <data name="UnknownProviderFormat" xml:space="preserve">
+	<data name="UnknownProviderFormat" xml:space="preserve">
 		<value>Penyedia tidak dikenal '{0}' di {1}. Yang diharapkan: 'anthropic', 'azure', atau 'openai'.</value>
 	</data>
-    <data name="EnvVarNotSetFormat" xml:space="preserve">
+	<data name="EnvVarNotSetFormat" xml:space="preserve">
 		<value>Variabel lingkungan {0} belum diatur</value>
 	</data>
-    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+	<data name="OpenAIMisconfiguredFormat" xml:space="preserve">
 		<value>Penyedia OpenAI salah dikonfigurasi. Atur {0} di {1}.</value>
 	</data>
-    <data name="ListConjunction" xml:space="preserve">
+	<data name="ListConjunction" xml:space="preserve">
 		<value>dan</value>
 	</data>
-    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+	<data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
 		<value>{0} harus lebih besar dari 0 (diperoleh {1}).</value>
 	</data>
-    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+	<data name="AzureMisconfiguredFormat" xml:space="preserve">
 		<value>Penyedia Azure salah dikonfigurasi. Atur {0} di {1}, atau jalankan 'shelly --config'.</value>
 	</data>
-    <data name="UnknownOptionFormat" xml:space="preserve">
+	<data name="UnknownOptionFormat" xml:space="preserve">
 		<value>Opsi '{0}' tidak dikenal.</value>
 	</data>
-    <data name="ConfigParseWarningFormat" xml:space="preserve">
+	<data name="ConfigParseWarningFormat" xml:space="preserve">
 		<value>Peringatan: gagal mengurai {0}: {1}. Menggunakan nilai bawaan.</value>
 	</data>
-    <data name="NoGraphicalSession" xml:space="preserve">
+	<data name="NoGraphicalSession" xml:space="preserve">
 		<value>Tidak ada sesi grafis yang terdeteksi (tidak ada WAYLAND_DISPLAY atau DISPLAY). Papan klip tidak tersedia di sesi headless/SSH.</value>
 	</data>
-    <data name="NoClipboardTool" xml:space="preserve">
+	<data name="NoClipboardTool" xml:space="preserve">
 		<value>Alat papan klip tidak ditemukan. Pasang wl-clipboard (Wayland), xclip, atau xsel.</value>
 	</data>
-    <data name="ProcessExitedFormat" xml:space="preserve">
+	<data name="ProcessExitedFormat" xml:space="preserve">
 		<value>'{0}' keluar dengan kode {1}. {2}</value>
 	</data>
-    <data name="HelpOptionHelp" xml:space="preserve">
+	<data name="HelpOptionHelp" xml:space="preserve">
 		<value>Menampilkan layar bantuan ini.</value>
 	</data>
-    <data name="HelpOptionVersion" xml:space="preserve">
+	<data name="HelpOptionVersion" xml:space="preserve">
 		<value>Menampilkan informasi versi.</value>
 	</data>
-    <data name="HelpOptionInfo" xml:space="preserve">
+	<data name="HelpOptionInfo" xml:space="preserve">
 		<value>Tampilkan konfigurasi aktif: penyedia, endpoint, model, dan shell.</value>
 	</data>
-    <data name="HelpOptionTerminator" xml:space="preserve">
+	<data name="HelpOptionTerminator" xml:space="preserve">
 		<value>Mengakhiri penguraian opsi; sisanya adalah prompt.</value>
 	</data>
-    <data name="HelpPrompt" xml:space="preserve">
+	<data name="HelpPrompt" xml:space="preserve">
 		<value>Deskripsi perintah. Jika tidak diisi, Anda akan ditanya.</value>
 	</data>
-    <data name="ResponseLanguage" xml:space="preserve">
+	<data name="ResponseLanguage" xml:space="preserve">
 		<value>Indonesian</value>
 	</data>
-    <data name="HelpOptionConfig" xml:space="preserve">
+	<data name="HelpOptionConfig" xml:space="preserve">
 		<value>Atur penyedia dan pengaturannya secara interaktif.</value>
 	</data>
-    <data name="MainMenuAsk" xml:space="preserve">
+	<data name="MainMenuAsk" xml:space="preserve">
 		<value>Ajukan pertanyaan</value>
 	</data>
-    <data name="MainMenuConfigure" xml:space="preserve">
+	<data name="MainMenuConfigure" xml:space="preserve">
 		<value>Konfigurasi</value>
 	</data>
-    <data name="MainMenuInfo" xml:space="preserve">
+	<!-- ReSharper disable once OverriddenWithSameValue -->
+	<data name="MainMenuInfo" xml:space="preserve">
 		<value>Info</value>
 	</data>
-    <data name="MainMenuExit" xml:space="preserve">
+	<data name="MainMenuExit" xml:space="preserve">
 		<value>Keluar</value>
 	</data>
-    <data name="DefaultMarker" xml:space="preserve">
+	<data name="DefaultMarker" xml:space="preserve">
 		<value>(bawaan)</value>
 	</data>
-    <data name="ChooseFormat" xml:space="preserve">
+	<data name="ChooseFormat" xml:space="preserve">
 		<value>Pilih (Enter = {0}):</value>
 	</data>
-    <data name="ConfigHeaderFormat" xml:space="preserve">
+	<data name="ConfigHeaderFormat" xml:space="preserve">
 		<value>Berkas konfigurasi: {0}</value>
 	</data>
-    <data name="ConfigUnreadableFormat" xml:space="preserve">
+	<data name="ConfigUnreadableFormat" xml:space="preserve">
 		<value>{0} tidak dapat dibaca: {1}. Menyimpan akan menggantinya dengan nilai yang dimasukkan di sini; berkas saat ini dicadangkan terlebih dahulu.</value>
 	</data>
-    <data name="ContinuePrompt" xml:space="preserve">
+	<data name="ContinuePrompt" xml:space="preserve">
 		<value>Lanjutkan?</value>
 	</data>
-    <data name="ProviderHeader" xml:space="preserve">
+	<data name="ProviderHeader" xml:space="preserve">
 		<value>Penyedia:</value>
 	</data>
-    <data name="ProviderOpenAICompatible" xml:space="preserve">
+	<data name="ProviderOpenAICompatible" xml:space="preserve">
 		<value>Server yang kompatibel dengan OpenAI</value>
 	</data>
-    <data name="SettingsHeader" xml:space="preserve">
+	<data name="SettingsHeader" xml:space="preserve">
 		<value>Pengaturan (Enter mempertahankan nilai dalam kurung siku):</value>
 	</data>
-    <data name="ValueRequired" xml:space="preserve">
+	<data name="ValueRequired" xml:space="preserve">
 		<value>Nilai wajib diisi.</value>
 	</data>
-    <data name="InvalidPositiveInteger" xml:space="preserve">
+	<data name="InvalidPositiveInteger" xml:space="preserve">
 		<value>Masukkan bilangan bulat yang lebih besar dari 0.</value>
 	</data>
-    <data name="InvalidHttpUrl" xml:space="preserve">
+	<data name="InvalidHttpUrl" xml:space="preserve">
 		<value>Masukkan URL lengkap yang diawali http:// atau https://.</value>
 	</data>
-    <data name="ApiKeyHeader" xml:space="preserve">
+	<data name="ApiKeyHeader" xml:space="preserve">
 		<value>Kunci API:</value>
 	</data>
-    <data name="ApiKeySetFormat" xml:space="preserve">
+	<data name="ApiKeySetFormat" xml:space="preserve">
 		<value>{0} sudah diatur.</value>
 	</data>
-    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+	<data name="ApiKeyNotSetFormat" xml:space="preserve">
 		<value>{0} belum diatur.</value>
 	</data>
-    <data name="ApiKeyOptional" xml:space="preserve">
+	<data name="ApiKeyOptional" xml:space="preserve">
 		<value>Opsional: sebagian besar server yang di-hosting sendiri tidak memeriksa kunci.</value>
 	</data>
-    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+	<data name="SetUserVariablePromptFormat" xml:space="preserve">
 		<value>Simpan {0} sebagai variabel lingkungan pengguna Windows sekarang?</value>
 	</data>
-    <data name="EnterApiKey" xml:space="preserve">
+	<data name="EnterApiKey" xml:space="preserve">
 		<value>Kunci API (Enter untuk melewati):</value>
 	</data>
-    <data name="Skipped" xml:space="preserve">
+	<data name="Skipped" xml:space="preserve">
 		<value>Dilewati.</value>
 	</data>
-    <data name="UserVariableSavedFormat" xml:space="preserve">
+	<data name="UserVariableSavedFormat" xml:space="preserve">
 		<value>{0} disimpan. Terminal yang dibuka mulai sekarang akan melihatnya; yang sudah terbuka tidak.</value>
 	</data>
-    <data name="ShellStartupLineFormat" xml:space="preserve">
+	<data name="ShellStartupLineFormat" xml:space="preserve">
 		<value>Tambahkan baris ini ke {0}, ganti {1} dengan kunci Anda, lalu buka terminal baru:</value>
 	</data>
-    <data name="FishUniversalVariableFormat" xml:space="preserve">
+	<data name="FishUniversalVariableFormat" xml:space="preserve">
 		<value>Jalankan ini sekali, ganti {0} dengan kunci Anda. Fish mengingatnya di semua sesi, jadi tidak perlu berkas startup:</value>
 	</data>
-    <data name="UnknownShellStartupFile" xml:space="preserve">
+	<data name="UnknownShellStartupFile" xml:space="preserve">
 		<value>berkas startup shell Anda</value>
 	</data>
-    <data name="SaveChangesPrompt" xml:space="preserve">
+	<data name="SaveChangesPrompt" xml:space="preserve">
 		<value>Simpan perubahan?</value>
 	</data>
-    <data name="ConfigNotSaved" xml:space="preserve">
+	<data name="ConfigNotSaved" xml:space="preserve">
 		<value>Tidak ada perubahan yang disimpan.</value>
 	</data>
-    <data name="ConfigBackedUpFormat" xml:space="preserve">
+	<data name="ConfigBackedUpFormat" xml:space="preserve">
 		<value>Berkas sebelumnya dicadangkan ke {0}.</value>
 	</data>
-    <data name="ConfigSavedFormat" xml:space="preserve">
+	<data name="ConfigSavedFormat" xml:space="preserve">
 		<value>{0} disimpan.</value>
 	</data>
-    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+	<data name="ConfigSaveFailedFormat" xml:space="preserve">
 		<value>Tidak dapat menyimpan {0}: {1}</value>
 	</data>
-    <data name="InteractiveTerminalRequired" xml:space="preserve">
+	<data name="InteractiveTerminalRequired" xml:space="preserve">
 		<value>--config memerlukan terminal interaktif.</value>
 	</data>
-    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+	<data name="DeprecatedEnvVarFormat" xml:space="preserve">
 		<value>Peringatan: {0} sudah usang. Atur {1} di {2} sebagai gantinya, atau jalankan 'shelly --config'.</value>
 	</data>
-    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+	<data name="MainMenuNeedsSetupFormat" xml:space="preserve">
 		<value>perlu diatur: {0}</value>
 	</data>
-    <data name="MenuBackToMainMenu" xml:space="preserve">
+	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>Kembali ke menu utama</value>
 	</data>
 </root>

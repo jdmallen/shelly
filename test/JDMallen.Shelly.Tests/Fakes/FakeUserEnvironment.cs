@@ -1,6 +1,7 @@
 namespace JDMallen.Shelly.Tests.Fakes;
 
-internal sealed class FakeUserEnvironment(bool canPersist = false) : IUserEnvironment
+internal sealed class FakeUserEnvironment(bool canPersist = false)
+	: IUserEnvironment
 {
 	public Dictionary<string, string> Variables { get; } = new();
 

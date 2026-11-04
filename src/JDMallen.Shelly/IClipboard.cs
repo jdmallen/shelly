@@ -12,7 +12,9 @@ internal interface IClipboard
 	/// </summary>
 	bool IsAvailable { get; }
 
-	Task SetTextAsync(string text, CancellationToken cancellationToken = default);
+	Task SetTextAsync(
+		string text,
+		CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -38,11 +40,14 @@ internal sealed class SystemClipboard : IClipboard
 				return false;
 			}
 
-			return LinuxCandidates(hasWayland, hasX11).Any(candidate => IsOnPath(candidate.FileName));
+			return LinuxCandidates(hasWayland, hasX11)
+				.Any(candidate => IsOnPath(candidate.FileName));
 		}
 	}
 
-	public async Task SetTextAsync(string text, CancellationToken cancellationToken = default)
+	public async Task SetTextAsync(
+		string text,
+		CancellationToken cancellationToken = default)
 	{
 		ClipboardCommand command = ResolveCommand();
 		await PipeToAsync(command, text, cancellationToken);
@@ -50,8 +55,11 @@ internal sealed class SystemClipboard : IClipboard
 
 	private static (bool Wayland, bool X11) DetectDisplays()
 	{
-		bool hasWayland = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WAYLAND_DISPLAY"));
-		bool hasX11 = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DISPLAY"));
+		bool hasWayland = !string.IsNullOrEmpty(
+			Environment.GetEnvironmentVariable("WAYLAND_DISPLAY"));
+		bool hasX11 =
+			!string.IsNullOrEmpty(
+				Environment.GetEnvironmentVariable("DISPLAY"));
 
 		return (hasWayland, hasX11);
 	}
@@ -78,8 +86,10 @@ internal sealed class SystemClipboard : IClipboard
 			throw new InvalidOperationException(Strings.NoGraphicalSession);
 		}
 
-		foreach (ClipboardCommand candidate in LinuxCandidates(hasWayland, hasX11)
-			         .Where(candidate => IsOnPath(candidate.FileName)))
+		foreach (ClipboardCommand candidate in LinuxCandidates(
+						 hasWayland,
+						 hasX11)
+					 .Where(candidate => IsOnPath(candidate.FileName)))
 		{
 			return candidate;
 		}
@@ -87,7 +97,9 @@ internal sealed class SystemClipboard : IClipboard
 		throw new InvalidOperationException(Strings.NoClipboardTool);
 	}
 
-	private static IEnumerable<ClipboardCommand> LinuxCandidates(bool hasWayland, bool hasX11)
+	private static IEnumerable<ClipboardCommand> LinuxCandidates(
+		bool hasWayland,
+		bool hasX11)
 	{
 		if (hasWayland)
 		{
@@ -142,12 +154,18 @@ internal sealed class SystemClipboard : IClipboard
 
 		if (process.ExitCode != 0)
 		{
-			string error = await process.StandardError.ReadToEndAsync(cancellationToken);
+			string error =
+				await process.StandardError.ReadToEndAsync(cancellationToken);
 
 			throw new InvalidOperationException(
-				Strings.ProcessExited(command.FileName, process.ExitCode, error));
+				Strings.ProcessExited(
+					command.FileName,
+					process.ExitCode,
+					error));
 		}
 	}
 
-	private readonly record struct ClipboardCommand(string FileName, string Arguments);
+	private readonly record struct ClipboardCommand(
+		string FileName,
+		string Arguments);
 }

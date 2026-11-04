@@ -1,271 +1,271 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
-            <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
-            </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <data name="WhatToDo" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+				xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+							<xsd:attribute ref="xml:space"/>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required"/>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+			PublicKeyToken=b77a5c561934e089
+		</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+			PublicKeyToken=b77a5c561934e089
+		</value>
+	</resheader>
+	<data name="WhatToDo" xml:space="preserve">
 		<value>Что вы хотите сделать?</value>
 	</data>
-    <data name="Thinking" xml:space="preserve">
+	<data name="Thinking" xml:space="preserve">
 		<value>Думаю...</value>
 	</data>
-    <data name="ErrorFormat" xml:space="preserve">
+	<data name="ErrorFormat" xml:space="preserve">
 		<value>Ошибка: {0}</value>
 	</data>
-    <data name="NoSuggestion" xml:space="preserve">
+	<data name="NoSuggestion" xml:space="preserve">
 		<value>API не вернул предложение</value>
 	</data>
-    <data name="SuggestionHeader" xml:space="preserve">
+	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Предложение:</value>
 	</data>
-    <data name="Explaining" xml:space="preserve">
+	<data name="Explaining" xml:space="preserve">
 		<value>Объясняю...</value>
 	</data>
-    <data name="ExplanationHeader" xml:space="preserve">
+	<data name="ExplanationHeader" xml:space="preserve">
 		<value>Объяснение:</value>
 	</data>
-    <data name="CopiedToClipboard" xml:space="preserve">
+	<data name="CopiedToClipboard" xml:space="preserve">
 		<value>Скопировано в буфер обмена</value>
 	</data>
-    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+	<data name="ClipboardUnavailableFormat" xml:space="preserve">
 		<value>Буфер обмена недоступен: {0}</value>
 	</data>
-    <data name="InstallClipboardToolLinux" xml:space="preserve">
+	<data name="InstallClipboardToolLinux" xml:space="preserve">
 		<value>Установите xclip, xsel или wl-clipboard, чтобы включить копирование в Linux.</value>
 	</data>
-    <data name="WhatShouldBeDifferent" xml:space="preserve">
+	<data name="WhatShouldBeDifferent" xml:space="preserve">
 		<value>Что нужно изменить?</value>
 	</data>
-    <data name="Goodbye" xml:space="preserve">
+	<data name="Goodbye" xml:space="preserve">
 		<value>До свидания!</value>
 	</data>
-    <data name="InvalidChoice" xml:space="preserve">
+	<data name="InvalidChoice" xml:space="preserve">
 		<value>Неверный выбор</value>
 	</data>
-    <data name="MenuExecute" xml:space="preserve">
+	<data name="MenuExecute" xml:space="preserve">
 		<value>[x] выполнить</value>
 	</data>
-    <data name="MenuEdit" xml:space="preserve">
+	<data name="MenuEdit" xml:space="preserve">
 		<value>[e] изменить</value>
 	</data>
-    <data name="MenuExplain" xml:space="preserve">
+	<data name="MenuExplain" xml:space="preserve">
 		<value>[p] объяснить</value>
 	</data>
-    <data name="MenuCopy" xml:space="preserve">
+	<data name="MenuCopy" xml:space="preserve">
 		<value>[c] копировать</value>
 	</data>
-    <data name="MenuRetry" xml:space="preserve">
+	<data name="MenuRetry" xml:space="preserve">
 		<value>[r] повторить</value>
 	</data>
-    <data name="MenuQuit" xml:space="preserve">
+	<data name="MenuQuit" xml:space="preserve">
 		<value>[q] выйти</value>
 	</data>
-    <data name="Executing" xml:space="preserve">
+	<data name="Executing" xml:space="preserve">
 		<value>Выполняю...</value>
 	</data>
-    <data name="FailedToStartShell" xml:space="preserve">
+	<data name="FailedToStartShell" xml:space="preserve">
 		<value>не удалось запустить оболочку</value>
 	</data>
-    <data name="UnknownProviderFormat" xml:space="preserve">
+	<data name="UnknownProviderFormat" xml:space="preserve">
 		<value>Неизвестный провайдер '{0}' в {1}. Ожидается 'anthropic', 'azure' или 'openai'.</value>
 	</data>
-    <data name="EnvVarNotSetFormat" xml:space="preserve">
+	<data name="EnvVarNotSetFormat" xml:space="preserve">
 		<value>Переменная окружения {0} не задана</value>
 	</data>
-    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+	<data name="OpenAIMisconfiguredFormat" xml:space="preserve">
 		<value>Провайдер OpenAI настроен неверно. Задайте {0} в {1}.</value>
 	</data>
-    <data name="ListConjunction" xml:space="preserve">
+	<data name="ListConjunction" xml:space="preserve">
 		<value>и</value>
 	</data>
-    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+	<data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
 		<value>{0} должно быть больше 0 (получено {1}).</value>
 	</data>
-    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+	<data name="AzureMisconfiguredFormat" xml:space="preserve">
 		<value>Провайдер Azure настроен неверно. Задайте {0} в {1} или выполните 'shelly --config'.</value>
 	</data>
-    <data name="UnknownOptionFormat" xml:space="preserve">
+	<data name="UnknownOptionFormat" xml:space="preserve">
 		<value>Неизвестный параметр '{0}'.</value>
 	</data>
-    <data name="ConfigParseWarningFormat" xml:space="preserve">
+	<data name="ConfigParseWarningFormat" xml:space="preserve">
 		<value>Предупреждение: не удалось разобрать {0}: {1}. Используются значения по умолчанию.</value>
 	</data>
-    <data name="NoGraphicalSession" xml:space="preserve">
+	<data name="NoGraphicalSession" xml:space="preserve">
 		<value>Графический сеанс не обнаружен (нет WAYLAND_DISPLAY и DISPLAY). Буфер обмена недоступен в сеансе без графики или по SSH.</value>
 	</data>
-    <data name="NoClipboardTool" xml:space="preserve">
+	<data name="NoClipboardTool" xml:space="preserve">
 		<value>Не найдена утилита для работы с буфером обмена. Установите wl-clipboard (Wayland), xclip или xsel.</value>
 	</data>
-    <data name="ProcessExitedFormat" xml:space="preserve">
+	<data name="ProcessExitedFormat" xml:space="preserve">
 		<value>'{0}' завершился с кодом {1}. {2}</value>
 	</data>
-    <data name="HelpOptionHelp" xml:space="preserve">
+	<data name="HelpOptionHelp" xml:space="preserve">
 		<value>Показать эту справку.</value>
 	</data>
-    <data name="HelpOptionVersion" xml:space="preserve">
+	<data name="HelpOptionVersion" xml:space="preserve">
 		<value>Показать сведения о версии.</value>
 	</data>
-    <data name="HelpOptionInfo" xml:space="preserve">
+	<data name="HelpOptionInfo" xml:space="preserve">
 		<value>Показать текущую конфигурацию: провайдер, конечную точку, модель и оболочку.</value>
 	</data>
-    <data name="HelpOptionTerminator" xml:space="preserve">
+	<data name="HelpOptionTerminator" xml:space="preserve">
 		<value>Завершает разбор параметров; остальное считается запросом.</value>
 	</data>
-    <data name="HelpPrompt" xml:space="preserve">
+	<data name="HelpPrompt" xml:space="preserve">
 		<value>Описание команды. Если не указано, оно будет запрошено.</value>
 	</data>
-    <data name="ResponseLanguage" xml:space="preserve">
+	<data name="ResponseLanguage" xml:space="preserve">
 		<value>Russian</value>
 	</data>
-    <data name="HelpOptionConfig" xml:space="preserve">
+	<data name="HelpOptionConfig" xml:space="preserve">
 		<value>Интерактивно настроить провайдера и его параметры.</value>
 	</data>
-    <data name="MainMenuAsk" xml:space="preserve">
+	<data name="MainMenuAsk" xml:space="preserve">
 		<value>Задать вопрос</value>
 	</data>
-    <data name="MainMenuConfigure" xml:space="preserve">
+	<data name="MainMenuConfigure" xml:space="preserve">
 		<value>Настроить</value>
 	</data>
-    <data name="MainMenuInfo" xml:space="preserve">
+	<data name="MainMenuInfo" xml:space="preserve">
 		<value>Сведения</value>
 	</data>
-    <data name="MainMenuExit" xml:space="preserve">
+	<data name="MainMenuExit" xml:space="preserve">
 		<value>Выход</value>
 	</data>
-    <data name="DefaultMarker" xml:space="preserve">
+	<data name="DefaultMarker" xml:space="preserve">
 		<value>(по умолчанию)</value>
 	</data>
-    <data name="ChooseFormat" xml:space="preserve">
+	<data name="ChooseFormat" xml:space="preserve">
 		<value>Выберите (Enter = {0}):</value>
 	</data>
-    <data name="ConfigHeaderFormat" xml:space="preserve">
+	<data name="ConfigHeaderFormat" xml:space="preserve">
 		<value>Файл конфигурации: {0}</value>
 	</data>
-    <data name="ConfigUnreadableFormat" xml:space="preserve">
+	<data name="ConfigUnreadableFormat" xml:space="preserve">
 		<value>Не удалось разобрать {0}: {1}. При сохранении он будет заменён введёнными здесь значениями; перед этим будет создана резервная копия текущего файла.</value>
 	</data>
-    <data name="ContinuePrompt" xml:space="preserve">
+	<data name="ContinuePrompt" xml:space="preserve">
 		<value>Продолжить?</value>
 	</data>
-    <data name="ProviderHeader" xml:space="preserve">
+	<data name="ProviderHeader" xml:space="preserve">
 		<value>Провайдер:</value>
 	</data>
-    <data name="ProviderOpenAICompatible" xml:space="preserve">
+	<data name="ProviderOpenAICompatible" xml:space="preserve">
 		<value>Сервер, совместимый с OpenAI</value>
 	</data>
-    <data name="SettingsHeader" xml:space="preserve">
+	<data name="SettingsHeader" xml:space="preserve">
 		<value>Параметры (Enter оставляет значение в квадратных скобках):</value>
 	</data>
-    <data name="ValueRequired" xml:space="preserve">
+	<data name="ValueRequired" xml:space="preserve">
 		<value>Значение обязательно.</value>
 	</data>
-    <data name="InvalidPositiveInteger" xml:space="preserve">
+	<data name="InvalidPositiveInteger" xml:space="preserve">
 		<value>Введите целое число больше 0.</value>
 	</data>
-    <data name="InvalidHttpUrl" xml:space="preserve">
+	<data name="InvalidHttpUrl" xml:space="preserve">
 		<value>Введите полный URL, начинающийся с http:// или https://.</value>
 	</data>
-    <data name="ApiKeyHeader" xml:space="preserve">
+	<data name="ApiKeyHeader" xml:space="preserve">
 		<value>Ключ API:</value>
 	</data>
-    <data name="ApiKeySetFormat" xml:space="preserve">
+	<data name="ApiKeySetFormat" xml:space="preserve">
 		<value>{0} задана.</value>
 	</data>
-    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+	<data name="ApiKeyNotSetFormat" xml:space="preserve">
 		<value>{0} не задана.</value>
 	</data>
-    <data name="ApiKeyOptional" xml:space="preserve">
+	<data name="ApiKeyOptional" xml:space="preserve">
 		<value>Необязательно: большинство самостоятельно размещённых серверов не проверяют ключ.</value>
 	</data>
-    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+	<data name="SetUserVariablePromptFormat" xml:space="preserve">
 		<value>Сохранить {0} как пользовательскую переменную окружения Windows?</value>
 	</data>
-    <data name="EnterApiKey" xml:space="preserve">
+	<data name="EnterApiKey" xml:space="preserve">
 		<value>Ключ API (Enter, чтобы пропустить):</value>
 	</data>
-    <data name="Skipped" xml:space="preserve">
+	<data name="Skipped" xml:space="preserve">
 		<value>Пропущено.</value>
 	</data>
-    <data name="UserVariableSavedFormat" xml:space="preserve">
+	<data name="UserVariableSavedFormat" xml:space="preserve">
 		<value>{0} сохранена. Её увидят терминалы, открытые с этого момента; уже открытые не увидят.</value>
 	</data>
-    <data name="ShellStartupLineFormat" xml:space="preserve">
+	<data name="ShellStartupLineFormat" xml:space="preserve">
 		<value>Добавьте эту строку в {0}, заменив {1} своим ключом, затем откройте новый терминал:</value>
 	</data>
-    <data name="FishUniversalVariableFormat" xml:space="preserve">
+	<data name="FishUniversalVariableFormat" xml:space="preserve">
 		<value>Выполните это один раз, заменив {0} своим ключом. Fish запоминает значение между сеансами, поэтому файл запуска не нужен:</value>
 	</data>
-    <data name="UnknownShellStartupFile" xml:space="preserve">
+	<data name="UnknownShellStartupFile" xml:space="preserve">
 		<value>файл запуска вашей оболочки</value>
 	</data>
-    <data name="SaveChangesPrompt" xml:space="preserve">
+	<data name="SaveChangesPrompt" xml:space="preserve">
 		<value>Сохранить изменения?</value>
 	</data>
-    <data name="ConfigNotSaved" xml:space="preserve">
+	<data name="ConfigNotSaved" xml:space="preserve">
 		<value>Изменения не сохранены.</value>
 	</data>
-    <data name="ConfigBackedUpFormat" xml:space="preserve">
+	<data name="ConfigBackedUpFormat" xml:space="preserve">
 		<value>Резервная копия прежнего файла: {0}.</value>
 	</data>
-    <data name="ConfigSavedFormat" xml:space="preserve">
+	<data name="ConfigSavedFormat" xml:space="preserve">
 		<value>{0} сохранён.</value>
 	</data>
-    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+	<data name="ConfigSaveFailedFormat" xml:space="preserve">
 		<value>Не удалось сохранить {0}: {1}</value>
 	</data>
-    <data name="InteractiveTerminalRequired" xml:space="preserve">
+	<data name="InteractiveTerminalRequired" xml:space="preserve">
 		<value>Для --config нужен интерактивный терминал.</value>
 	</data>
-    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+	<data name="DeprecatedEnvVarFormat" xml:space="preserve">
 		<value>Предупреждение: {0} устарела. Вместо неё задайте {1} в {2} или выполните 'shelly --config'.</value>
 	</data>
-    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+	<data name="MainMenuNeedsSetupFormat" xml:space="preserve">
 		<value>требуется настройка: {0}</value>
 	</data>
-    <data name="MenuBackToMainMenu" xml:space="preserve">
+	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>Назад в главное меню</value>
 	</data>
 </root>

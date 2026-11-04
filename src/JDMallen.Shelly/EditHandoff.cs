@@ -13,7 +13,8 @@ internal static class EditHandoff
 {
 	private const string FILE_ENV_VAR = "SHELLY_EDIT_FILE";
 
-	public static string? FilePath => Environment.GetEnvironmentVariable(FILE_ENV_VAR);
+	public static string? FilePath
+		=> Environment.GetEnvironmentVariable(FILE_ENV_VAR);
 
 	public static bool IsEnabled => !string.IsNullOrEmpty(FilePath);
 }

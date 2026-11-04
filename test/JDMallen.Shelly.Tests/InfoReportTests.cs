@@ -19,7 +19,7 @@ public class InfoReportTests
 	[Fact]
 	public void Azure_ReportsEndpointDeploymentAndKeyPresence()
 	{
-		_environment[ChatProvider.AzureApiKeyEnvVar] = SECRET;
+		_environment[ChatProvider.AZURE_API_KEY_ENV_VAR] = SECRET;
 
 		string report = Build(
 			new ShellyConfig
@@ -36,8 +36,12 @@ public class InfoReportTests
 
 		Assert.StartsWith("shelly 9.9.9", report);
 		Assert.Contains("provider:   azure", report);
-		Assert.Contains("endpoint:   https://example.openai.azure.com\n", report.ReplaceLineEndings("\n"));
-		Assert.Contains("deployment: gpt-6-luna\n", report.ReplaceLineEndings("\n"));
+		Assert.Contains(
+			"endpoint:   https://example.openai.azure.com\n",
+			report.ReplaceLineEndings("\n"));
+		Assert.Contains(
+			"deployment: gpt-6-luna\n",
+			report.ReplaceLineEndings("\n"));
 		Assert.Contains("reasoning:  yes (temperature not sent)", report);
 		Assert.Contains("max tokens: 2048", report);
 		Assert.Contains("api key:    AZURE_OPENAI_API_KEY is set", report);
@@ -48,8 +52,9 @@ public class InfoReportTests
 	[Fact]
 	public void Azure_DeprecatedVariables_ReportedAsDeprecated()
 	{
-		_environment[ChatProvider.AzureEndpointEnvVar] = "https://example.openai.azure.com";
-		_environment[ChatProvider.AzureDeploymentEnvVar] = "gpt-6-luna";
+		_environment[ChatProvider.AZURE_ENDPOINT_ENV_VAR] =
+			"https://example.openai.azure.com";
+		_environment[ChatProvider.AZURE_DEPLOYMENT_ENV_VAR] = "gpt-6-luna";
 
 		string report = Build(new ShellyConfig { Provider = "azure" });
 
@@ -74,7 +79,7 @@ public class InfoReportTests
 	[Fact]
 	public void Anthropic_ReportsModelAndFixedEndpoint()
 	{
-		_environment[ChatProvider.AnthropicApiKeyEnvVar] = SECRET;
+		_environment[ChatProvider.ANTHROPIC_API_KEY_ENV_VAR] = SECRET;
 
 		string report = Build(new ShellyConfig());
 

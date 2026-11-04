@@ -29,7 +29,8 @@ internal sealed class ConfigWizard
 		new(ShellyConfig.ANTHROPIC_PROVIDER, () => "Anthropic (Claude)"),
 		new(
 			ShellyConfig.OPENAI_PROVIDER,
-			() => $"{Strings.ProviderOpenAICompatible} (openai.com, llama.cpp, Ollama, vLLM, ...)"),
+			()
+				=> $"{Strings.ProviderOpenAICompatible} (openai.com, llama.cpp, Ollama, vLLM, ...)"),
 		new(ShellyConfig.AZURE_PROVIDER, () => "Azure OpenAI"),
 	];
 
@@ -74,11 +75,15 @@ internal sealed class ConfigWizard
 		_io.Write($"{Strings.ConfigHeader(_configPath)}\n", ConsoleColor.Green);
 		_io.WriteLine();
 
-		ShellyConfig config = ShellyConfig.Load(_configPath, out string? parseError);
+		ShellyConfig config = ShellyConfig.Load(
+			_configPath,
+			out string? parseError);
 		if (parseError is not null)
 		{
-			_io.Write($"{Strings.ConfigUnreadable(_configPath, parseError)}\n", ConsoleColor.Yellow);
-			if (!_prompts.YesNo(Strings.ContinuePrompt, defaultYes: false))
+			_io.Write(
+				$"{Strings.ConfigUnreadable(_configPath, parseError)}\n",
+				ConsoleColor.Yellow);
+			if (!_prompts.YesNo(Strings.ContinuePrompt, false))
 			{
 				return Discard();
 			}
@@ -88,9 +93,11 @@ internal sealed class ConfigWizard
 
 		_io.WriteLine(Strings.ProviderHeader);
 		int chosen = _prompts.Choose(
-			Providers.Select(provider => provider.Label()).ToList(),
+			[.. Providers.Select(provider => provider.Label())],
 			CurrentProviderIndex(config.Provider),
-			zeroOption: fromMainMenu ? Strings.MenuBackToMainMenu : Strings.MainMenuExit);
+			zeroOption: fromMainMenu
+				? Strings.MenuBackToMainMenu
+				: Strings.MainMenuExit);
 		if (chosen == ConsolePrompts.CANCELLED)
 		{
 			// Nothing has been changed yet, so there's nothing to report.
@@ -110,40 +117,46 @@ internal sealed class ConfigWizard
 		_io.WriteLine(Strings.SettingsHeader);
 		string apiKeyVariable = provider switch
 		{
-			ShellyConfig.AZURE_PROVIDER  => ConfigureAzure(config.Azure),
+			ShellyConfig.AZURE_PROVIDER => ConfigureAzure(config.Azure),
 			ShellyConfig.OPENAI_PROVIDER => ConfigureOpenAI(config.OpenAI),
-			_                            => ConfigureAnthropic(config.Anthropic),
+			_ => ConfigureAnthropic(config.Anthropic),
 		};
 
 		_io.WriteLine();
 		string? pendingApiKey = ConfigureApiKey(
 			apiKeyVariable,
-			optional: provider == ShellyConfig.OPENAI_PROVIDER);
+			provider == ShellyConfig.OPENAI_PROVIDER);
 
 		_io.WriteLine();
-		if (!_prompts.YesNo(Strings.SaveChangesPrompt, defaultYes: true))
-		{
-			return Discard();
-		}
 
-		return Save(config, backUpFirst: parseError is not null, apiKeyVariable, pendingApiKey);
+		return !_prompts.YesNo(Strings.SaveChangesPrompt, true)
+			? Discard()
+			: Save(
+				config,
+				parseError is not null,
+				apiKeyVariable,
+				pendingApiKey);
 	}
 
 	private string ConfigureAnthropic(AnthropicConfig anthropic)
 	{
 		anthropic.Model = _prompts.Text("anthropic.model", anthropic.Model);
 
-		return ChatProvider.AnthropicApiKeyEnvVar;
+		return ChatProvider.ANTHROPIC_API_KEY_ENV_VAR;
 	}
 
 	private string ConfigureOpenAI(OpenAIConfig openAI)
 	{
 		openAI.BaseUrl = _prompts.HttpUrl("openai.baseUrl", openAI.BaseUrl);
 		openAI.Model = _prompts.Text("openai.model", openAI.Model);
-		openAI.TimeoutSeconds = _prompts.PositiveInteger("openai.timeoutSeconds", openAI.TimeoutSeconds);
-		openAI.MaxTokens = _prompts.PositiveInteger("openai.maxTokens", openAI.MaxTokens);
+		openAI.TimeoutSeconds = _prompts.PositiveInteger(
+			"openai.timeoutSeconds",
+			openAI.TimeoutSeconds);
+		openAI.MaxTokens = _prompts.PositiveInteger(
+			"openai.maxTokens",
+			openAI.MaxTokens);
 
-		return ChatProvider.OpenAIApiKeyEnvVar;
+		return ChatProvider.OPEN_AI_API_KEY_ENV_VAR;
 	}
 
 	private string ConfigureAzure(AzureConfig azure)
@@ -156,10 +169,14 @@ internal sealed class ConfigWizard
 		azure.Deployment = _prompts.Text(
 			"azure.deployment",
 			azure.ResolveDeployment(_environment.Get).Value ?? string.Empty);
-		azure.ReasoningModel = _prompts.Boolean("azure.reasoningModel", azure.ReasoningModel);
-		azure.MaxTokens = _prompts.PositiveInteger("azure.maxTokens", azure.MaxTokens);
+		azure.ReasoningModel = _prompts.Boolean(
+			"azure.reasoningModel",
+			azure.ReasoningModel);
+		azure.MaxTokens = _prompts.PositiveInteger(
+			"azure.maxTokens",
+			azure.MaxTokens);
 
-		return ChatProvider.AzureApiKeyEnvVar;
+		return ChatProvider.AZURE_API_KEY_ENV_VAR;
 	}
 
 	/// <returns>
@@ -179,7 +196,9 @@ internal sealed class ConfigWizard
 
 		if (_environment.CanPersist)
 		{
-			return AskForKeyToPersist(variable, defaultYes: !isSet && !optional);
+			return AskForKeyToPersist(
+				variable,
+				!isSet && !optional);
 		}
 
 		if (!isSet)
@@ -192,20 +211,23 @@ internal sealed class ConfigWizard
 
 	private string? AskForKeyToPersist(string variable, bool defaultYes)
 	{
-		if (!_prompts.YesNo(Strings.SetUserVariablePrompt(variable), defaultYes, indent: true))
+		if (!_prompts.YesNo(
+				Strings.SetUserVariablePrompt(variable),
+				defaultYes,
+				true))
 		{
 			return null;
 		}
 
 		string? key = _prompts.Secret(Strings.EnterApiKey);
-		if (string.IsNullOrWhiteSpace(key))
+		if (!string.IsNullOrWhiteSpace(key))
 		{
-			_io.WriteLine($"  {Strings.Skipped}");
-
-			return null;
+			return key.Trim();
 		}
 
-		return key.Trim();
+		_io.WriteLine($"  {Strings.Skipped}");
+
+		return null;
 	}
 
 	private void WriteStartupInstructions(string variable)
@@ -225,25 +247,30 @@ internal sealed class ConfigWizard
 	/// file means the line is run once instead (fish's universal variables
 	/// persist on their own).
 	/// </summary>
-	internal static (string Line, string? StartupFile) StartupLine(Shell shell, string variable)
+	internal static (string Line, string? StartupFile) StartupLine(
+		Shell shell,
+		string variable)
 	{
-		string value = $"'{KEY_PLACEHOLDER}'";
+		const string value = $"'{KEY_PLACEHOLDER}'";
 
 		return shell.Name switch
 		{
-			"fish"                 => ($"set -Ux {variable} {value}", null),
-			"zsh"                  => ($"export {variable}={value}", "~/.zshrc"),
-			"bash"                 => ($"export {variable}={value}", "~/.bashrc"),
-			"tcsh"                 => ($"setenv {variable} {value}", "~/.tcshrc"),
-			"csh"                  => ($"setenv {variable} {value}", "~/.cshrc"),
-			"pwsh" or "powershell" => ($"$env:{variable} = {value}", "$PROFILE"),
-			"nu"                   => ($"$env.{variable} = {value}", "$nu.env-path"),
-			"elvish"               => ($"set E:{variable} = {value}", "~/.config/elvish/rc.elv"),
+			"fish" => ($"set -Ux {variable} {value}", null),
+			"zsh" => ($"export {variable}={value}", "~/.zshrc"),
+			"bash" => ($"export {variable}={value}", "~/.bashrc"),
+			"tcsh" => ($"setenv {variable} {value}", "~/.tcshrc"),
+			"csh" => ($"setenv {variable} {value}", "~/.cshrc"),
+			"pwsh" or "powershell" => ($"$env:{variable} = {value}",
+				"$PROFILE"),
+			"nu" => ($"$env.{variable} = {value}", "$nu.env-path"),
+			"elvish" => ($"set E:{variable} = {value}",
+				"~/.config/elvish/rc.elv"),
 			"ksh" or "ksh93" or "mksh" or "lksh" or "oksh" or "pdksh"
 				=> ($"export {variable}={value}", "~/.kshrc"),
 			"sh" or "dash" or "ash" or "posh" or "yash"
 				=> ($"export {variable}={value}", "~/.profile"),
-			_ => ($"export {variable}={value}", Strings.UnknownShellStartupFile),
+			_ => ($"export {variable}={value}",
+				Strings.UnknownShellStartupFile),
 		};
 	}
 
@@ -251,12 +278,16 @@ internal sealed class ConfigWizard
 	{
 		if (ShellyConfig.IsOpenAIProvider(provider))
 		{
-			return Array.FindIndex(Providers, option => option.Name == ShellyConfig.OPENAI_PROVIDER);
+			return Array.FindIndex(
+				Providers,
+				option => option.Name == ShellyConfig.OPENAI_PROVIDER);
 		}
 
 		int index = Array.FindIndex(
 			Providers,
-			option => option.Name.Equals(provider, StringComparison.OrdinalIgnoreCase));
+			option => option.Name.Equals(
+				provider,
+				StringComparison.OrdinalIgnoreCase));
 
 		return Math.Max(index, 0);
 	}
@@ -273,27 +304,37 @@ internal sealed class ConfigWizard
 		{
 			if (backUpFirst && File.Exists(_configPath))
 			{
-				string timestamp = _utcNow().ToString(BACKUP_TIMESTAMP_FORMAT, CultureInfo.InvariantCulture);
-				string backupPath = $"{_configPath}.bak_{timestamp}";
-				File.Copy(_configPath, backupPath, overwrite: false);
+				var timestamp = _utcNow()
+					.ToString(
+						BACKUP_TIMESTAMP_FORMAT,
+						CultureInfo.InvariantCulture);
+				var backupPath = $"{_configPath}.bak_{timestamp}";
+				File.Copy(_configPath, backupPath, false);
 				_io.WriteLine(Strings.ConfigBackedUp(backupPath));
 			}
 
 			config.Save(_configPath);
 		}
-		catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+		catch (Exception ex) when (ex is IOException
+									   or UnauthorizedAccessException)
 		{
-			_io.Write($"{Strings.Error(Strings.ConfigSaveFailed(_configPath, ex.Message))}\n", ConsoleColor.Red);
+			_io.Write(
+				$"{Strings.Error(Strings.ConfigSaveFailed(_configPath, ex.Message))}\n",
+				ConsoleColor.Red);
 
 			return ConfigWizardOutcome.Failed;
 		}
 
 		_io.Write($"{Strings.ConfigSaved(_configPath)}\n", ConsoleColor.Green);
-		if (pendingApiKey is not null)
+		if (pendingApiKey is null)
 		{
-			_environment.SetPersistent(apiKeyVariable, pendingApiKey);
-			_io.Write($"{Strings.UserVariableSaved(apiKeyVariable)}\n", ConsoleColor.Green);
+			return ConfigWizardOutcome.Saved;
 		}
+
+		_environment.SetPersistent(apiKeyVariable, pendingApiKey);
+		_io.Write(
+			$"{Strings.UserVariableSaved(apiKeyVariable)}\n",
+			ConsoleColor.Green);
 
 		return ConfigWizardOutcome.Saved;
 	}

@@ -1,271 +1,271 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
-            <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
-            </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <data name="WhatToDo" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+				xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+							<xsd:attribute ref="xml:space"/>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required"/>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+			PublicKeyToken=b77a5c561934e089
+		</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+			PublicKeyToken=b77a5c561934e089
+		</value>
+	</resheader>
+	<data name="WhatToDo" xml:space="preserve">
 		<value>คุณต้องการทำอะไร?</value>
 	</data>
-    <data name="Thinking" xml:space="preserve">
+	<data name="Thinking" xml:space="preserve">
 		<value>กำลังคิด...</value>
 	</data>
-    <data name="ErrorFormat" xml:space="preserve">
+	<data name="ErrorFormat" xml:space="preserve">
 		<value>ข้อผิดพลาด: {0}</value>
 	</data>
-    <data name="NoSuggestion" xml:space="preserve">
+	<data name="NoSuggestion" xml:space="preserve">
 		<value>ไม่ได้รับคำแนะนำจาก API</value>
 	</data>
-    <data name="SuggestionHeader" xml:space="preserve">
+	<data name="SuggestionHeader" xml:space="preserve">
 		<value>คำแนะนำ:</value>
 	</data>
-    <data name="Explaining" xml:space="preserve">
+	<data name="Explaining" xml:space="preserve">
 		<value>กำลังอธิบาย...</value>
 	</data>
-    <data name="ExplanationHeader" xml:space="preserve">
+	<data name="ExplanationHeader" xml:space="preserve">
 		<value>คำอธิบาย:</value>
 	</data>
-    <data name="CopiedToClipboard" xml:space="preserve">
+	<data name="CopiedToClipboard" xml:space="preserve">
 		<value>คัดลอกไปยังคลิปบอร์ดแล้ว</value>
 	</data>
-    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+	<data name="ClipboardUnavailableFormat" xml:space="preserve">
 		<value>ใช้คลิปบอร์ดไม่ได้: {0}</value>
 	</data>
-    <data name="InstallClipboardToolLinux" xml:space="preserve">
+	<data name="InstallClipboardToolLinux" xml:space="preserve">
 		<value>ติดตั้ง xclip, xsel หรือ wl-clipboard เพื่อเปิดใช้การคัดลอกบน Linux</value>
 	</data>
-    <data name="WhatShouldBeDifferent" xml:space="preserve">
+	<data name="WhatShouldBeDifferent" xml:space="preserve">
 		<value>ต้องการให้เปลี่ยนอะไร?</value>
 	</data>
-    <data name="Goodbye" xml:space="preserve">
+	<data name="Goodbye" xml:space="preserve">
 		<value>ลาก่อน!</value>
 	</data>
-    <data name="InvalidChoice" xml:space="preserve">
+	<data name="InvalidChoice" xml:space="preserve">
 		<value>ตัวเลือกไม่ถูกต้อง</value>
 	</data>
-    <data name="MenuExecute" xml:space="preserve">
+	<data name="MenuExecute" xml:space="preserve">
 		<value>[x] รัน</value>
 	</data>
-    <data name="MenuEdit" xml:space="preserve">
+	<data name="MenuEdit" xml:space="preserve">
 		<value>[e] แก้ไข</value>
 	</data>
-    <data name="MenuExplain" xml:space="preserve">
+	<data name="MenuExplain" xml:space="preserve">
 		<value>[p] อธิบาย</value>
 	</data>
-    <data name="MenuCopy" xml:space="preserve">
+	<data name="MenuCopy" xml:space="preserve">
 		<value>[c] คัดลอก</value>
 	</data>
-    <data name="MenuRetry" xml:space="preserve">
+	<data name="MenuRetry" xml:space="preserve">
 		<value>[r] ลองใหม่</value>
 	</data>
-    <data name="MenuQuit" xml:space="preserve">
+	<data name="MenuQuit" xml:space="preserve">
 		<value>[q] ออก</value>
 	</data>
-    <data name="Executing" xml:space="preserve">
+	<data name="Executing" xml:space="preserve">
 		<value>กำลังรัน...</value>
 	</data>
-    <data name="FailedToStartShell" xml:space="preserve">
+	<data name="FailedToStartShell" xml:space="preserve">
 		<value>เริ่มเชลล์ไม่สำเร็จ</value>
 	</data>
-    <data name="UnknownProviderFormat" xml:space="preserve">
+	<data name="UnknownProviderFormat" xml:space="preserve">
 		<value>ไม่รู้จักผู้ให้บริการ '{0}' ใน {1} ค่าที่รองรับ: 'anthropic', 'azure' หรือ 'openai'</value>
 	</data>
-    <data name="EnvVarNotSetFormat" xml:space="preserve">
+	<data name="EnvVarNotSetFormat" xml:space="preserve">
 		<value>ยังไม่ได้ตั้งค่าตัวแปรสภาพแวดล้อม {0}</value>
 	</data>
-    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+	<data name="OpenAIMisconfiguredFormat" xml:space="preserve">
 		<value>ตั้งค่าผู้ให้บริการ OpenAI ไม่ถูกต้อง ให้ตั้งค่า {0} ใน {1}</value>
 	</data>
-    <data name="ListConjunction" xml:space="preserve">
+	<data name="ListConjunction" xml:space="preserve">
 		<value>และ</value>
 	</data>
-    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+	<data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
 		<value>{0} ต้องมากกว่า 0 (ได้รับ {1})</value>
 	</data>
-    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+	<data name="AzureMisconfiguredFormat" xml:space="preserve">
 		<value>ตั้งค่าผู้ให้บริการ Azure ไม่ถูกต้อง ให้ตั้งค่า {0} ใน {1} หรือเรียกใช้ 'shelly --config'</value>
 	</data>
-    <data name="UnknownOptionFormat" xml:space="preserve">
+	<data name="UnknownOptionFormat" xml:space="preserve">
 		<value>ไม่รู้จักตัวเลือก '{0}'</value>
 	</data>
-    <data name="ConfigParseWarningFormat" xml:space="preserve">
+	<data name="ConfigParseWarningFormat" xml:space="preserve">
 		<value>คำเตือน: แยกวิเคราะห์ {0} ไม่สำเร็จ: {1} จะใช้ค่าเริ่มต้นแทน</value>
 	</data>
-    <data name="NoGraphicalSession" xml:space="preserve">
+	<data name="NoGraphicalSession" xml:space="preserve">
 		<value>ไม่พบเซสชันกราฟิก (ไม่มี WAYLAND_DISPLAY หรือ DISPLAY) ไม่สามารถใช้คลิปบอร์ดผ่านเซสชัน headless/SSH ได้</value>
 	</data>
-    <data name="NoClipboardTool" xml:space="preserve">
+	<data name="NoClipboardTool" xml:space="preserve">
 		<value>ไม่พบเครื่องมือคลิปบอร์ด ให้ติดตั้ง wl-clipboard (Wayland), xclip หรือ xsel</value>
 	</data>
-    <data name="ProcessExitedFormat" xml:space="preserve">
+	<data name="ProcessExitedFormat" xml:space="preserve">
 		<value>'{0}' จบการทำงานด้วยรหัส {1} {2}</value>
 	</data>
-    <data name="HelpOptionHelp" xml:space="preserve">
+	<data name="HelpOptionHelp" xml:space="preserve">
 		<value>แสดงหน้าจอวิธีใช้นี้</value>
 	</data>
-    <data name="HelpOptionVersion" xml:space="preserve">
+	<data name="HelpOptionVersion" xml:space="preserve">
 		<value>แสดงข้อมูลเวอร์ชัน</value>
 	</data>
-    <data name="HelpOptionInfo" xml:space="preserve">
+	<data name="HelpOptionInfo" xml:space="preserve">
 		<value>แสดงการกำหนดค่าปัจจุบัน: ผู้ให้บริการ, ปลายทาง, โมเดล และเชลล์</value>
 	</data>
-    <data name="HelpOptionTerminator" xml:space="preserve">
+	<data name="HelpOptionTerminator" xml:space="preserve">
 		<value>สิ้นสุดการแยกวิเคราะห์ตัวเลือก ส่วนที่เหลือคือพรอมต์</value>
 	</data>
-    <data name="HelpPrompt" xml:space="preserve">
+	<data name="HelpPrompt" xml:space="preserve">
 		<value>คำอธิบายคำสั่ง หากไม่ระบุ ระบบจะถามคุณ</value>
 	</data>
-    <data name="ResponseLanguage" xml:space="preserve">
+	<data name="ResponseLanguage" xml:space="preserve">
 		<value>Thai</value>
 	</data>
-    <data name="HelpOptionConfig" xml:space="preserve">
+	<data name="HelpOptionConfig" xml:space="preserve">
 		<value>ตั้งค่าผู้ให้บริการและการตั้งค่าของผู้ให้บริการแบบโต้ตอบ</value>
 	</data>
-    <data name="MainMenuAsk" xml:space="preserve">
+	<data name="MainMenuAsk" xml:space="preserve">
 		<value>ถามคำถาม</value>
 	</data>
-    <data name="MainMenuConfigure" xml:space="preserve">
+	<data name="MainMenuConfigure" xml:space="preserve">
 		<value>ตั้งค่า</value>
 	</data>
-    <data name="MainMenuInfo" xml:space="preserve">
+	<data name="MainMenuInfo" xml:space="preserve">
 		<value>ข้อมูล</value>
 	</data>
-    <data name="MainMenuExit" xml:space="preserve">
+	<data name="MainMenuExit" xml:space="preserve">
 		<value>ออก</value>
 	</data>
-    <data name="DefaultMarker" xml:space="preserve">
+	<data name="DefaultMarker" xml:space="preserve">
 		<value>(ค่าเริ่มต้น)</value>
 	</data>
-    <data name="ChooseFormat" xml:space="preserve">
+	<data name="ChooseFormat" xml:space="preserve">
 		<value>เลือก (Enter = {0}):</value>
 	</data>
-    <data name="ConfigHeaderFormat" xml:space="preserve">
+	<data name="ConfigHeaderFormat" xml:space="preserve">
 		<value>ไฟล์การตั้งค่า: {0}</value>
 	</data>
-    <data name="ConfigUnreadableFormat" xml:space="preserve">
+	<data name="ConfigUnreadableFormat" xml:space="preserve">
 		<value>ไม่สามารถอ่าน {0} ได้: {1} การบันทึกจะแทนที่ไฟล์ด้วยค่าที่ป้อนที่นี่ โดยจะสำรองไฟล์ปัจจุบันไว้ก่อน</value>
 	</data>
-    <data name="ContinuePrompt" xml:space="preserve">
+	<data name="ContinuePrompt" xml:space="preserve">
 		<value>ดำเนินการต่อหรือไม่?</value>
 	</data>
-    <data name="ProviderHeader" xml:space="preserve">
+	<data name="ProviderHeader" xml:space="preserve">
 		<value>ผู้ให้บริการ:</value>
 	</data>
-    <data name="ProviderOpenAICompatible" xml:space="preserve">
+	<data name="ProviderOpenAICompatible" xml:space="preserve">
 		<value>เซิร์ฟเวอร์ที่เข้ากันได้กับ OpenAI</value>
 	</data>
-    <data name="SettingsHeader" xml:space="preserve">
+	<data name="SettingsHeader" xml:space="preserve">
 		<value>การตั้งค่า (กด Enter เพื่อคงค่าในวงเล็บเหลี่ยม):</value>
 	</data>
-    <data name="ValueRequired" xml:space="preserve">
+	<data name="ValueRequired" xml:space="preserve">
 		<value>ต้องระบุค่า</value>
 	</data>
-    <data name="InvalidPositiveInteger" xml:space="preserve">
+	<data name="InvalidPositiveInteger" xml:space="preserve">
 		<value>ป้อนจำนวนเต็มที่มากกว่า 0</value>
 	</data>
-    <data name="InvalidHttpUrl" xml:space="preserve">
+	<data name="InvalidHttpUrl" xml:space="preserve">
 		<value>ป้อน URL แบบเต็มที่ขึ้นต้นด้วย http:// หรือ https://</value>
 	</data>
-    <data name="ApiKeyHeader" xml:space="preserve">
+	<data name="ApiKeyHeader" xml:space="preserve">
 		<value>คีย์ API:</value>
 	</data>
-    <data name="ApiKeySetFormat" xml:space="preserve">
+	<data name="ApiKeySetFormat" xml:space="preserve">
 		<value>ตั้งค่า {0} แล้ว</value>
 	</data>
-    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+	<data name="ApiKeyNotSetFormat" xml:space="preserve">
 		<value>ยังไม่ได้ตั้งค่า {0}</value>
 	</data>
-    <data name="ApiKeyOptional" xml:space="preserve">
+	<data name="ApiKeyOptional" xml:space="preserve">
 		<value>ไม่บังคับ: เซิร์ฟเวอร์ที่โฮสต์เองส่วนใหญ่ไม่ตรวจสอบคีย์</value>
 	</data>
-    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+	<data name="SetUserVariablePromptFormat" xml:space="preserve">
 		<value>บันทึก {0} เป็นตัวแปรสภาพแวดล้อมของผู้ใช้ Windows ตอนนี้หรือไม่?</value>
 	</data>
-    <data name="EnterApiKey" xml:space="preserve">
+	<data name="EnterApiKey" xml:space="preserve">
 		<value>คีย์ API (กด Enter เพื่อข้าม):</value>
 	</data>
-    <data name="Skipped" xml:space="preserve">
+	<data name="Skipped" xml:space="preserve">
 		<value>ข้ามแล้ว</value>
 	</data>
-    <data name="UserVariableSavedFormat" xml:space="preserve">
+	<data name="UserVariableSavedFormat" xml:space="preserve">
 		<value>บันทึก {0} แล้ว เทอร์มินัลที่เปิดจากนี้ไปจะเห็นค่านี้ แต่เทอร์มินัลที่เปิดอยู่แล้วจะไม่เห็น</value>
 	</data>
-    <data name="ShellStartupLineFormat" xml:space="preserve">
+	<data name="ShellStartupLineFormat" xml:space="preserve">
 		<value>เพิ่มบรรทัดนี้ลงใน {0} โดยแทนที่ {1} ด้วยคีย์ของคุณ แล้วเปิดเทอร์มินัลใหม่:</value>
 	</data>
-    <data name="FishUniversalVariableFormat" xml:space="preserve">
+	<data name="FishUniversalVariableFormat" xml:space="preserve">
 		<value>เรียกใช้คำสั่งนี้หนึ่งครั้ง โดยแทนที่ {0} ด้วยคีย์ของคุณ fish จะจำค่านี้ข้ามเซสชัน จึงไม่ต้องใช้ไฟล์เริ่มต้น:</value>
 	</data>
-    <data name="UnknownShellStartupFile" xml:space="preserve">
+	<data name="UnknownShellStartupFile" xml:space="preserve">
 		<value>ไฟล์เริ่มต้นของเชลล์ของคุณ</value>
 	</data>
-    <data name="SaveChangesPrompt" xml:space="preserve">
+	<data name="SaveChangesPrompt" xml:space="preserve">
 		<value>บันทึกการเปลี่ยนแปลงหรือไม่?</value>
 	</data>
-    <data name="ConfigNotSaved" xml:space="preserve">
+	<data name="ConfigNotSaved" xml:space="preserve">
 		<value>ไม่ได้บันทึกการเปลี่ยนแปลง</value>
 	</data>
-    <data name="ConfigBackedUpFormat" xml:space="preserve">
+	<data name="ConfigBackedUpFormat" xml:space="preserve">
 		<value>สำรองไฟล์ก่อนหน้าไว้ที่ {0} แล้ว</value>
 	</data>
-    <data name="ConfigSavedFormat" xml:space="preserve">
+	<data name="ConfigSavedFormat" xml:space="preserve">
 		<value>บันทึก {0} แล้ว</value>
 	</data>
-    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+	<data name="ConfigSaveFailedFormat" xml:space="preserve">
 		<value>ไม่สามารถบันทึก {0}: {1}</value>
 	</data>
-    <data name="InteractiveTerminalRequired" xml:space="preserve">
+	<data name="InteractiveTerminalRequired" xml:space="preserve">
 		<value>--config ต้องใช้เทอร์มินัลแบบโต้ตอบ</value>
 	</data>
-    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+	<data name="DeprecatedEnvVarFormat" xml:space="preserve">
 		<value>คำเตือน: {0} เลิกใช้แล้ว ให้ตั้งค่า {1} ใน {2} แทน หรือเรียกใช้ 'shelly --config'</value>
 	</data>
-    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+	<data name="MainMenuNeedsSetupFormat" xml:space="preserve">
 		<value>ต้องตั้งค่า: {0}</value>
 	</data>
-    <data name="MenuBackToMainMenu" xml:space="preserve">
+	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>กลับไปที่เมนูหลัก</value>
 	</data>
 </root>

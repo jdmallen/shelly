@@ -16,10 +16,12 @@ internal static class MainMenu
 {
 	private const int CONFIGURE_INDEX = 1;
 
+	/// <param name="versionLine">The version line to display.</param>
 	/// <param name="missingSettings">
 	/// From <see cref="ConfigCheck.FindMissing" />: shown next to Configure
 	/// when not empty.
 	/// </param>
+	/// <param name="io">The console I/O instance.</param>
 	public static MainMenuChoice Show(
 		IConsoleIO io,
 		string versionLine,
@@ -29,7 +31,12 @@ internal static class MainMenu
 		io.WriteLine();
 
 		Dictionary<int, string>? warnings = missingSettings is { Count: > 0 }
-			? new() { [CONFIGURE_INDEX] = Strings.MainMenuNeedsSetup(string.Join(", ", missingSettings)) }
+			? new Dictionary<int, string>
+			{
+				[CONFIGURE_INDEX] =
+					Strings.MainMenuNeedsSetup(
+						string.Join(", ", missingSettings)),
+			}
 			: null;
 
 		int chosen = new ConsolePrompts(io).Choose(
@@ -38,16 +45,16 @@ internal static class MainMenu
 				Strings.MainMenuConfigure,
 				Strings.MainMenuInfo,
 			],
-			defaultIndex: 0,
+			0,
 			warnings,
-			zeroOption: Strings.MainMenuExit);
+			Strings.MainMenuExit);
 
 		return chosen switch
 		{
-			0               => MainMenuChoice.Ask,
+			0 => MainMenuChoice.Ask,
 			CONFIGURE_INDEX => MainMenuChoice.Configure,
-			2               => MainMenuChoice.Info,
-			_               => MainMenuChoice.Exit,
+			2 => MainMenuChoice.Info,
+			_ => MainMenuChoice.Exit,
 		};
 	}
 }

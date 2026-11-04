@@ -40,14 +40,16 @@ internal sealed class SystemConsoleIO : IConsoleIO
 
 	public string? ReadLine() => Console.ReadLine();
 
-	public ConsoleKey ReadKey() => Console.ReadKey(intercept: true).Key;
+	public ConsoleKey ReadKey() => Console.ReadKey(true).Key;
 
 	public string? ReadSecret()
 	{
 		var secret = new StringBuilder();
 		while (true)
 		{
-			ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+			ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+			// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 			switch (keyInfo.Key)
 			{
 				case ConsoleKey.Enter:
@@ -62,7 +64,7 @@ internal sealed class SystemConsoleIO : IConsoleIO
 					if (secret.Length > 0)
 					{
 						secret.Length--;
-						Console.Write("\b \b");
+						Console.Write(@" ");
 					}
 
 					break;

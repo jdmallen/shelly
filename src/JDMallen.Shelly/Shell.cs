@@ -37,13 +37,26 @@ public sealed record Shell(
 
 	private static readonly string[] DashC = ["-c"];
 
-	private static readonly string[] PowerShellFlags = ["-NoProfile", "-Command"];
+	private static readonly string[] PowerShellFlags =
+		["-NoProfile", "-Command"];
 
 	private static readonly KnownShell[] KnownShells =
 	[
-		new(["bash"], "Bash", DashC, null),
-		new(["zsh"], "Zsh", DashC, null),
-		new(["sh", "dash", "ash", "posh", "yash"], "POSIX sh", DashC, POSIX_HINT),
+		new(
+			["bash"],
+			"Bash",
+			DashC,
+			null),
+		new(
+			["zsh"],
+			"Zsh",
+			DashC,
+			null),
+		new(
+			["sh", "dash", "ash", "posh", "yash"],
+			"POSIX sh",
+			DashC,
+			POSIX_HINT),
 		new(
 			["ksh", "ksh93", "mksh", "lksh", "oksh", "pdksh"],
 			"KornShell",
@@ -65,7 +78,11 @@ public sealed record Shell(
 			"Use csh/tcsh syntax: `setenv NAME value` and `set name = value`, "
 			+ "`foreach x (...) ... end`, `if (...) then ... endif`, backticks "
 			+ "for command substitution; there is no `$(...)` and no `export`."),
-		new(["pwsh"], "PowerShell", PowerShellFlags, POWERSHELL_HINT),
+		new(
+			["pwsh"],
+			"PowerShell",
+			PowerShellFlags,
+			POWERSHELL_HINT),
 		new(
 			["powershell"],
 			"Windows PowerShell 5.1",
@@ -117,10 +134,14 @@ public sealed record Shell(
 	/// name is <c>sh</c> but the executable is <c>/bin/busybox</c>, the name is
 	/// run instead.
 	/// </param>
-	internal static Shell? TryResolveKnown(string nameOrPath, string? executablePath = null)
+	internal static Shell? TryResolveKnown(
+		string nameOrPath,
+		string? executablePath = null)
 	{
 		string name = NormalizeName(nameOrPath);
-		KnownShell? known = KnownShells.FirstOrDefault(candidate => candidate.Names.Contains(name));
+		KnownShell? known =
+			KnownShells.FirstOrDefault(candidate
+				=> candidate.Names.Contains(name));
 		if (known is null)
 		{
 			return null;
@@ -137,7 +158,12 @@ public sealed record Shell(
 			? $"POSIX sh ({name})"
 			: known.DisplayName;
 
-		return new Shell(name, displayName, executable, known.CommandFlags, known.PromptHint);
+		return new Shell(
+			name,
+			displayName,
+			executable,
+			known.CommandFlags,
+			known.PromptHint);
 	}
 
 	/// <summary>
@@ -155,7 +181,12 @@ public sealed record Shell(
 
 		string name = NormalizeName(nameOrPath);
 
-		return new Shell(name, name, nameOrPath, DashC, null);
+		return new Shell(
+			name,
+			name,
+			nameOrPath,
+			DashC,
+			null);
 	}
 
 	/// <summary>
@@ -163,7 +194,7 @@ public sealed record Shell(
 	/// directory, a login shell's leading <c>-</c> and a <c>.exe</c> suffix
 	/// removed.
 	/// </summary>
-	internal static string NormalizeName(string nameOrPath)
+	private static string NormalizeName(string nameOrPath)
 	{
 		// Split on both separators: a Windows path must normalize on any OS.
 		int lastSeparator = nameOrPath.LastIndexOfAny(['/', '\\']);

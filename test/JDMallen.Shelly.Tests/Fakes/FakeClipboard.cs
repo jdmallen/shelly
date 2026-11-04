@@ -6,7 +6,9 @@ internal sealed class FakeClipboard : IClipboard
 
 	public List<string> SetTexts { get; } = [];
 
-	public Task SetTextAsync(string text, CancellationToken cancellationToken = default)
+	public Task SetTextAsync(
+		string text,
+		CancellationToken cancellationToken = default)
 	{
 		SetTexts.Add(text);
 

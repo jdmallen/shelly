@@ -22,190 +22,190 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-    inputs:
-      dry_run:
-        description: "Build and upload artifacts only; no tag, no release"
-        type: boolean
-        default: true
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+        inputs:
+            dry_run:
+                description: "Build and upload artifacts only; no tag, no release"
+                type: boolean
+                default: true
 
 permissions:
-  contents: write
+    contents: write
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.version.outputs.version }}
-      exists: ${{ steps.tag_check.outputs.exists }}
-      should_build: ${{ steps.decide.outputs.should_build }}
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+    check:
+        runs-on: ubuntu-latest
+        outputs:
+            version: ${{ steps.version.outputs.version }}
+            exists: ${{ steps.tag_check.outputs.exists }}
+            should_build: ${{ steps.decide.outputs.should_build }}
+        steps:
+            -   name: Check out repository
+                uses: actions/checkout@v4
 
-      - name: Read version from Directory.Build.props
-        id: version
-        run: |
-          version="$(grep -oP '(?<=<Version>)[^<]+' \
-            Directory.Build.props | head -n1)"
-          if [[ -z "$version" ]]; then
-            echo "::error::No <Version> found in Directory.Build.props." >&2
-            exit 1
-          fi
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "Version: $version"
+            -   name: Read version from Directory.Build.props
+                id: version
+                run: |
+                    version="$(grep -oP '(?<=<Version>)[^<]+' \
+                      Directory.Build.props | head -n1)"
+                    if [[ -z "$version" ]]; then
+                      echo "::error::No <Version> found in Directory.Build.props." >&2
+                      exit 1
+                    fi
+                    echo "version=$version" >> "$GITHUB_OUTPUT"
+                    echo "Version: $version"
 
-      - name: Skip if tag already exists
-        id: tag_check
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          if git ls-remote --exit-code --tags origin "refs/tags/$VERSION" > /dev/null; then
-            echo "Tag $VERSION already exists; skipping release."
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-          fi
+            -   name: Skip if tag already exists
+                id: tag_check
+                env:
+                    VERSION: ${{ steps.version.outputs.version }}
+                run: |
+                    if git ls-remote --exit-code --tags origin "refs/tags/$VERSION" > /dev/null; then
+                      echo "Tag $VERSION already exists; skipping release."
+                      echo "exists=true" >> "$GITHUB_OUTPUT"
+                    else
+                      echo "exists=false" >> "$GITHUB_OUTPUT"
+                    fi
 
-      - name: Decide whether to build
-        id: decide
-        env:
-          EXISTS: ${{ steps.tag_check.outputs.exists }}
-          IS_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
-        run: |
-          if [[ "$EXISTS" == "false" || "$IS_DRY_RUN" == "true" ]]; then
-            echo "should_build=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "should_build=false" >> "$GITHUB_OUTPUT"
-          fi
+            -   name: Decide whether to build
+                id: decide
+                env:
+                    EXISTS: ${{ steps.tag_check.outputs.exists }}
+                    IS_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+                run: |
+                    if [[ "$EXISTS" == "false" || "$IS_DRY_RUN" == "true" ]]; then
+                      echo "should_build=true" >> "$GITHUB_OUTPUT"
+                    else
+                      echo "should_build=false" >> "$GITHUB_OUTPUT"
+                    fi
+    
+    build:
+        needs: check
+        if: needs.check.outputs.should_build == 'true'
+        name: build (${{ matrix.primary_rid }}${{ matrix.secondary_rid && format(' + {0}', matrix.secondary_rid) || '' }})
+        runs-on: ${{ matrix.os }}
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    -   os: ubuntu-latest
+                        primary_rid: linux-x64
+                        secondary_rid: ''
+                    -   os: ubuntu-24.04-arm
+                        primary_rid: linux-arm64
+                        secondary_rid: ''
+                    -   os: windows-latest
+                        primary_rid: win-x64
+                        secondary_rid: win-arm64
+                    -   os: macos-latest
+                        primary_rid: osx-arm64
+                        secondary_rid: osx-x64
+        steps:
+            -   name: Check out repository
+                uses: actions/checkout@v4
 
-  build:
-    needs: check
-    if: needs.check.outputs.should_build == 'true'
-    name: build (${{ matrix.primary_rid }}${{ matrix.secondary_rid && format(' + {0}', matrix.secondary_rid) || '' }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            primary_rid: linux-x64
-            secondary_rid: ''
-          - os: ubuntu-24.04-arm
-            primary_rid: linux-arm64
-            secondary_rid: ''
-          - os: windows-latest
-            primary_rid: win-x64
-            secondary_rid: win-arm64
-          - os: macos-latest
-            primary_rid: osx-arm64
-            secondary_rid: osx-x64
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+            -   name: Set up .NET SDK
+                uses: actions/setup-dotnet@v4
+                with:
+                    dotnet-version: '10.0.x'
+            
+            # The engine zips the Windows archives, and Git Bash on the Windows
+            # runner has no zip.
+            -   name: Install zip (Windows)
+                if: runner.os == 'Windows'
+                shell: bash
+                run: choco install zip -y --no-progress
+            
+            # The engine uses an empty-array expansion that bash 3.2 (the macOS
+            # system bash) rejects under `set -u`; bash 4.4+ is fine.
+            -   name: Install modern bash (macOS)
+                if: runner.os == 'macOS'
+                run: brew install bash
+            
+            # -v is passed explicitly so the engine never has to grep the props file
+            # (grep -oP isn't reliable in Git Bash / BSD userlands).
+            -   name: Publish release binaries
+                shell: bash
+                env:
+                    VERSION: ${{ needs.check.outputs.version }}
+                    PRIMARY_RID: ${{ matrix.primary_rid }}
+                    SECONDARY_RID: ${{ matrix.secondary_rid }}
+                run: |
+                    publish_shell=bash
+                    if [[ "$RUNNER_OS" == "macOS" ]]; then
+                      publish_shell="$(brew --prefix)/bin/bash"
+                    fi
+                    "$publish_shell" scripts/publish.sh -v "$VERSION" "$PRIMARY_RID" $SECONDARY_RID
 
-      - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
+            -   name: Upload ${{ matrix.primary_rid }} archive
+                uses: actions/upload-artifact@v4
+                with:
+                    name: shelly-${{ needs.check.outputs.version }}-${{ matrix.primary_rid }}
+                    path: dist/shelly-${{ needs.check.outputs.version }}-${{ matrix.primary_rid }}.*
+                    if-no-files-found: error
+                    retention-days: 14
 
-      # The engine zips the Windows archives, and Git Bash on the Windows
-      # runner has no zip.
-      - name: Install zip (Windows)
-        if: runner.os == 'Windows'
-        shell: bash
-        run: choco install zip -y --no-progress
+            -   name: Upload ${{ matrix.secondary_rid }} archive
+                if: matrix.secondary_rid != ''
+                uses: actions/upload-artifact@v4
+                with:
+                    name: shelly-${{ needs.check.outputs.version }}-${{ matrix.secondary_rid }}
+                    path: dist/shelly-${{ needs.check.outputs.version }}-${{ matrix.secondary_rid }}.*
+                    if-no-files-found: error
+                    retention-days: 14
+    
+    release:
+        needs: [ check, build ]
+        if: >-
+            needs.check.outputs.exists == 'false'
+            && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Check out repository
+                uses: actions/checkout@v4
 
-      # The engine uses an empty-array expansion that bash 3.2 (the macOS
-      # system bash) rejects under `set -u`; bash 4.4+ is fine.
-      - name: Install modern bash (macOS)
-        if: runner.os == 'macOS'
-        run: brew install bash
+            -   name: Download archives
+                uses: actions/download-artifact@v4
+                with:
+                    pattern: shelly-*
+                    path: dist
+                    merge-multiple: true
 
-      # -v is passed explicitly so the engine never has to grep the props file
-      # (grep -oP isn't reliable in Git Bash / BSD userlands).
-      - name: Publish release binaries
-        shell: bash
-        env:
-          VERSION: ${{ needs.check.outputs.version }}
-          PRIMARY_RID: ${{ matrix.primary_rid }}
-          SECONDARY_RID: ${{ matrix.secondary_rid }}
-        run: |
-          publish_shell=bash
-          if [[ "$RUNNER_OS" == "macOS" ]]; then
-            publish_shell="$(brew --prefix)/bin/bash"
-          fi
-          "$publish_shell" scripts/publish.sh -v "$VERSION" "$PRIMARY_RID" $SECONDARY_RID
+            -   name: Generate checksums
+                run: |
+                    cd dist
+                    sha256sum *.tar.gz *.zip > SHA256SUMS.txt
+                    cat SHA256SUMS.txt
 
-      - name: Upload ${{ matrix.primary_rid }} archive
-        uses: actions/upload-artifact@v4
-        with:
-          name: shelly-${{ needs.check.outputs.version }}-${{ matrix.primary_rid }}
-          path: dist/shelly-${{ needs.check.outputs.version }}-${{ matrix.primary_rid }}.*
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Upload ${{ matrix.secondary_rid }} archive
-        if: matrix.secondary_rid != ''
-        uses: actions/upload-artifact@v4
-        with:
-          name: shelly-${{ needs.check.outputs.version }}-${{ matrix.secondary_rid }}
-          path: dist/shelly-${{ needs.check.outputs.version }}-${{ matrix.secondary_rid }}.*
-          if-no-files-found: error
-          retention-days: 14
-
-  release:
-    needs: [ check, build ]
-    if: >-
-      needs.check.outputs.exists == 'false'
-      && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Download archives
-        uses: actions/download-artifact@v4
-        with:
-          pattern: shelly-*
-          path: dist
-          merge-multiple: true
-
-      - name: Generate checksums
-        run: |
-          cd dist
-          sha256sum *.tar.gz *.zip > SHA256SUMS.txt
-          cat SHA256SUMS.txt
-
-      - name: Extract changelog section for this version
-        env:
-          VERSION: ${{ needs.check.outputs.version }}
-        run: |
-          awk -v ver="$VERSION" '
-            $0 ~ "^## \\[" ver "\\]" { in_section = 1; next }
-            in_section && (/^## \[/ || /^\[/)  { in_section = 0 }
-            in_section { print }
-          ' CHANGELOG.md > release_notes.md
-          if [[ ! -s release_notes.md ]]; then
-            echo "::error::No section for version $VERSION found in CHANGELOG.md." >&2
-            exit 1
-          fi
-          echo "--- Release notes ---"
-          cat release_notes.md
-
-      # Creating the release also creates the tag (raw semver, no 'v' prefix)
-      # on the pushed commit. Tagging happens here, after every build job
-      # succeeded, so a failed publish never leaves a tag without a release.
-      - name: Create GitHub release and tag
-        env:
-          GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ needs.check.outputs.version }}
-        run: |
-          gh release create "$VERSION" \
-            --target "$GITHUB_SHA" \
-            --title "$VERSION" \
-            --notes-file release_notes.md \
-            dist/*.tar.gz dist/*.zip dist/SHA256SUMS.txt
+            -   name: Extract changelog section for this version
+                env:
+                    VERSION: ${{ needs.check.outputs.version }}
+                run: |
+                    awk -v ver="$VERSION" '
+                      $0 ~ "^## \\[" ver "\\]" { in_section = 1; next }
+                      in_section && (/^## \[/ || /^\[/)  { in_section = 0 }
+                      in_section { print }
+                    ' CHANGELOG.md > release_notes.md
+                    if [[ ! -s release_notes.md ]]; then
+                      echo "::error::No section for version $VERSION found in CHANGELOG.md." >&2
+                      exit 1
+                    fi
+                    echo "--- Release notes ---"
+                    cat release_notes.md
+            
+            # Creating the release also creates the tag (raw semver, no 'v' prefix)
+            # on the pushed commit. Tagging happens here, after every build job
+            # succeeded, so a failed publish never leaves a tag without a release.
+            -   name: Create GitHub release and tag
+                env:
+                    GH_TOKEN: ${{ github.token }}
+                    VERSION: ${{ needs.check.outputs.version }}
+                run: |
+                    gh release create "$VERSION" \
+                      --target "$GITHUB_SHA" \
+                      --title "$VERSION" \
+                      --notes-file release_notes.md \
+                      dist/*.tar.gz dist/*.zip dist/SHA256SUMS.txt

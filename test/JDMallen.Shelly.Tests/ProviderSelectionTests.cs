@@ -1,4 +1,5 @@
 using System.Text.Json;
+
 using Xunit;
 
 namespace JDMallen.Shelly.Tests;
@@ -20,7 +21,8 @@ public class ProviderSelectionTests
 	/// Runs <see cref="Program.CreateProvider" /> with stderr captured, so the
 	/// failure message is assertable without leaking into the test output.
 	/// </summary>
-	private static (IChatProvider? Provider, string Error) Create(ShellyConfig config)
+	private static (IChatProvider? Provider, string Error) Create(
+		ShellyConfig config)
 	{
 		TextWriter original = Console.Error;
 		var captured = new StringWriter();
@@ -54,7 +56,8 @@ public class ProviderSelectionTests
 	[Fact]
 	public void CreateProvider_UnknownProvider_ListsOpenAIAsAnOption()
 	{
-		(IChatProvider? provider, string error) = Create(new ShellyConfig { Provider = "llama" });
+		(IChatProvider? provider, string error) =
+			Create(new ShellyConfig { Provider = "llama" });
 
 		Assert.Null(provider);
 		Assert.Contains("Unknown provider 'llama'", error);
@@ -96,7 +99,8 @@ public class ProviderSelectionTests
 	[Theory]
 	[InlineData(0)]
 	[InlineData(-1)]
-	public void CreateProvider_OpenAINonPositiveTimeout_Fails(int timeoutSeconds)
+	public void CreateProvider_OpenAINonPositiveTimeout_Fails(
+		int timeoutSeconds)
 	{
 		ShellyConfig config = LocalConfig();
 		config.OpenAI.TimeoutSeconds = timeoutSeconds;
@@ -126,8 +130,11 @@ public class ProviderSelectionTests
 	[InlineData(-1)]
 	public void CreateProvider_AzureNonPositiveMaxTokens_Fails(int maxTokens)
 	{
-		var config = new ShellyConfig { Provider = "azure" };
-		config.Azure.MaxTokens = maxTokens;
+		var config = new ShellyConfig
+		{
+			Provider = "azure",
+			Azure = { MaxTokens = maxTokens },
+		};
 
 		(IChatProvider? provider, string error) = Create(config);
 
@@ -139,7 +146,9 @@ public class ProviderSelectionTests
 public class ShellyConfigTests
 {
 	private static ShellyConfig Deserialize(string json) =>
-		JsonSerializer.Deserialize(json, ShellyConfigJsonContext.Default.ShellyConfig)!;
+		JsonSerializer.Deserialize(
+			json,
+			ShellyConfigJsonContext.Default.ShellyConfig)!;
 
 	[Fact]
 	public void OpenAIDefaults_AreEmptyAddressAndGenerousBudget()
@@ -162,10 +171,12 @@ public class ShellyConfigTests
 		Assert.Equal(500, defaults.MaxTokens);
 		Assert.False(defaults.ReasoningModel);
 		Assert.True(
-			Deserialize("{ \"azure\": { \"reasoningModel\": true } }").Azure.ReasoningModel);
+			Deserialize("{ \"azure\": { \"reasoningModel\": true } }")
+				.Azure.ReasoningModel);
 		Assert.Equal(
 			2048,
-			Deserialize("{ \"azure\": { \"maxTokens\": 2048 } }").Azure.MaxTokens);
+			Deserialize("{ \"azure\": { \"maxTokens\": 2048 } }")
+				.Azure.MaxTokens);
 	}
 
 	[Fact]

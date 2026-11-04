@@ -7,7 +7,10 @@ namespace JDMallen.Shelly;
 /// working directory. The model is told all three, and suggested commands run
 /// in <see cref="Shell" />.
 /// </summary>
-public sealed record ShellContext(Shell Shell, string OperatingSystem, string WorkingDirectory)
+public sealed record ShellContext(
+	Shell Shell,
+	string OperatingSystem,
+	string WorkingDirectory)
 {
 	public static ShellContext Detect() =>
 		new(
@@ -46,7 +49,7 @@ internal static class ShellDetector
 			Environment.GetEnvironmentVariable,
 			ProcessTree.ForCurrentPlatform(),
 			Environment.ProcessId,
-			System.OperatingSystem.IsWindows());
+			OperatingSystem.IsWindows());
 
 	internal static Shell Detect(
 		Func<string, string?> getEnvironmentVariable,
@@ -69,7 +72,9 @@ internal static class ShellDetector
 		var visited = new HashSet<int> { processId };
 		int ancestorId = processTree.Get(processId)?.ParentId ?? 0;
 
-		for (var depth = 0; depth < MAX_ANCESTORS && ancestorId > 0 && visited.Add(ancestorId); depth++)
+		for (var depth = 0;
+			 depth < MAX_ANCESTORS && ancestorId > 0 && visited.Add(ancestorId);
+			 depth++)
 		{
 			ProcessEntry? ancestor = processTree.Get(ancestorId);
 			if (ancestor is null)
@@ -77,8 +82,11 @@ internal static class ShellDetector
 				return null;
 			}
 
-			Shell? shell = Shell.TryResolveKnown(ancestor.Value.Name, ancestor.Value.ExecutablePath);
-			if (shell is null && !string.IsNullOrEmpty(ancestor.Value.ExecutablePath))
+			Shell? shell = Shell.TryResolveKnown(
+				ancestor.Value.Name,
+				ancestor.Value.ExecutablePath);
+			if (shell is null
+				&& !string.IsNullOrEmpty(ancestor.Value.ExecutablePath))
 			{
 				shell = Shell.TryResolveKnown(
 					ancestor.Value.ExecutablePath,
@@ -96,9 +104,12 @@ internal static class ShellDetector
 		return null;
 	}
 
-	private static Shell FromEnvironment(Func<string, string?> getEnvironmentVariable, bool isWindows)
+	private static Shell FromEnvironment(
+		Func<string, string?> getEnvironmentVariable,
+		bool isWindows)
 	{
-		string? configured = getEnvironmentVariable(isWindows ? "ComSpec" : "SHELL");
+		string? configured =
+			getEnvironmentVariable(isWindows ? "ComSpec" : "SHELL");
 
 		return Shell.FromNameOrPath(
 			string.IsNullOrWhiteSpace(configured)

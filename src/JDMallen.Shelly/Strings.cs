@@ -29,9 +29,11 @@ internal static class Strings
 
 	public static string CopiedToClipboard => Get(nameof(CopiedToClipboard));
 
-	public static string InstallClipboardToolLinux => Get(nameof(InstallClipboardToolLinux));
+	public static string InstallClipboardToolLinux
+		=> Get(nameof(InstallClipboardToolLinux));
 
-	public static string WhatShouldBeDifferent => Get(nameof(WhatShouldBeDifferent));
+	public static string WhatShouldBeDifferent
+		=> Get(nameof(WhatShouldBeDifferent));
 
 	public static string Goodbye => Get(nameof(Goodbye));
 
@@ -65,7 +67,8 @@ internal static class Strings
 
 	public static string HelpOptionInfo => Get(nameof(HelpOptionInfo));
 
-	public static string HelpOptionTerminator => Get(nameof(HelpOptionTerminator));
+	public static string HelpOptionTerminator
+		=> Get(nameof(HelpOptionTerminator));
 
 	public static string HelpPrompt => Get(nameof(HelpPrompt));
 
@@ -87,13 +90,15 @@ internal static class Strings
 
 	public static string ProviderHeader => Get(nameof(ProviderHeader));
 
-	public static string ProviderOpenAICompatible => Get(nameof(ProviderOpenAICompatible));
+	public static string ProviderOpenAICompatible
+		=> Get(nameof(ProviderOpenAICompatible));
 
 	public static string SettingsHeader => Get(nameof(SettingsHeader));
 
 	public static string ValueRequired => Get(nameof(ValueRequired));
 
-	public static string InvalidPositiveInteger => Get(nameof(InvalidPositiveInteger));
+	public static string InvalidPositiveInteger
+		=> Get(nameof(InvalidPositiveInteger));
 
 	public static string InvalidHttpUrl => Get(nameof(InvalidHttpUrl));
 
@@ -105,13 +110,15 @@ internal static class Strings
 
 	public static string Skipped => Get(nameof(Skipped));
 
-	public static string UnknownShellStartupFile => Get(nameof(UnknownShellStartupFile));
+	public static string UnknownShellStartupFile
+		=> Get(nameof(UnknownShellStartupFile));
 
 	public static string SaveChangesPrompt => Get(nameof(SaveChangesPrompt));
 
 	public static string ConfigNotSaved => Get(nameof(ConfigNotSaved));
 
-	public static string InteractiveTerminalRequired => Get(nameof(InteractiveTerminalRequired));
+	public static string InteractiveTerminalRequired
+		=> Get(nameof(InteractiveTerminalRequired));
 
 	public static string Choose(int defaultNumber) =>
 		Format("ChooseFormat", defaultNumber);
@@ -134,7 +141,9 @@ internal static class Strings
 	public static string UserVariableSaved(string variableName) =>
 		Format("UserVariableSavedFormat", variableName);
 
-	public static string ShellStartupLine(string startupFile, string placeholder) =>
+	public static string ShellStartupLine(
+		string startupFile,
+		string placeholder) =>
 		Format("ShellStartupLineFormat", startupFile, placeholder);
 
 	public static string FishUniversalVariable(string placeholder) =>
@@ -152,8 +161,15 @@ internal static class Strings
 	public static string ConfigSaveFailed(string configPath, string message) =>
 		Format("ConfigSaveFailedFormat", configPath, message);
 
-	public static string DeprecatedEnvVar(string variableName, string configKey, string configPath) =>
-		Format("DeprecatedEnvVarFormat", variableName, configKey, configPath);
+	public static string DeprecatedEnvVar(
+		string variableName,
+		string configKey,
+		string configPath) =>
+		Format(
+			"DeprecatedEnvVarFormat",
+			variableName,
+			configKey,
+			configPath);
 
 	public static string Error(string message) =>
 		Format("ErrorFormat", message);
@@ -167,13 +183,19 @@ internal static class Strings
 	public static string EnvVarNotSet(string variableName) =>
 		Format("EnvVarNotSetFormat", variableName);
 
-	public static string OpenAIMisconfigured(string missingKeys, string configPath) =>
+	public static string OpenAIMisconfigured(
+		string missingKeys,
+		string configPath) =>
 		Format("OpenAIMisconfiguredFormat", missingKeys, configPath);
 
-	public static string MustBeGreaterThanZero(string settingName, int actualValue) =>
+	public static string MustBeGreaterThanZero(
+		string settingName,
+		int actualValue) =>
 		Format("MustBeGreaterThanZeroFormat", settingName, actualValue);
 
-	public static string AzureMisconfigured(string missingKeys, string configPath) =>
+	public static string AzureMisconfigured(
+		string missingKeys,
+		string configPath) =>
 		Format("AzureMisconfiguredFormat", missingKeys, configPath);
 
 	public static string UnknownOption(string option) =>
@@ -182,7 +204,10 @@ internal static class Strings
 	public static string ConfigParseWarning(string path, string message) =>
 		Format("ConfigParseWarningFormat", path, message);
 
-	public static string ProcessExited(string fileName, int exitCode, string error) =>
+	public static string ProcessExited(
+		string fileName,
+		int exitCode,
+		string error) =>
 		Format(
 				"ProcessExitedFormat",
 				fileName,
@@ -197,13 +222,18 @@ internal static class Strings
 	public static string ResponseLanguage(CultureInfo? culture = null) =>
 		Get(nameof(ResponseLanguage), culture);
 
-	internal static string Get(string resourceKey, CultureInfo? culture = null) =>
-		ResourceManager.GetString(
-			resourceKey,
-			culture ?? CultureInfo.CurrentUICulture)
-		?? throw new InvalidOperationException(
-			$"Missing string resource '{resourceKey}'.");
+	internal static string Get(string resourceKey, CultureInfo? culture = null)
+		=>
+			ResourceManager.GetString(
+				resourceKey,
+				culture ?? CultureInfo.CurrentUICulture)
+			?? throw new InvalidOperationException(
+				$"Missing string resource '{resourceKey}'.");
 
-	private static string Format(string resourceKey, params object[] arguments) =>
-		string.Format(CultureInfo.CurrentCulture, Get(resourceKey), arguments);
+	private static string Format(string resourceKey, params object[] arguments)
+		=>
+			string.Format(
+				CultureInfo.CurrentCulture,
+				Get(resourceKey),
+				arguments);
 }

@@ -30,7 +30,9 @@ internal static class Prompts
 		 Context: {context.Describe()}
 		 """;
 
-	public static string Explain(ShellContext context, CultureInfo? culture = null)
+	public static string Explain(
+		ShellContext context,
+		CultureInfo? culture = null)
 	{
 		string responseLanguage = Strings.ResponseLanguage(culture);
 		string languageInstruction = responseLanguage.Length == 0
@@ -50,8 +52,11 @@ internal static class Prompts
 	/// </summary>
 	private static string ShellInstruction(Shell shell)
 	{
-		string instruction = $"The user's shell is {shell.DisplayName}. Write the command(s) for {shell.DisplayName} specifically, using its syntax and builtins, so they run correctly when typed into it.";
+		var instruction =
+			$"The user's shell is {shell.DisplayName}. Write the command(s) for {shell.DisplayName} specifically, using its syntax and builtins, so they run correctly when typed into it.";
 
-		return shell.PromptHint is null ? instruction : $"{instruction} {shell.PromptHint}";
+		return shell.PromptHint is null
+			? instruction
+			: $"{instruction} {shell.PromptHint}";
 	}
 }

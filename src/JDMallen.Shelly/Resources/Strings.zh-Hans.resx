@@ -1,271 +1,271 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
-            <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
-            </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <data name="WhatToDo" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+				xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+							<xsd:attribute ref="xml:space"/>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required"/>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+			PublicKeyToken=b77a5c561934e089
+		</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+			PublicKeyToken=b77a5c561934e089
+		</value>
+	</resheader>
+	<data name="WhatToDo" xml:space="preserve">
 		<value>你想做什么？</value>
 	</data>
-    <data name="Thinking" xml:space="preserve">
+	<data name="Thinking" xml:space="preserve">
 		<value>思考中...</value>
 	</data>
-    <data name="ErrorFormat" xml:space="preserve">
+	<data name="ErrorFormat" xml:space="preserve">
 		<value>错误：{0}</value>
 	</data>
-    <data name="NoSuggestion" xml:space="preserve">
+	<data name="NoSuggestion" xml:space="preserve">
 		<value>未从 API 收到任何建议</value>
 	</data>
-    <data name="SuggestionHeader" xml:space="preserve">
+	<data name="SuggestionHeader" xml:space="preserve">
 		<value>建议：</value>
 	</data>
-    <data name="Explaining" xml:space="preserve">
+	<data name="Explaining" xml:space="preserve">
 		<value>正在解释...</value>
 	</data>
-    <data name="ExplanationHeader" xml:space="preserve">
+	<data name="ExplanationHeader" xml:space="preserve">
 		<value>解释：</value>
 	</data>
-    <data name="CopiedToClipboard" xml:space="preserve">
+	<data name="CopiedToClipboard" xml:space="preserve">
 		<value>已复制到剪贴板</value>
 	</data>
-    <data name="ClipboardUnavailableFormat" xml:space="preserve">
+	<data name="ClipboardUnavailableFormat" xml:space="preserve">
 		<value>剪贴板不可用：{0}</value>
 	</data>
-    <data name="InstallClipboardToolLinux" xml:space="preserve">
+	<data name="InstallClipboardToolLinux" xml:space="preserve">
 		<value>请安装 xclip、xsel 或 wl-clipboard 以在 Linux 上启用复制功能。</value>
 	</data>
-    <data name="WhatShouldBeDifferent" xml:space="preserve">
+	<data name="WhatShouldBeDifferent" xml:space="preserve">
 		<value>需要做哪些调整？</value>
 	</data>
-    <data name="Goodbye" xml:space="preserve">
+	<data name="Goodbye" xml:space="preserve">
 		<value>再见！</value>
 	</data>
-    <data name="InvalidChoice" xml:space="preserve">
+	<data name="InvalidChoice" xml:space="preserve">
 		<value>无效的选择</value>
 	</data>
-    <data name="MenuExecute" xml:space="preserve">
+	<data name="MenuExecute" xml:space="preserve">
 		<value>[x] 执行</value>
 	</data>
-    <data name="MenuEdit" xml:space="preserve">
+	<data name="MenuEdit" xml:space="preserve">
 		<value>[e] 编辑</value>
 	</data>
-    <data name="MenuExplain" xml:space="preserve">
+	<data name="MenuExplain" xml:space="preserve">
 		<value>[p] 解释</value>
 	</data>
-    <data name="MenuCopy" xml:space="preserve">
+	<data name="MenuCopy" xml:space="preserve">
 		<value>[c] 复制</value>
 	</data>
-    <data name="MenuRetry" xml:space="preserve">
+	<data name="MenuRetry" xml:space="preserve">
 		<value>[r] 重试</value>
 	</data>
-    <data name="MenuQuit" xml:space="preserve">
+	<data name="MenuQuit" xml:space="preserve">
 		<value>[q] 退出</value>
 	</data>
-    <data name="Executing" xml:space="preserve">
+	<data name="Executing" xml:space="preserve">
 		<value>正在执行...</value>
 	</data>
-    <data name="FailedToStartShell" xml:space="preserve">
+	<data name="FailedToStartShell" xml:space="preserve">
 		<value>无法启动 shell</value>
 	</data>
-    <data name="UnknownProviderFormat" xml:space="preserve">
+	<data name="UnknownProviderFormat" xml:space="preserve">
 		<value>{1} 中的提供商 '{0}' 未知。应为 'anthropic'、'azure' 或 'openai'。</value>
 	</data>
-    <data name="EnvVarNotSetFormat" xml:space="preserve">
+	<data name="EnvVarNotSetFormat" xml:space="preserve">
 		<value>未设置环境变量 {0}</value>
 	</data>
-    <data name="OpenAIMisconfiguredFormat" xml:space="preserve">
+	<data name="OpenAIMisconfiguredFormat" xml:space="preserve">
 		<value>OpenAI 提供商配置有误。请在 {1} 中设置 {0}。</value>
 	</data>
-    <data name="ListConjunction" xml:space="preserve">
+	<data name="ListConjunction" xml:space="preserve">
 		<value>和</value>
 	</data>
-    <data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
+	<data name="MustBeGreaterThanZeroFormat" xml:space="preserve">
 		<value>{0} 必须大于 0（当前值：{1}）。</value>
 	</data>
-    <data name="AzureMisconfiguredFormat" xml:space="preserve">
+	<data name="AzureMisconfiguredFormat" xml:space="preserve">
 		<value>Azure 提供商配置有误。请在 {1} 中设置 {0}，或运行 'shelly --config'。</value>
 	</data>
-    <data name="UnknownOptionFormat" xml:space="preserve">
+	<data name="UnknownOptionFormat" xml:space="preserve">
 		<value>未知选项 '{0}'。</value>
 	</data>
-    <data name="ConfigParseWarningFormat" xml:space="preserve">
+	<data name="ConfigParseWarningFormat" xml:space="preserve">
 		<value>警告：无法解析 {0}：{1}。将使用默认设置。</value>
 	</data>
-    <data name="NoGraphicalSession" xml:space="preserve">
+	<data name="NoGraphicalSession" xml:space="preserve">
 		<value>未检测到图形会话（没有 WAYLAND_DISPLAY 或 DISPLAY）。在无头或 SSH 会话中无法使用剪贴板。</value>
 	</data>
-    <data name="NoClipboardTool" xml:space="preserve">
+	<data name="NoClipboardTool" xml:space="preserve">
 		<value>未找到剪贴板工具。请安装 wl-clipboard (Wayland)、xclip 或 xsel。</value>
 	</data>
-    <data name="ProcessExitedFormat" xml:space="preserve">
+	<data name="ProcessExitedFormat" xml:space="preserve">
 		<value>'{0}' 已退出，代码为 {1}。{2}</value>
 	</data>
-    <data name="HelpOptionHelp" xml:space="preserve">
+	<data name="HelpOptionHelp" xml:space="preserve">
 		<value>显示此帮助界面。</value>
 	</data>
-    <data name="HelpOptionVersion" xml:space="preserve">
+	<data name="HelpOptionVersion" xml:space="preserve">
 		<value>显示版本信息。</value>
 	</data>
-    <data name="HelpOptionInfo" xml:space="preserve">
+	<data name="HelpOptionInfo" xml:space="preserve">
 		<value>显示当前配置：提供商、端点、模型和 shell。</value>
 	</data>
-    <data name="HelpOptionTerminator" xml:space="preserve">
+	<data name="HelpOptionTerminator" xml:space="preserve">
 		<value>结束选项解析；其余内容作为提示词。</value>
 	</data>
-    <data name="HelpPrompt" xml:space="preserve">
+	<data name="HelpPrompt" xml:space="preserve">
 		<value>命令描述。如果省略，将提示你输入。</value>
 	</data>
-    <data name="ResponseLanguage" xml:space="preserve">
+	<data name="ResponseLanguage" xml:space="preserve">
 		<value>Simplified Chinese</value>
 	</data>
-    <data name="HelpOptionConfig" xml:space="preserve">
+	<data name="HelpOptionConfig" xml:space="preserve">
 		<value>以交互方式配置提供商及其设置。</value>
 	</data>
-    <data name="MainMenuAsk" xml:space="preserve">
+	<data name="MainMenuAsk" xml:space="preserve">
 		<value>提问</value>
 	</data>
-    <data name="MainMenuConfigure" xml:space="preserve">
+	<data name="MainMenuConfigure" xml:space="preserve">
 		<value>配置</value>
 	</data>
-    <data name="MainMenuInfo" xml:space="preserve">
+	<data name="MainMenuInfo" xml:space="preserve">
 		<value>信息</value>
 	</data>
-    <data name="MainMenuExit" xml:space="preserve">
+	<data name="MainMenuExit" xml:space="preserve">
 		<value>退出</value>
 	</data>
-    <data name="DefaultMarker" xml:space="preserve">
+	<data name="DefaultMarker" xml:space="preserve">
 		<value>(默认)</value>
 	</data>
-    <data name="ChooseFormat" xml:space="preserve">
+	<data name="ChooseFormat" xml:space="preserve">
 		<value>请选择 (Enter = {0}):</value>
 	</data>
-    <data name="ConfigHeaderFormat" xml:space="preserve">
+	<data name="ConfigHeaderFormat" xml:space="preserve">
 		<value>配置文件：{0}</value>
 	</data>
-    <data name="ConfigUnreadableFormat" xml:space="preserve">
+	<data name="ConfigUnreadableFormat" xml:space="preserve">
 		<value>无法解析 {0}：{1}。保存后将以此处输入的值替换该文件；当前文件会先备份。</value>
 	</data>
-    <data name="ContinuePrompt" xml:space="preserve">
+	<data name="ContinuePrompt" xml:space="preserve">
 		<value>继续？</value>
 	</data>
-    <data name="ProviderHeader" xml:space="preserve">
+	<data name="ProviderHeader" xml:space="preserve">
 		<value>提供商：</value>
 	</data>
-    <data name="ProviderOpenAICompatible" xml:space="preserve">
+	<data name="ProviderOpenAICompatible" xml:space="preserve">
 		<value>OpenAI 兼容服务器</value>
 	</data>
-    <data name="SettingsHeader" xml:space="preserve">
+	<data name="SettingsHeader" xml:space="preserve">
 		<value>设置 (按 Enter 保留方括号中的值)：</value>
 	</data>
-    <data name="ValueRequired" xml:space="preserve">
+	<data name="ValueRequired" xml:space="preserve">
 		<value>必须输入一个值。</value>
 	</data>
-    <data name="InvalidPositiveInteger" xml:space="preserve">
+	<data name="InvalidPositiveInteger" xml:space="preserve">
 		<value>请输入大于 0 的整数。</value>
 	</data>
-    <data name="InvalidHttpUrl" xml:space="preserve">
+	<data name="InvalidHttpUrl" xml:space="preserve">
 		<value>请输入以 http:// 或 https:// 开头的完整 URL。</value>
 	</data>
-    <data name="ApiKeyHeader" xml:space="preserve">
+	<data name="ApiKeyHeader" xml:space="preserve">
 		<value>API 密钥：</value>
 	</data>
-    <data name="ApiKeySetFormat" xml:space="preserve">
+	<data name="ApiKeySetFormat" xml:space="preserve">
 		<value>{0} 已设置。</value>
 	</data>
-    <data name="ApiKeyNotSetFormat" xml:space="preserve">
+	<data name="ApiKeyNotSetFormat" xml:space="preserve">
 		<value>{0} 未设置。</value>
 	</data>
-    <data name="ApiKeyOptional" xml:space="preserve">
+	<data name="ApiKeyOptional" xml:space="preserve">
 		<value>可选：大多数自托管服务器不检查密钥。</value>
 	</data>
-    <data name="SetUserVariablePromptFormat" xml:space="preserve">
+	<data name="SetUserVariablePromptFormat" xml:space="preserve">
 		<value>现在将 {0} 保存为 Windows 用户环境变量吗？</value>
 	</data>
-    <data name="EnterApiKey" xml:space="preserve">
+	<data name="EnterApiKey" xml:space="preserve">
 		<value>API 密钥 (按 Enter 跳过)：</value>
 	</data>
-    <data name="Skipped" xml:space="preserve">
+	<data name="Skipped" xml:space="preserve">
 		<value>已跳过。</value>
 	</data>
-    <data name="UserVariableSavedFormat" xml:space="preserve">
+	<data name="UserVariableSavedFormat" xml:space="preserve">
 		<value>已保存 {0}。此后打开的终端可以看到它；已打开的终端看不到。</value>
 	</data>
-    <data name="ShellStartupLineFormat" xml:space="preserve">
+	<data name="ShellStartupLineFormat" xml:space="preserve">
 		<value>将 {1} 替换为你的密钥，把这一行添加到 {0}，然后打开新终端：</value>
 	</data>
-    <data name="FishUniversalVariableFormat" xml:space="preserve">
+	<data name="FishUniversalVariableFormat" xml:space="preserve">
 		<value>将 {0} 替换为你的密钥后运行一次。fish 会跨会话记住该值，因此无需启动文件：</value>
 	</data>
-    <data name="UnknownShellStartupFile" xml:space="preserve">
+	<data name="UnknownShellStartupFile" xml:space="preserve">
 		<value>你的 shell 启动文件</value>
 	</data>
-    <data name="SaveChangesPrompt" xml:space="preserve">
+	<data name="SaveChangesPrompt" xml:space="preserve">
 		<value>保存更改？</value>
 	</data>
-    <data name="ConfigNotSaved" xml:space="preserve">
+	<data name="ConfigNotSaved" xml:space="preserve">
 		<value>未保存任何更改。</value>
 	</data>
-    <data name="ConfigBackedUpFormat" xml:space="preserve">
+	<data name="ConfigBackedUpFormat" xml:space="preserve">
 		<value>已将之前的文件备份到 {0}。</value>
 	</data>
-    <data name="ConfigSavedFormat" xml:space="preserve">
+	<data name="ConfigSavedFormat" xml:space="preserve">
 		<value>已保存 {0}。</value>
 	</data>
-    <data name="ConfigSaveFailedFormat" xml:space="preserve">
+	<data name="ConfigSaveFailedFormat" xml:space="preserve">
 		<value>无法保存 {0}：{1}</value>
 	</data>
-    <data name="InteractiveTerminalRequired" xml:space="preserve">
+	<data name="InteractiveTerminalRequired" xml:space="preserve">
 		<value>--config 需要交互式终端。</value>
 	</data>
-    <data name="DeprecatedEnvVarFormat" xml:space="preserve">
+	<data name="DeprecatedEnvVarFormat" xml:space="preserve">
 		<value>警告：{0} 已弃用。请改为在 {2} 中设置 {1}，或运行 'shelly --config'。</value>
 	</data>
-    <data name="MainMenuNeedsSetupFormat" xml:space="preserve">
+	<data name="MainMenuNeedsSetupFormat" xml:space="preserve">
 		<value>需要配置：{0}</value>
 	</data>
-    <data name="MenuBackToMainMenu" xml:space="preserve">
+	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>返回主菜单</value>
 	</data>
 </root>

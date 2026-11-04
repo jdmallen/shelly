@@ -2,7 +2,9 @@ using System.Collections;
 using System.Globalization;
 using System.Resources;
 using System.Text.RegularExpressions;
+
 using JDMallen.Shelly.Tests.Fakes;
+
 using Xunit;
 
 namespace JDMallen.Shelly.Tests;
@@ -15,7 +17,8 @@ public partial class StringsTests
 		"pl", "tr", "uk", "vi", "zh-Hant", "nl", "cs", "sv", "th",
 	];
 
-	public static TheoryData<string> TranslatedCultures => new(TranslatedCultureNames);
+	public static TheoryData<string> TranslatedCultures
+		=> new(TranslatedCultureNames);
 
 	public static TheoryData<string, char> MenuLabels => new()
 	{
@@ -29,23 +32,26 @@ public partial class StringsTests
 
 	[Theory]
 	[MemberData(nameof(TranslatedCultures))]
-	public void Culture_TranslatesEveryKeyWithMatchingPlaceholders(string cultureName)
+	public void Culture_TranslatesEveryKeyWithMatchingPlaceholders(
+		string cultureName)
 	{
-		ResourceSet ownStrings = OwnResourceSet(CultureInfo.GetCultureInfo(cultureName));
+		ResourceSet ownStrings =
+			OwnResourceSet(CultureInfo.GetCultureInfo(cultureName));
 
 		foreach ((string key, string neutralValue) in NeutralStrings())
 		{
 			string? translated = ownStrings.GetString(key);
-			Assert.False(string.IsNullOrWhiteSpace(translated), $"{cultureName}: {key}");
+			Assert.False(
+				string.IsNullOrWhiteSpace(translated),
+				$"{cultureName}: {key}");
 			Assert.Equal(Placeholders(neutralValue), Placeholders(translated));
 		}
 	}
 
 	[Fact]
-	public void Neutral_ResponseLanguageIsEmpty()
-	{
-		Assert.Equal(string.Empty, Strings.ResponseLanguage(CultureInfo.InvariantCulture));
-	}
+	public void Neutral_ResponseLanguageIsEmpty() => Assert.Equal(
+		string.Empty,
+		Strings.ResponseLanguage(CultureInfo.InvariantCulture));
 
 	[Theory]
 	[MemberData(nameof(MenuLabels))]
@@ -83,7 +89,7 @@ public partial class StringsTests
 				provider,
 				io,
 				clipboard,
-				editEnabled: true)
+				true)
 			.RunAsync("list files", TestContext.Current.CancellationToken);
 
 		Assert.Contains(expectedMenu, io.Output.ToString());
@@ -92,9 +98,10 @@ public partial class StringsTests
 	private static ResourceSet OwnResourceSet(CultureInfo culture) =>
 		Strings.ResourceManager.GetResourceSet(
 			culture,
-			createIfNotExists: true,
-			tryParents: false)
-		?? throw new InvalidOperationException($"No resources for {culture.Name}.");
+			true,
+			false)
+		?? throw new InvalidOperationException(
+			$"No resources for {culture.Name}.");
 
 	private static IEnumerable<(string Key, string Value)> NeutralStrings() =>
 		OwnResourceSet(CultureInfo.InvariantCulture)
@@ -107,6 +114,8 @@ public partial class StringsTests
 			.Matches(value)
 			.Select(match => match.Value)
 			.Order(StringComparer.Ordinal)
+
+			// ReSharper disable once UseCollectionExpression
 			.ToArray();
 
 	[GeneratedRegex(@"\{\d+\}")]

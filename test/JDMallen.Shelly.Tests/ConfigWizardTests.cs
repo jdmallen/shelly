@@ -1,4 +1,5 @@
 using JDMallen.Shelly.Tests.Fakes;
+
 using Xunit;
 
 namespace JDMallen.Shelly.Tests;
@@ -7,9 +8,17 @@ public sealed class ConfigWizardTests : IDisposable
 {
 	private const string SECRET = "sk-super-secret-value";
 
-	private static readonly DateTime FixedUtcNow = new(2026, 11, 3, 19, 37, 0, DateTimeKind.Utc);
+	private static readonly DateTime FixedUtcNow = new(
+		2026,
+		11,
+		3,
+		19,
+		37,
+		0,
+		DateTimeKind.Utc);
 
-	private readonly string _directory = Directory.CreateTempSubdirectory("shelly-wizard-").FullName;
+	private readonly string _directory =
+		Directory.CreateTempSubdirectory("shelly-wizard-").FullName;
 
 	private readonly FakeConsoleIO _io = new();
 
@@ -17,7 +26,7 @@ public sealed class ConfigWizardTests : IDisposable
 
 	private string Output => _io.Output.ToString();
 
-	public void Dispose() => Directory.Delete(_directory, recursive: true);
+	public void Dispose() => Directory.Delete(_directory, true);
 
 	private ConfigWizardOutcome Run(
 		FakeUserEnvironment? environment = null,
@@ -33,7 +42,9 @@ public sealed class ConfigWizardTests : IDisposable
 
 	private ShellyConfig Saved()
 	{
-		ShellyConfig config = ShellyConfig.Load(ConfigPath, out string? parseError);
+		ShellyConfig config = ShellyConfig.Load(
+			ConfigPath,
+			out string? parseError);
 		Assert.Null(parseError);
 
 		return config;
@@ -65,14 +76,18 @@ public sealed class ConfigWizardTests : IDisposable
 
 		string output = Output.ReplaceLineEndings("\n");
 		Assert.Contains("  1) Anthropic (Claude) (default)\n", output);
-		Assert.Contains("  2) OpenAI-compatible server (openai.com, llama.cpp, Ollama, vLLM, ...)\n", output);
+		Assert.Contains(
+			"  2) OpenAI-compatible server (openai.com, llama.cpp, Ollama, vLLM, ...)\n",
+			output);
 		Assert.Contains("  3) Azure OpenAI\n", output);
 	}
 
 	[Theory]
 	[InlineData(true, "  0) Back to main menu\n")]
 	[InlineData(false, "  0) Exit\n")]
-	public void ProviderMenu_ZeroLabelDependsOnEntryPoint(bool fromMainMenu, string expected)
+	public void ProviderMenu_ZeroLabelDependsOnEntryPoint(
+		bool fromMainMenu,
+		string expected)
 	{
 		_io.ReadKeys.Enqueue(ConsoleKey.D0);
 
@@ -103,13 +118,13 @@ public sealed class ConfigWizardTests : IDisposable
 	public void OpenAI_ValidatesInputAndSaves()
 	{
 		_io.ReadKeys.Enqueue(ConsoleKey.D2);
-		_io.ReadLines.Enqueue("localhost:8080");           // invalid URL
+		_io.ReadLines.Enqueue("localhost:8080"); // invalid URL
 		_io.ReadLines.Enqueue("http://localhost:8080/v1"); // openai.baseUrl
-		_io.ReadLines.Enqueue("qwen");                     // openai.model
-		_io.ReadLines.Enqueue("soon");                     // invalid timeout
-		_io.ReadLines.Enqueue("");                         // openai.timeoutSeconds: keep
-		_io.ReadLines.Enqueue("4096");                     // openai.maxTokens
-		_io.ReadKeys.Enqueue(ConsoleKey.Y);                // save
+		_io.ReadLines.Enqueue("qwen"); // openai.model
+		_io.ReadLines.Enqueue("soon"); // invalid timeout
+		_io.ReadLines.Enqueue(""); // openai.timeoutSeconds: keep
+		_io.ReadLines.Enqueue("4096"); // openai.maxTokens
+		_io.ReadKeys.Enqueue(ConsoleKey.Y); // save
 
 		Assert.Equal(ConfigWizardOutcome.Saved, Run());
 
@@ -130,9 +145,14 @@ public sealed class ConfigWizardTests : IDisposable
 		new ShellyConfig
 		{
 			Provider = "local",
-			OpenAI = new OpenAIConfig { BaseUrl = "http://localhost:8080/v1", Model = "qwen" },
+			OpenAI = new OpenAIConfig
+			{
+				BaseUrl = "http://localhost:8080/v1",
+				Model = "qwen",
+			},
 		}.Save(ConfigPath);
-		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // provider: current (OpenAI-compatible)
+		_io.ReadKeys.Enqueue(
+			ConsoleKey.Enter); // provider: current (OpenAI-compatible)
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
 
 		Assert.Equal(ConfigWizardOutcome.Saved, Run());
@@ -143,14 +163,21 @@ public sealed class ConfigWizardTests : IDisposable
 	[Fact]
 	public void Azure_PrefillsFromDeprecatedVariablesAndPersistsKeyOnWindows()
 	{
-		var environment = new FakeUserEnvironment(canPersist: true);
-		environment.Variables[ChatProvider.AzureEndpointEnvVar] = "https://example.openai.azure.com";
+		var environment = new FakeUserEnvironment(true)
+		{
+			Variables =
+			{
+				[ChatProvider.AZURE_ENDPOINT_ENV_VAR] =
+					"https://example.openai.azure.com",
+			},
+		};
 		_io.ReadKeys.Enqueue(ConsoleKey.D3);
-		_io.ReadLines.Enqueue("");              // azure.endpoint: keep the env value
-		_io.ReadLines.Enqueue("gpt-6-luna");    // azure.deployment
-		_io.ReadLines.Enqueue("y");             // azure.reasoningModel
-		_io.ReadLines.Enqueue("2048");          // azure.maxTokens
-		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // set the user variable: yes (default)
+		_io.ReadLines.Enqueue(""); // azure.endpoint: keep the env value
+		_io.ReadLines.Enqueue("gpt-6-luna"); // azure.deployment
+		_io.ReadLines.Enqueue("y"); // azure.reasoningModel
+		_io.ReadLines.Enqueue("2048"); // azure.maxTokens
+		_io.ReadKeys.Enqueue(
+			ConsoleKey.Enter); // set the user variable: yes (default)
 		_io.ReadSecrets.Enqueue(SECRET);
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
 
@@ -162,7 +189,9 @@ public sealed class ConfigWizardTests : IDisposable
 		Assert.Equal("gpt-6-luna", saved.Azure.Deployment);
 		Assert.True(saved.Azure.ReasoningModel);
 		Assert.Equal(2048, saved.Azure.MaxTokens);
-		Assert.Equal(SECRET, environment.Persisted[ChatProvider.AzureApiKeyEnvVar]);
+		Assert.Equal(
+			SECRET,
+			environment.Persisted[ChatProvider.AZURE_API_KEY_ENV_VAR]);
 		Assert.DoesNotContain(SECRET, Output);
 		Assert.DoesNotContain(SECRET, File.ReadAllText(ConfigPath));
 	}
@@ -198,27 +227,32 @@ public sealed class ConfigWizardTests : IDisposable
 	[Fact]
 	public void Windows_DecliningSave_DoesNotPersistTypedKey()
 	{
-		var environment = new FakeUserEnvironment(canPersist: true);
+		var environment = new FakeUserEnvironment(true);
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // provider
 		_io.ReadLines.Enqueue("");              // anthropic.model
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // set the variable: yes
 		_io.ReadSecrets.Enqueue(SECRET);
-		_io.ReadKeys.Enqueue(ConsoleKey.N);     // save: no
+		_io.ReadKeys.Enqueue(ConsoleKey.N); // save: no
 
 		Assert.Equal(ConfigWizardOutcome.Discarded, Run(environment));
 
 		Assert.Empty(environment.Persisted);
-		Assert.DoesNotContain(Strings.UserVariableSaved(ChatProvider.AnthropicApiKeyEnvVar), Output);
+		Assert.DoesNotContain(
+			Strings.UserVariableSaved(ChatProvider.ANTHROPIC_API_KEY_ENV_VAR),
+			Output);
 	}
 
 	[Fact]
 	public void Windows_KeyAlreadySet_DefaultsToKeepingIt()
 	{
-		var environment = new FakeUserEnvironment(canPersist: true);
-		environment.Variables[ChatProvider.AnthropicApiKeyEnvVar] = SECRET;
+		var environment = new FakeUserEnvironment(true)
+		{
+			Variables = { [ChatProvider.ANTHROPIC_API_KEY_ENV_VAR] = SECRET },
+		};
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // provider
 		_io.ReadLines.Enqueue("");              // anthropic.model
-		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // replace the variable: no (default)
+		_io.ReadKeys.Enqueue(
+			ConsoleKey.Enter); // replace the variable: no (default)
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
 
 		Assert.Equal(ConfigWizardOutcome.Saved, Run(environment));
@@ -231,7 +265,7 @@ public sealed class ConfigWizardTests : IDisposable
 	[Fact]
 	public void Windows_EmptySecret_Skips()
 	{
-		var environment = new FakeUserEnvironment(canPersist: true);
+		var environment = new FakeUserEnvironment(true);
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // provider
 		_io.ReadLines.Enqueue("");              // anthropic.model
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // set the variable: yes
@@ -247,8 +281,13 @@ public sealed class ConfigWizardTests : IDisposable
 	[Fact]
 	public void Unix_KeyAlreadySet_PrintsNoInstructions()
 	{
-		var environment = new FakeUserEnvironment();
-		environment.Variables[ChatProvider.AnthropicApiKeyEnvVar] = SECRET;
+		var environment = new FakeUserEnvironment
+		{
+			Variables =
+			{
+				[ChatProvider.ANTHROPIC_API_KEY_ENV_VAR] = SECRET,
+			},
+		};
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter);
 		_io.ReadLines.Enqueue("");
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter);
@@ -264,9 +303,9 @@ public sealed class ConfigWizardTests : IDisposable
 	{
 		new ShellyConfig { Provider = "openai" }.Save(ConfigPath);
 		string before = File.ReadAllText(ConfigPath);
-		_io.ReadKeys.Enqueue(ConsoleKey.D1);    // switch to anthropic
+		_io.ReadKeys.Enqueue(ConsoleKey.D1); // switch to anthropic
 		_io.ReadLines.Enqueue("claude-other");
-		_io.ReadKeys.Enqueue(ConsoleKey.N);     // save: no
+		_io.ReadKeys.Enqueue(ConsoleKey.N); // save: no
 
 		Assert.Equal(ConfigWizardOutcome.Discarded, Run());
 
@@ -297,7 +336,7 @@ public sealed class ConfigWizardTests : IDisposable
 
 		Assert.Equal(ConfigWizardOutcome.Saved, Run());
 
-		string backupPath = $"{ConfigPath}.bak_20261103T193700Z";
+		var backupPath = $"{ConfigPath}.bak_20261103T193700Z";
 		Assert.Equal("{ not json", File.ReadAllText(backupPath));
 		Assert.Equal(ShellyConfig.ANTHROPIC_PROVIDER, Saved().Provider);
 		Assert.Contains(backupPath, Output);
@@ -311,10 +350,18 @@ public sealed class ConfigWizardTests : IDisposable
 	[InlineData("tcsh", "setenv NAME '<your-key>'", "~/.tcshrc")]
 	[InlineData("pwsh", "$env:NAME = '<your-key>'", "$PROFILE")]
 	[InlineData("nu", "$env.NAME = '<your-key>'", "$nu.env-path")]
-	[InlineData("elvish", "set E:NAME = '<your-key>'", "~/.config/elvish/rc.elv")]
-	public void StartupLine_MatchesShell(string shell, string expectedLine, string? expectedFile)
+	[InlineData(
+		"elvish",
+		"set E:NAME = '<your-key>'",
+		"~/.config/elvish/rc.elv")]
+	public void StartupLine_MatchesShell(
+		string shell,
+		string expectedLine,
+		string? expectedFile)
 	{
-		(string line, string? startupFile) = ConfigWizard.StartupLine(Shell.FromNameOrPath(shell), "NAME");
+		(string line, string? startupFile) = ConfigWizard.StartupLine(
+			Shell.FromNameOrPath(shell),
+			"NAME");
 
 		Assert.Equal(expectedLine, line);
 		Assert.Equal(expectedFile, startupFile);
@@ -323,7 +370,9 @@ public sealed class ConfigWizardTests : IDisposable
 	[Fact]
 	public void StartupLine_UnknownShell_FallsBackToExport()
 	{
-		(string line, string? startupFile) = ConfigWizard.StartupLine(Shell.FromNameOrPath("xonsh"), "NAME");
+		(string line, string? startupFile) = ConfigWizard.StartupLine(
+			Shell.FromNameOrPath("xonsh"),
+			"NAME");
 
 		Assert.Equal("export NAME='<your-key>'", line);
 		Assert.Equal(Strings.UnknownShellStartupFile, startupFile);
@@ -338,7 +387,9 @@ public sealed class ConfigWizardTests : IDisposable
 
 		Run(shell: "fish");
 
-		Assert.Contains("set -Ux ANTHROPIC_API_KEY_SHELLY '<your-key>'", Output);
+		Assert.Contains(
+			"set -Ux ANTHROPIC_API_KEY_SHELLY '<your-key>'",
+			Output);
 		Assert.Contains("Fish remembers it", Output);
 	}
 }
