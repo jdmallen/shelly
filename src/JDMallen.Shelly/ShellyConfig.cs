@@ -21,6 +21,12 @@ public sealed class ShellyConfig
 	[JsonPropertyName("openai")]
 	public OpenAIConfig OpenAI { get; set; } = new();
 
+	/// <summary>
+	/// Whether the REPL shows the run's token count after the menu options.
+	/// Usage is still added to the lifetime totals when this is off.
+	/// </summary>
+	public bool ShowTokenUsage { get; set; } = true;
+
 	public static ShellyConfig Load()
 	{
 		string path = ConfigPath();

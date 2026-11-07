@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Each run's total is added to `usage.json` in the local app data directory,
   and `shelly --info` reports the lifetime total and the average per run,
   split into input and output tokens. Providers that don't report usage are
-  left out of both.
+  left out of both. Set `"showTokenUsage": false` in `config.json` to hide
+  the faded count; the totals are still recorded.
 
 ### Changed
 

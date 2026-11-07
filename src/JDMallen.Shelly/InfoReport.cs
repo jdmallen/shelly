@@ -112,7 +112,9 @@ internal static class InfoReport
 		if (usage is not null)
 		{
 			report.AppendLine();
-			AppendRows(report, UsageRows(usage.Value));
+			AppendRows(
+				report,
+				UsageRows(usage.Value, config.ShowTokenUsage));
 		}
 
 		return report.ToString().TrimEnd();
@@ -132,11 +134,16 @@ internal static class InfoReport
 	}
 
 	private static List<(string Label, string Value)> UsageRows(
-		UsageReport usage)
+		UsageReport usage,
+		bool showTokenUsage)
 	{
 		var rows = new List<(string Label, string Value)>
 		{
 			("usage log", usage.Path),
+			("footer",
+				showTokenUsage
+					? "shown after the menu (showTokenUsage)"
+					: "hidden (showTokenUsage: false)"),
 		};
 
 		if (usage.Totals is not { } totals)

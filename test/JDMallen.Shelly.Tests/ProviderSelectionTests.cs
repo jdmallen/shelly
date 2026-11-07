@@ -180,6 +180,14 @@ public class ShellyConfigTests
 	}
 
 	[Fact]
+	public void Deserialize_ShowTokenUsage_DefaultsToTrue()
+	{
+		Assert.True(Deserialize("""{ "provider": "anthropic" }""").ShowTokenUsage);
+		Assert.False(
+			Deserialize("""{ "showTokenUsage": false }""").ShowTokenUsage);
+	}
+
+	[Fact]
 	public void Deserialize_ReadsLowercaseOpenaiBlock()
 	{
 		ShellyConfig config = Deserialize(

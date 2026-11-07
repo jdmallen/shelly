@@ -182,7 +182,8 @@ Default contents:
     "model": "",
     "timeoutSeconds": 300,
     "maxTokens": 2048
-  }
+  },
+  "showTokenUsage": true
 }
 ```
 
@@ -309,6 +310,8 @@ session with a clipboard tool (so it's hidden over headless/SSH sessions).
 After the menu options, shelly shows in faded text how many tokens this run
 has used so far, counting every suggestion, retry and explanation. Nothing is
 shown when the provider doesn't report usage (some self-hosted runners don't).
+Set `"showTokenUsage": false` in `config.json` to hide it; usage is still
+added to the lifetime totals.
 
 When the run ends, its tokens are added to lifetime totals in `usage.json`
 (`~/.local/share/shelly/` on Linux, `%LOCALAPPDATA%\shelly\` on Windows,
@@ -317,6 +320,7 @@ total and the average per run:
 
 ```text
   usage log: /home/me/.local/share/shelly/usage.json
+  footer:    shown after the menu (showTokenUsage)
   total:     12,345 tokens (10,000 in, 2,345 out) over 42 runs since 2026-11-06
   average:   294 tokens per run (238 in, 56 out)
 ```

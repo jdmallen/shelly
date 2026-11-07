@@ -7,6 +7,7 @@ public sealed class ReplLoop
 	private readonly IClipboard _clipboard;
 	private readonly bool _editEnabled;
 	private readonly bool _clipboardEnabled;
+	private readonly bool _showTokenUsage;
 	private readonly ShellContext _context;
 
 	internal ReplLoop(
@@ -14,7 +15,8 @@ public sealed class ReplLoop
 		IConsoleIO io,
 		IClipboard clipboard,
 		bool editEnabled = false,
-		ShellContext? context = null)
+		ShellContext? context = null,
+		bool showTokenUsage = true)
 	{
 		_provider = provider;
 		_context = context ?? ShellContext.Detect();
@@ -22,15 +24,20 @@ public sealed class ReplLoop
 		_clipboard = clipboard;
 		_editEnabled = editEnabled;
 		_clipboardEnabled = clipboard.IsAvailable;
+		_showTokenUsage = showTokenUsage;
 	}
 
-	public ReplLoop(IChatProvider provider, ShellContext context)
+	public ReplLoop(
+		IChatProvider provider,
+		ShellContext context,
+		bool showTokenUsage = true)
 		: this(
 			provider,
 			new SystemConsoleIO(),
 			new SystemClipboard(),
 			EditHandoff.IsEnabled,
-			context)
+			context,
+			showTokenUsage)
 	{
 	}
 
@@ -241,7 +248,7 @@ public sealed class ReplLoop
 		Option('q', Strings.MenuQuit);
 
 		// Faded, so it reads as a footnote to the menu rather than an option.
-		if (SessionUsage.HasUsage)
+		if (_showTokenUsage && SessionUsage.HasUsage)
 		{
 			_io.Write(
 				$"   {Strings.TokensUsed(SessionUsage.TotalTokens)}",

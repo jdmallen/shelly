@@ -125,11 +125,14 @@ public class InfoReportTests
 
 	private const string USAGE_PATH = "/home/me/.local/share/shelly/usage.json";
 
-	private string BuildWithUsage(UsageTotals? totals, string? error = null) =>
+	private string BuildWithUsage(
+		UsageTotals? totals,
+		string? error = null,
+		bool showTokenUsage = true) =>
 		InfoReport.Build(
 			"shelly 9.9.9",
 			"/home/me/.config/shelly/config.json",
-			new ShellyConfig(),
+			new ShellyConfig { ShowTokenUsage = showTokenUsage },
 			Shell.FromNameOrPath("/usr/bin/zsh"),
 			name => _environment.GetValueOrDefault(name),
 			new InfoReport.UsageReport(USAGE_PATH, totals, error));
@@ -158,6 +161,17 @@ public class InfoReportTests
 		// The usage block is aligned on its own, so the provider block keeps
 		// its padding.
 		Assert.Contains("provider:   anthropic", report);
+	}
+
+	[Fact]
+	public void Usage_ReportsWhetherTheFooterIsShown()
+	{
+		Assert.Contains(
+			"footer:    shown after the menu (showTokenUsage)",
+			BuildWithUsage(new UsageTotals()));
+		Assert.Contains(
+			"footer:    hidden (showTokenUsage: false)",
+			BuildWithUsage(new UsageTotals(), showTokenUsage: false));
 	}
 
 	[Fact]

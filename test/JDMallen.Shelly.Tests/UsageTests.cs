@@ -23,12 +23,13 @@ public sealed class UsageTests : IDisposable
 		}
 	}
 
-	private ReplLoop NewLoop() => new(
+	private ReplLoop NewLoop(bool showTokenUsage = true) => new(
 		_provider,
 		_io,
 		new FakeClipboard(),
 		false,
-		new ShellContext(Shell.FromNameOrPath("bash"), "os", "/pwd"));
+		new ShellContext(Shell.FromNameOrPath("bash"), "os", "/pwd"),
+		showTokenUsage);
 
 	private static UsageTally Tally(params TokenUsage?[] usages)
 	{
@@ -93,6 +94,20 @@ public sealed class UsageTests : IDisposable
 
 		Assert.DoesNotContain("tokens", _io.Output.ToString());
 		Assert.False(loop.SessionUsage.HasUsage);
+	}
+
+	[Fact]
+	public async Task Repl_FooterTurnedOff_HidesTokensButStillTallies()
+	{
+		_provider.SuggestionResponses.Enqueue("ls -la");
+		_provider.SuggestionUsages.Enqueue(new TokenUsage(1200, 34));
+		_io.ReadKeys.Enqueue(ConsoleKey.Q);
+
+		ReplLoop loop = NewLoop(false);
+		await loop.RunAsync("list files", TestContext.Current.CancellationToken);
+
+		Assert.DoesNotContain("tokens", _io.Output.ToString());
+		Assert.Equal(1234, loop.SessionUsage.TotalTokens);
 	}
 
 	[Fact]

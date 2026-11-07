@@ -157,7 +157,7 @@ public static class Program
 		}
 
 		ShellContext context = ShellContext.Detect();
-		var loop = new ReplLoop(provider, context);
+		var loop = new ReplLoop(provider, context, config.ShowTokenUsage);
 		ReplResult result = await loop.RunAsync(prompt);
 
 		// Before executing: the command may run long, or be interrupted along
