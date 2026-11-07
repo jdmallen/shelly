@@ -34,6 +34,11 @@ public sealed class ReplLoop
 	{
 	}
 
+	/// <summary>
+	/// Token usage of every model request this loop has made so far.
+	/// </summary>
+	public UsageTally SessionUsage { get; } = new();
+
 	public async Task<ReplResult> RunAsync(
 		string? initialPrompt,
 		CancellationToken cancellationToken = default)
@@ -58,10 +63,12 @@ public sealed class ReplLoop
 			string suggestion;
 			try
 			{
-				suggestion = await _provider.GetSuggestionAsync(
+				ChatReply reply = await _provider.GetSuggestionAsync(
 					prompt,
 					_context,
 					cancellationToken);
+				SessionUsage.Add(reply.Usage);
+				suggestion = reply.Text;
 			}
 			catch (Exception ex)
 			{
@@ -139,10 +146,12 @@ public sealed class ReplLoop
 					string explanation;
 					try
 					{
-						explanation = await _provider.ExplainCommandAsync(
+						ChatReply reply = await _provider.ExplainCommandAsync(
 							suggestion,
 							context,
 							cancellationToken);
+						SessionUsage.Add(reply.Usage);
+						explanation = reply.Text;
 					}
 					catch (Exception ex)
 					{
@@ -230,6 +239,15 @@ public sealed class ReplLoop
 
 		Option('r', Strings.MenuRetry);
 		Option('q', Strings.MenuQuit);
+
+		// Faded, so it reads as a footnote to the menu rather than an option.
+		if (SessionUsage.HasUsage)
+		{
+			_io.Write(
+				$"   {Strings.TokensUsed(SessionUsage.TotalTokens)}",
+				ConsoleColor.DarkGray);
+		}
+
 		_io.Write(" ");
 
 		return;

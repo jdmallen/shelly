@@ -269,4 +269,10 @@
 	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>Zurück zum Hauptmenü</value>
 	</data>
+	<data name="TokensUsedFormat" xml:space="preserve">
+		<value>{0} Tokens</value>
+	</data>
+	<data name="UsageNotRecordedFormat" xml:space="preserve">
+		<value>Warnung: Token-Verbrauch konnte nicht in {0} gespeichert werden: {1}</value>
+	</data>
 </root>

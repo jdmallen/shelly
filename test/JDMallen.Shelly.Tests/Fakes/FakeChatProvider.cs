@@ -1,3 +1,5 @@
+using JDMallen.Toolbox.AI;
+
 namespace JDMallen.Shelly.Tests.Fakes;
 
 internal sealed class FakeChatProvider : IChatProvider
@@ -5,6 +7,14 @@ internal sealed class FakeChatProvider : IChatProvider
 	public Queue<string> SuggestionResponses { get; } = new();
 
 	public Queue<string> ExplanationResponses { get; } = new();
+
+	/// <summary>
+	/// Usage reported with each suggestion, in order; an empty queue reports
+	/// none, like a provider that omits usage.
+	/// </summary>
+	public Queue<TokenUsage?> SuggestionUsages { get; } = new();
+
+	public Queue<TokenUsage?> ExplanationUsages { get; } = new();
 
 	public List<string> SuggestionPrompts { get; } = [];
 
@@ -14,7 +24,7 @@ internal sealed class FakeChatProvider : IChatProvider
 
 	public Exception? ExplanationThrow { get; set; }
 
-	public Task<string> GetSuggestionAsync(
+	public Task<ChatReply> GetSuggestionAsync(
 		string prompt,
 		ShellContext context,
 		CancellationToken cancellationToken = default)
@@ -23,10 +33,15 @@ internal sealed class FakeChatProvider : IChatProvider
 
 		return SuggestionThrow is not null
 			? throw SuggestionThrow
-			: Task.FromResult(SuggestionResponses.Dequeue());
+			: Task.FromResult(
+				new ChatReply(
+					SuggestionResponses.Dequeue(),
+					SuggestionUsages.Count == 0
+						? null
+						: SuggestionUsages.Dequeue()));
 	}
 
-	public Task<string> ExplainCommandAsync(
+	public Task<ChatReply> ExplainCommandAsync(
 		string command,
 		ShellContext context,
 		CancellationToken cancellationToken = default)
@@ -35,6 +50,11 @@ internal sealed class FakeChatProvider : IChatProvider
 
 		return ExplanationThrow is not null
 			? throw ExplanationThrow
-			: Task.FromResult(ExplanationResponses.Dequeue());
+			: Task.FromResult(
+				new ChatReply(
+					ExplanationResponses.Dequeue(),
+					ExplanationUsages.Count == 0
+						? null
+						: ExplanationUsages.Dequeue()));
 	}
 }

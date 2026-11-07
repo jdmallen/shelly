@@ -269,4 +269,10 @@
 	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>Volver al menú principal</value>
 	</data>
+	<data name="TokensUsedFormat" xml:space="preserve">
+		<value>{0} tokens</value>
+	</data>
+	<data name="UsageNotRecordedFormat" xml:space="preserve">
+		<value>Advertencia: no se pudo registrar el uso de tokens en {0}: {1}</value>
+	</data>
 </root>

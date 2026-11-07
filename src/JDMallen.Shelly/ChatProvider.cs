@@ -27,7 +27,7 @@ public sealed class ChatProvider(
 	// ReSharper disable once MemberCanBePrivate.Global
 	internal const int DEFAULT_MAX_TOKENS = 500;
 
-	public Task<string> GetSuggestionAsync(
+	public Task<ChatReply> GetSuggestionAsync(
 		string prompt,
 		ShellContext context,
 		CancellationToken cancellationToken = default)
@@ -37,7 +37,7 @@ public sealed class ChatProvider(
 			true,
 			cancellationToken);
 
-	public Task<string> ExplainCommandAsync(
+	public Task<ChatReply> ExplainCommandAsync(
 		string command,
 		ShellContext context,
 		CancellationToken cancellationToken = default)
@@ -47,17 +47,19 @@ public sealed class ChatProvider(
 			false,
 			cancellationToken);
 
-	private async Task<string> ChatAsync(
+	private async Task<ChatReply> ChatAsync(
 		string system,
 		string userMessage,
 		bool sanitize,
 		CancellationToken cancellationToken)
 	{
-		string text = (await client.CompleteAsync(
-				new CompletionRequest(system, userMessage, maxTokens),
-				cancellationToken))
-			.Trim();
+		CompletionResult result = await client.GetCompletionAsync(
+			new CompletionRequest(system, userMessage, maxTokens),
+			cancellationToken);
+		string text = result.Text.Trim();
 
-		return sanitize ? CommandSanitizer.Strip(text) : text;
+		return new ChatReply(
+			sanitize ? CommandSanitizer.Strip(text) : text,
+			result.Usage);
 	}
 }

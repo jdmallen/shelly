@@ -304,6 +304,26 @@ The `[e]dit` and `[c]opy` options only appear when they can actually work:
 `edit` requires the shell wrapper below, and `copy` requires a graphical
 session with a clipboard tool (so it's hidden over headless/SSH sessions).
 
+### Token usage
+
+After the menu options, shelly shows in faded text how many tokens this run
+has used so far, counting every suggestion, retry and explanation. Nothing is
+shown when the provider doesn't report usage (some self-hosted runners don't).
+
+When the run ends, its tokens are added to lifetime totals in `usage.json`
+(`~/.local/share/shelly/` on Linux, `%LOCALAPPDATA%\shelly\` on Windows,
+`~/Library/Application Support/shelly/` on macOS). `shelly --info` shows the
+total and the average per run:
+
+```text
+  usage log: /home/me/.local/share/shelly/usage.json
+  total:     12,345 tokens (10,000 in, 2,345 out) over 42 runs since 2026-11-06
+  average:   294 tokens per run (238 in, 56 out)
+```
+
+Runs whose provider reported no usage are not counted, so they don't pull the
+average down. Delete `usage.json` to start the totals over.
+
 ### Shell detection
 
 shelly writes commands for the shell you run it from, and `[x]` executes them

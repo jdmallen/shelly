@@ -292,4 +292,12 @@
 		<value>Back to main menu</value>
 		<comment>Last option (0) of the configuration wizard's provider menu when it was opened from the main menu.</comment>
 	</data>
+	<data name="TokensUsedFormat" xml:space="preserve">
+		<value>{0} tokens</value>
+		<comment>Faded footnote after the action menu: the tokens this run has used so far. {0} is the already-formatted number.</comment>
+	</data>
+	<data name="UsageNotRecordedFormat" xml:space="preserve">
+		<value>Warning: could not record token usage in {0}: {1}</value>
+		<comment>{0} is the usage.json path, {1} the error message.</comment>
+	</data>
 </root>

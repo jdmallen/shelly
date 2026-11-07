@@ -34,7 +34,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="JetBrains.Annotations" Version="2025.2.4"/>
-		<PackageReference Include="JDMallen.Toolbox.AI" Version="4.2.1"/>
+		<PackageReference Include="JDMallen.Toolbox.AI" Version="4.3.0"/>
 	</ItemGroup>
 
 	<ItemGroup>

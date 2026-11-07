@@ -171,6 +171,17 @@ internal static class Strings
 			configKey,
 			configPath);
 
+	/// <summary>
+	/// The faded token count after the action menu, e.g. "1,234 tokens".
+	/// </summary>
+	public static string TokensUsed(long tokens) =>
+		Format(
+			"TokensUsedFormat",
+			tokens.ToString("N0", CultureInfo.CurrentCulture));
+
+	public static string UsageNotRecorded(string path, string message) =>
+		Format("UsageNotRecordedFormat", path, message);
+
 	public static string Error(string message) =>
 		Format("ErrorFormat", message);
 

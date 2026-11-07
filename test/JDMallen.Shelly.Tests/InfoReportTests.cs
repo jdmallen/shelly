@@ -122,4 +122,58 @@ public class InfoReportTests
 		Assert.Contains("provider: gemini", report);
 		Assert.Contains("error:    unknown provider", report);
 	}
+
+	private const string USAGE_PATH = "/home/me/.local/share/shelly/usage.json";
+
+	private string BuildWithUsage(UsageTotals? totals, string? error = null) =>
+		InfoReport.Build(
+			"shelly 9.9.9",
+			"/home/me/.config/shelly/config.json",
+			new ShellyConfig(),
+			Shell.FromNameOrPath("/usr/bin/zsh"),
+			name => _environment.GetValueOrDefault(name),
+			new InfoReport.UsageReport(USAGE_PATH, totals, error));
+
+	[Fact]
+	public void Usage_ReportsTotalsAndPerRunAverage()
+	{
+		string report = BuildWithUsage(
+			new UsageTotals
+			{
+				Runs = 4,
+				Requests = 6,
+				InputTokens = 10_000,
+				OutputTokens = 2_345,
+				Since = new DateTimeOffset(2026, 11, 6, 9, 0, 0, TimeSpan.Zero),
+			});
+
+		Assert.Contains($"usage log: {USAGE_PATH}", report);
+		Assert.Contains(
+			"total:     12,345 tokens (10,000 in, 2,345 out) over 4 runs since 2026-11-06",
+			report);
+		Assert.Contains(
+			"average:   3,086 tokens per run (2,500 in, 586 out)",
+			report);
+
+		// The usage block is aligned on its own, so the provider block keeps
+		// its padding.
+		Assert.Contains("provider:   anthropic", report);
+	}
+
+	[Fact]
+	public void Usage_NothingRecorded_SaysSo()
+	{
+		string report = BuildWithUsage(new UsageTotals());
+
+		Assert.Contains("total:     none recorded yet", report);
+		Assert.DoesNotContain("average:", report);
+	}
+
+	[Fact]
+	public void Usage_UnreadableFile_ShowsTheError()
+	{
+		string report = BuildWithUsage(null, "bad json");
+
+		Assert.Contains("total:     (unreadable: bad json)", report);
+	}
 }

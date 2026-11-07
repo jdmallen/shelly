@@ -268,4 +268,10 @@
 	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>Назад в главное меню</value>
 	</data>
+	<data name="TokensUsedFormat" xml:space="preserve">
+		<value>токены: {0}</value>
+	</data>
+	<data name="UsageNotRecordedFormat" xml:space="preserve">
+		<value>Предупреждение: не удалось записать расход токенов в {0}: {1}</value>
+	</data>
 </root>

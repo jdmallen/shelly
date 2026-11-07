@@ -268,4 +268,10 @@
 	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>返回主選單</value>
 	</data>
+	<data name="TokensUsedFormat" xml:space="preserve">
+		<value>{0} 個 Token</value>
+	</data>
+	<data name="UsageNotRecordedFormat" xml:space="preserve">
+		<value>警告：無法將 Token 用量記錄到 {0}：{1}</value>
+	</data>
 </root>

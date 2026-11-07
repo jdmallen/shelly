@@ -269,4 +269,10 @@
 	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>Tillbaka till huvudmenyn</value>
 	</data>
+	<data name="TokensUsedFormat" xml:space="preserve">
+		<value>{0} token</value>
+	</data>
+	<data name="UsageNotRecordedFormat" xml:space="preserve">
+		<value>Varning: kunde inte registrera tokenanvändning i {0}: {1}</value>
+	</data>
 </root>

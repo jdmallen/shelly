@@ -268,4 +268,10 @@
 	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>メインメニューに戻る</value>
 	</data>
+	<data name="TokensUsedFormat" xml:space="preserve">
+		<value>{0} トークン</value>
+	</data>
+	<data name="UsageNotRecordedFormat" xml:space="preserve">
+		<value>警告：トークン使用量を {0} に記録できませんでした：{1}</value>
+	</data>
 </root>

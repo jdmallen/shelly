@@ -268,4 +268,10 @@
 	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>Quay lại menu chính</value>
 	</data>
+	<data name="TokensUsedFormat" xml:space="preserve">
+		<value>{0} token</value>
+	</data>
+	<data name="UsageNotRecordedFormat" xml:space="preserve">
+		<value>Cảnh báo: không thể ghi lượng token đã dùng vào {0}: {1}</value>
+	</data>
 </root>

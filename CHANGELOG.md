@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0]
+
+### Added
+
+- **Token usage.** After the suggestion menu, faded text shows the tokens the
+  current run has used so far (suggestions, retries and explanations).
+  Each run's total is added to `usage.json` in the local app data directory,
+  and `shelly --info` reports the lifetime total and the average per run,
+  split into input and output tokens. Providers that don't report usage are
+  left out of both.
+
+### Changed
+
+- Requires `JDMallen.Toolbox.AI` 4.3.0, using its `GetCompletionAsync`
+  (completion plus usage and metadata) in place of the deprecated
+  `CompleteAsync`.
+
 ## [1.5.0]
 
 ### Added

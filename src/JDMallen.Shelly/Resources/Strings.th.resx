@@ -268,4 +268,10 @@
 	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>กลับไปที่เมนูหลัก</value>
 	</data>
+	<data name="TokensUsedFormat" xml:space="preserve">
+		<value>{0} โทเค็น</value>
+	</data>
+	<data name="UsageNotRecordedFormat" xml:space="preserve">
+		<value>คำเตือน: บันทึกการใช้โทเค็นลงใน {0} ไม่สำเร็จ: {1}</value>
+	</data>
 </root>

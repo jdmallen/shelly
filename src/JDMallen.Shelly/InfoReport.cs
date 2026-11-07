@@ -5,8 +5,9 @@ namespace JDMallen.Shelly;
 
 /// <summary>
 /// The <c>--info</c> report: which provider shelly would use and where it
-/// would send requests. Diagnostic output, so it stays in English like
-/// <c>--version</c>. API keys are reported as set or not set, never shown.
+/// would send requests, plus lifetime token usage. Diagnostic output, so it
+/// stays in English like <c>--version</c>. API keys are reported as set or not
+/// set, never shown.
 /// </summary>
 internal static class InfoReport
 {
@@ -18,7 +19,8 @@ internal static class InfoReport
 		string configPath,
 		ShellyConfig config,
 		Shell shell,
-		Func<string, string?> getEnvironmentVariable)
+		Func<string, string?> getEnvironmentVariable,
+		UsageReport? usage = null)
 	{
 		var rows = new List<(string Label, string Value)>
 		{
@@ -103,18 +105,87 @@ internal static class InfoReport
 			("shell",
 				$"{shell.DisplayName} ({string.Join(' ', [shell.Executable, .. shell.CommandFlags])})"));
 
-		int labelWidth = rows.Max(row => row.Label.Length) + 1;
 		StringBuilder report =
 			new StringBuilder(versionLine).AppendLine().AppendLine();
+		AppendRows(report, rows);
+
+		if (usage is not null)
+		{
+			report.AppendLine();
+			AppendRows(report, UsageRows(usage.Value));
+		}
+
+		return report.ToString().TrimEnd();
+	}
+
+	private static void AppendRows(
+		StringBuilder report,
+		List<(string Label, string Value)> rows)
+	{
+		int labelWidth = rows.Max(row => row.Label.Length) + 1;
 		foreach ((string label, string value) in rows)
 		{
 			report.AppendLine(
 				CultureInfo.CurrentCulture,
 				$"  {$"{label}:".PadRight(labelWidth)} {value}");
 		}
-
-		return report.ToString().TrimEnd();
 	}
+
+	private static List<(string Label, string Value)> UsageRows(
+		UsageReport usage)
+	{
+		var rows = new List<(string Label, string Value)>
+		{
+			("usage log", usage.Path),
+		};
+
+		if (usage.Totals is not { } totals)
+		{
+			rows.Add(("total", $"(unreadable: {usage.Error})"));
+
+			return rows;
+		}
+
+		if (totals.Runs == 0)
+		{
+			rows.Add(("total", "none recorded yet"));
+
+			return rows;
+		}
+
+		string since = totals.Since is { } sinceDate
+			? $" since {sinceDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}"
+			: string.Empty;
+		string runs = totals.Runs == 1
+			? "1 run"
+			: $"{Count(totals.Runs)} runs";
+		rows.Add(
+			("total",
+				$"{Count(totals.TotalTokens)} tokens ({Count(totals.InputTokens)} in, {Count(totals.OutputTokens)} out) over {runs}{since}"));
+		rows.Add(
+			("average",
+				$"{Average(totals.TotalTokens)} tokens per run ({Average(totals.InputTokens)} in, {Average(totals.OutputTokens)} out)"));
+
+		return rows;
+
+		string Average(long tokens) =>
+			Count(
+				(long)Math.Round(
+					(double)tokens / totals.Runs,
+					MidpointRounding.AwayFromZero));
+	}
+
+	private static string Count(long value) =>
+		value.ToString("N0", CultureInfo.CurrentCulture);
+
+	/// <summary>The usage block's inputs.</summary>
+	/// <param name="Path">Where the totals live.</param>
+	/// <param name="Totals">The totals, or null when the file is unreadable.</param>
+	/// <param name="Error">Why the file is unreadable, when it is.</param>
+	internal readonly record struct UsageReport(
+		string Path,
+		UsageTotals? Totals,
+		string? Error);
 
 	private static string Describe(AzureSetting setting, string configKey) =>
 		!setting.IsSet

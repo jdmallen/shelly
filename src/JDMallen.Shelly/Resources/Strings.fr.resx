@@ -268,4 +268,10 @@
 	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>Retour au menu principal</value>
 	</data>
+	<data name="TokensUsedFormat" xml:space="preserve">
+		<value>{0} jetons</value>
+	</data>
+	<data name="UsageNotRecordedFormat" xml:space="preserve">
+		<value>Avertissement : impossible d'enregistrer la consommation de jetons dans {0} : {1}</value>
+	</data>
 </root>

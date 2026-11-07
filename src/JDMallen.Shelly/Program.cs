@@ -97,13 +97,19 @@ public static class Program
 	private static int RunConfigWizard() =>
 		new ConfigWizard().Run() == ConfigWizardOutcome.Failed ? 1 : 0;
 
-	private static string BuildInfoReport() =>
-		InfoReport.Build(
+	private static string BuildInfoReport()
+	{
+		string usagePath = UsageLog.FilePath();
+		UsageTotals? usage = UsageLog.Read(usagePath, out string? usageError);
+
+		return InfoReport.Build(
 			BuildVersionLine(),
 			ShellyConfig.ConfigPath(),
 			ShellyConfig.Load(),
 			ShellDetector.Detect(),
-			Environment.GetEnvironmentVariable);
+			Environment.GetEnvironmentVariable,
+			new InfoReport.UsageReport(usagePath, usage, usageError));
+	}
 
 	private static string BuildVersionLine()
 	{
@@ -151,8 +157,12 @@ public static class Program
 		}
 
 		ShellContext context = ShellContext.Detect();
-		ReplResult result =
-			await new ReplLoop(provider, context).RunAsync(prompt);
+		var loop = new ReplLoop(provider, context);
+		ReplResult result = await loop.RunAsync(prompt);
+
+		// Before executing: the command may run long, or be interrupted along
+		// with shelly, and the tokens were spent either way.
+		RecordUsage(loop.SessionUsage);
 
 		if (result.Action == ReplAction.Failed)
 		{
@@ -172,6 +182,19 @@ public static class Program
 			ReplAction.Edit => WriteEditHandoff(result.Command),
 			_ => 0,
 		};
+	}
+
+	private static void RecordUsage(UsageTally sessionUsage)
+	{
+		string path = UsageLog.FilePath();
+		if (!UsageLog.TryRecord(
+			    path,
+			    sessionUsage,
+			    DateTimeOffset.Now,
+			    out string? error))
+		{
+			Console.Error.WriteLine(Strings.UsageNotRecorded(path, error!));
+		}
 	}
 
 	private static int WriteEditHandoff(string command)

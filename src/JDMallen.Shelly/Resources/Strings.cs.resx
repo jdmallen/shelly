@@ -268,4 +268,10 @@
 	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>Zpět do hlavní nabídky</value>
 	</data>
+	<data name="TokensUsedFormat" xml:space="preserve">
+		<value>tokeny: {0}</value>
+	</data>
+	<data name="UsageNotRecordedFormat" xml:space="preserve">
+		<value>Upozornění: nepodařilo se zaznamenat spotřebu tokenů do {0}: {1}</value>
+	</data>
 </root>

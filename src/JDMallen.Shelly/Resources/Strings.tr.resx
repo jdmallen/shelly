@@ -268,4 +268,10 @@
 	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>Ana menüye dön</value>
 	</data>
+	<data name="TokensUsedFormat" xml:space="preserve">
+		<value>{0} token</value>
+	</data>
+	<data name="UsageNotRecordedFormat" xml:space="preserve">
+		<value>Uyarı: token kullanımı {0} dosyasına kaydedilemedi: {1}</value>
+	</data>
 </root>
