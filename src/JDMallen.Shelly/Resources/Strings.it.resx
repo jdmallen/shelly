@@ -191,6 +191,7 @@
 	<data name="ContinuePrompt" xml:space="preserve">
 		<value>Continuare?</value>
 	</data>
+	<!-- ReSharper disable once OverriddenWithSameValue -->
 	<data name="ProviderHeader" xml:space="preserve">
 		<value>Provider:</value>
 	</data>

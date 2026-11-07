@@ -5,23 +5,10 @@ using Xunit;
 
 namespace JDMallen.Shelly.Tests;
 
-public sealed class UsageTests : IDisposable
+public sealed class UsageTests
 {
 	private readonly FakeChatProvider _provider = new();
 	private readonly FakeConsoleIO _io = new();
-	private readonly string _directory = Path.Combine(
-		Path.GetTempPath(),
-		$"shelly-usage-{Guid.NewGuid():N}");
-
-	private string UsagePath => Path.Combine(_directory, "usage.json");
-
-	public void Dispose()
-	{
-		if (Directory.Exists(_directory))
-		{
-			Directory.Delete(_directory, true);
-		}
-	}
 
 	private ReplLoop NewLoop(bool showTokenUsage = true) => new(
 		_provider,
@@ -30,17 +17,6 @@ public sealed class UsageTests : IDisposable
 		false,
 		new ShellContext(Shell.FromNameOrPath("bash"), "os", "/pwd"),
 		showTokenUsage);
-
-	private static UsageTally Tally(params TokenUsage?[] usages)
-	{
-		var tally = new UsageTally();
-		foreach (TokenUsage? usage in usages)
-		{
-			tally.Add(usage);
-		}
-
-		return tally;
-	}
 
 	[Fact]
 	public async Task Repl_ShowsSessionTokensAfterTheMenu()
@@ -108,76 +84,6 @@ public sealed class UsageTests : IDisposable
 
 		Assert.DoesNotContain("tokens", _io.Output.ToString());
 		Assert.Equal(1234, loop.SessionUsage.TotalTokens);
-	}
-
-	[Fact]
-	public void Read_MissingFile_ReturnsEmptyTotals()
-	{
-		UsageTotals? totals = UsageLog.Read(UsagePath, out string? error);
-
-		Assert.Null(error);
-		Assert.NotNull(totals);
-		Assert.Equal(0, totals.Runs);
-	}
-
-	[Fact]
-	public void TryRecord_AccumulatesAcrossRuns()
-	{
-		var firstRun = new DateTimeOffset(2026, 11, 6, 9, 0, 0, TimeSpan.Zero);
-
-		Assert.True(
-			UsageLog.TryRecord(
-				UsagePath,
-				Tally(new TokenUsage(100, 10), new TokenUsage(50, 5)),
-				firstRun,
-				out _));
-		Assert.True(
-			UsageLog.TryRecord(
-				UsagePath,
-				Tally(new TokenUsage(200, 20)),
-				firstRun.AddDays(1),
-				out _));
-
-		UsageTotals totals = UsageLog.Read(UsagePath, out _)!;
-		Assert.Equal(2, totals.Runs);
-		Assert.Equal(3, totals.Requests);
-		Assert.Equal(350, totals.InputTokens);
-		Assert.Equal(35, totals.OutputTokens);
-		Assert.Equal(firstRun, totals.Since);
-		Assert.Empty(
-			Directory.GetFiles(_directory, "*.tmp", SearchOption.AllDirectories));
-	}
-
-	[Fact]
-	public void TryRecord_RunWithoutUsage_IsNotCounted()
-	{
-		Assert.True(
-			UsageLog.TryRecord(
-				UsagePath,
-				Tally((TokenUsage?)null),
-				DateTimeOffset.Now,
-				out _));
-
-		Assert.False(File.Exists(UsagePath));
-	}
-
-	[Fact]
-	public void TryRecord_UnparseableFile_IsLeftUntouched()
-	{
-		Directory.CreateDirectory(_directory);
-		File.WriteAllText(UsagePath, "{ not json");
-
-		bool recorded = UsageLog.TryRecord(
-			UsagePath,
-			Tally(new TokenUsage(1, 1)),
-			DateTimeOffset.Now,
-			out string? error);
-
-		Assert.False(recorded);
-		Assert.NotNull(error);
-		Assert.Equal("{ not json", File.ReadAllText(UsagePath));
-		Assert.Null(UsageLog.Read(UsagePath, out string? readError));
-		Assert.NotNull(readError);
 	}
 
 	[Fact]

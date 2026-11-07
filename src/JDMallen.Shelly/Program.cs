@@ -99,8 +99,9 @@ public static class Program
 
 	private static string BuildInfoReport()
 	{
-		string usagePath = UsageLog.FilePath();
-		UsageTotals? usage = UsageLog.Read(usagePath, out string? usageError);
+		string usagePath = TokenUsageLog.DefaultPath("shelly");
+		TokenUsageTotals? usage =
+			TokenUsageLog.Read(usagePath, out string? usageError);
 
 		return InfoReport.Build(
 			BuildVersionLine(),
@@ -180,14 +181,14 @@ public static class Program
 				result.Command,
 				context.Shell),
 			ReplAction.Edit => WriteEditHandoff(result.Command),
-			_ => 0,
+			_               => 0,
 		};
 	}
 
-	private static void RecordUsage(UsageTally sessionUsage)
+	private static void RecordUsage(TokenUsageTally sessionUsage)
 	{
-		string path = UsageLog.FilePath();
-		if (!UsageLog.TryRecord(
+		string path = TokenUsageLog.DefaultPath("shelly");
+		if (!TokenUsageLog.TryRecord(
 			    path,
 			    sessionUsage,
 			    DateTimeOffset.Now,

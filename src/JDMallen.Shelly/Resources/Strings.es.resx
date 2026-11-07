@@ -269,6 +269,7 @@
 	<data name="MenuBackToMainMenu" xml:space="preserve">
 		<value>Volver al menú principal</value>
 	</data>
+	<!-- ReSharper disable once OverriddenWithSameValue -->
 	<data name="TokensUsedFormat" xml:space="preserve">
 		<value>{0} tokens</value>
 	</data>

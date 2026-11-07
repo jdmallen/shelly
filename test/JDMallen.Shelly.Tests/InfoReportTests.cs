@@ -1,3 +1,5 @@
+using JDMallen.Toolbox.AI;
+
 using Xunit;
 
 namespace JDMallen.Shelly.Tests;
@@ -126,7 +128,7 @@ public class InfoReportTests
 	private const string USAGE_PATH = "/home/me/.local/share/shelly/usage.json";
 
 	private string BuildWithUsage(
-		UsageTotals? totals,
+		TokenUsageTotals? totals,
 		string? error = null,
 		bool showTokenUsage = true) =>
 		InfoReport.Build(
@@ -141,7 +143,7 @@ public class InfoReportTests
 	public void Usage_ReportsTotalsAndPerRunAverage()
 	{
 		string report = BuildWithUsage(
-			new UsageTotals
+			new TokenUsageTotals
 			{
 				Runs = 4,
 				Requests = 6,
@@ -168,16 +170,16 @@ public class InfoReportTests
 	{
 		Assert.Contains(
 			"footer:    shown after the menu (showTokenUsage)",
-			BuildWithUsage(new UsageTotals()));
+			BuildWithUsage(new TokenUsageTotals()));
 		Assert.Contains(
 			"footer:    hidden (showTokenUsage: false)",
-			BuildWithUsage(new UsageTotals(), showTokenUsage: false));
+			BuildWithUsage(new TokenUsageTotals(), showTokenUsage: false));
 	}
 
 	[Fact]
 	public void Usage_NothingRecorded_SaysSo()
 	{
-		string report = BuildWithUsage(new UsageTotals());
+		string report = BuildWithUsage(new TokenUsageTotals());
 
 		Assert.Contains("total:     none recorded yet", report);
 		Assert.DoesNotContain("average:", report);

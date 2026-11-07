@@ -109,13 +109,15 @@ internal static class InfoReport
 			new StringBuilder(versionLine).AppendLine().AppendLine();
 		AppendRows(report, rows);
 
-		if (usage is not null)
+		if (usage is null)
 		{
-			report.AppendLine();
-			AppendRows(
-				report,
-				UsageRows(usage.Value, config.ShowTokenUsage));
+			return report.ToString().TrimEnd();
 		}
+
+		report.AppendLine();
+		AppendRows(
+			report,
+			UsageRows(usage.Value, config.ShowTokenUsage));
 
 		return report.ToString().TrimEnd();
 	}
@@ -169,17 +171,12 @@ internal static class InfoReport
 		rows.Add(
 			("total",
 				$"{Count(totals.TotalTokens)} tokens ({Count(totals.InputTokens)} in, {Count(totals.OutputTokens)} out) over {runs}{since}"));
+		TokenUsageAverages average = totals.AveragePerRun()!;
 		rows.Add(
 			("average",
-				$"{Average(totals.TotalTokens)} tokens per run ({Average(totals.InputTokens)} in, {Average(totals.OutputTokens)} out)"));
+				$"{Count(average.TotalTokens)} tokens per run ({Count(average.InputTokens)} in, {Count(average.OutputTokens)} out)"));
 
 		return rows;
-
-		string Average(long tokens) =>
-			Count(
-				(long)Math.Round(
-					(double)tokens / totals.Runs,
-					MidpointRounding.AwayFromZero));
 	}
 
 	private static string Count(long value) =>
@@ -191,7 +188,7 @@ internal static class InfoReport
 	/// <param name="Error">Why the file is unreadable, when it is.</param>
 	internal readonly record struct UsageReport(
 		string Path,
-		UsageTotals? Totals,
+		TokenUsageTotals? Totals,
 		string? Error);
 
 	private static string Describe(AzureSetting setting, string configKey) =>

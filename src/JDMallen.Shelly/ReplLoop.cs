@@ -44,7 +44,7 @@ public sealed class ReplLoop
 	/// <summary>
 	/// Token usage of every model request this loop has made so far.
 	/// </summary>
-	public UsageTally SessionUsage { get; } = new();
+	public TokenUsageTally SessionUsage { get; } = new();
 
 	public async Task<ReplResult> RunAsync(
 		string? initialPrompt,
