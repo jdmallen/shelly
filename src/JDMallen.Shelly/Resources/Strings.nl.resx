@@ -191,6 +191,7 @@
 	<data name="ContinuePrompt" xml:space="preserve">
 		<value>Doorgaan?</value>
 	</data>
+	<!-- ReSharper disable once OverriddenWithSameValue -->
 	<data name="ProviderHeader" xml:space="preserve">
 		<value>Provider:</value>
 	</data>
@@ -275,5 +276,41 @@
 	</data>
 	<data name="UsageNotRecordedFormat" xml:space="preserve">
 		<value>Waarschuwing: kan tokengebruik niet vastleggen in {0}: {1}</value>
+	</data>
+	<data name="AzureAuthHeader" xml:space="preserve">
+		<value>Authenticatie:</value>
+	</data>
+	<data name="AzureAuthApiKeyFormat" xml:space="preserve">
+		<value>API-sleutel ({0})</value>
+	</data>
+	<data name="AzureAuthAzureCli" xml:space="preserve">
+		<value>Microsoft Entra ID via de Azure CLI (az login)</value>
+	</data>
+	<data name="OptionalTextHint" xml:space="preserve">
+		<value>optioneel, - wist het</value>
+	</data>
+	<data name="InvalidTenantId" xml:space="preserve">
+		<value>Voer een tenant-ID (een GUID) of een domein zoals contoso.onmicrosoft.com in.</value>
+	</data>
+	<data name="AzureCliSignInHeader" xml:space="preserve">
+		<value>Aanmelden met de Azure CLI:</value>
+	</data>
+	<data name="AzureCliFoundFormat" xml:space="preserve">
+		<value>az gevonden in {0}.</value>
+	</data>
+	<data name="AzureCliNotFoundFormat" xml:space="preserve">
+		<value>az niet gevonden in PATH. Installeer de Azure CLI (2.54 of nieuwer): {0}</value>
+	</data>
+	<data name="AzureCliSignIn" xml:space="preserve">
+		<value>Meld je één keer aan met deze opdracht; daarna haalt shelly zelf tokens op via az:</value>
+	</data>
+	<data name="AzureCliRoleNoteFormat" xml:space="preserve">
+		<value>Je account heeft ook de rol '{0}' op de resource nodig. Owner en Contributor zijn niet genoeg.</value>
+	</data>
+	<data name="InvalidSettingFormat" xml:space="preserve">
+		<value>{0} is ongeldig. Corrigeer het in {1}, of voer 'shelly --config' uit.</value>
+	</data>
+	<data name="UnknownAzureAuthFormat" xml:space="preserve">
+		<value>Onbekende azure.auth '{0}' in {1}. Verwacht 'apiKey' of 'azureCli'.</value>
 	</data>
 </root>

@@ -274,4 +274,40 @@
 	<data name="UsageNotRecordedFormat" xml:space="preserve">
 		<value>Попередження: не вдалося записати витрату токенів у {0}: {1}</value>
 	</data>
+	<data name="AzureAuthHeader" xml:space="preserve">
+		<value>Автентифікація:</value>
+	</data>
+	<data name="AzureAuthApiKeyFormat" xml:space="preserve">
+		<value>Ключ API ({0})</value>
+	</data>
+	<data name="AzureAuthAzureCli" xml:space="preserve">
+		<value>Microsoft Entra ID через Azure CLI (az login)</value>
+	</data>
+	<data name="OptionalTextHint" xml:space="preserve">
+		<value>необов'язково, - очищає значення</value>
+	</data>
+	<data name="InvalidTenantId" xml:space="preserve">
+		<value>Введіть ID клієнта (GUID) або домен, наприклад contoso.onmicrosoft.com.</value>
+	</data>
+	<data name="AzureCliSignInHeader" xml:space="preserve">
+		<value>Вхід через Azure CLI:</value>
+	</data>
+	<data name="AzureCliFoundFormat" xml:space="preserve">
+		<value>az знайдено: {0}.</value>
+	</data>
+	<data name="AzureCliNotFoundFormat" xml:space="preserve">
+		<value>az не знайдено в PATH. Установіть Azure CLI (2.54 або новішу): {0}</value>
+	</data>
+	<data name="AzureCliSignIn" xml:space="preserve">
+		<value>Увійдіть один раз цією командою; далі shelly сам отримує токени від az:</value>
+	</data>
+	<data name="AzureCliRoleNoteFormat" xml:space="preserve">
+		<value>Вашому обліковому запису також потрібна роль '{0}' на цьому ресурсі. Ролей Owner і Contributor недостатньо.</value>
+	</data>
+	<data name="InvalidSettingFormat" xml:space="preserve">
+		<value>Недійсне значення {0}. Виправте його в {1} або виконайте 'shelly --config'.</value>
+	</data>
+	<data name="UnknownAzureAuthFormat" xml:space="preserve">
+		<value>Невідоме значення azure.auth '{0}' у {1}. Очікується 'apiKey' або 'azureCli'.</value>
+	</data>
 </root>

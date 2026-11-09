@@ -54,11 +54,7 @@ internal static class InfoReport
 					("max tokens",
 						config.Azure.MaxTokens.ToString(
 							CultureInfo.CurrentCulture)));
-				rows.Add(
-					("api key",
-						KeyStatus(
-							ChatProvider.AZURE_API_KEY_ENV_VAR,
-							getEnvironmentVariable)));
+				AddAzureAuthRows(rows, config.Azure, getEnvironmentVariable);
 
 				break;
 			case ShellyConfig.ANTHROPIC_PROVIDER:
@@ -120,6 +116,52 @@ internal static class InfoReport
 			UsageRows(usage.Value, config.ShowTokenUsage));
 
 		return report.ToString().TrimEnd();
+	}
+
+	/// <summary>
+	/// The auth method and what it depends on. For the Azure CLI that's the
+	/// tenant, scope and az's location; no token is fetched or shown.
+	/// </summary>
+	private static void AddAzureAuthRows(
+		List<(string Label, string Value)> rows,
+		AzureConfig azure,
+		Func<string, string?> getEnvironmentVariable)
+	{
+		if (azure.UsesApiKey)
+		{
+			rows.Add(("auth", "api key"));
+			rows.Add(
+				("api key",
+					KeyStatus(
+						ChatProvider.AZURE_API_KEY_ENV_VAR,
+						getEnvironmentVariable)));
+
+			return;
+		}
+
+		if (!azure.UsesAzureCli)
+		{
+			rows.Add(
+				("auth",
+					$"{azure.Auth} (unknown; expected {AzureConfig.API_KEY_AUTH} or {AzureConfig.AZURE_CLI_AUTH})"));
+
+			return;
+		}
+
+		rows.Add(("auth", "Microsoft Entra ID via the Azure CLI"));
+		if (azure.TryCreateTokenProvider(out string? invalidKey) is null)
+		{
+			rows.Add(("error", $"{invalidKey} is not valid"));
+		}
+
+		AzureCliTokenProviderOptions options = azure.TokenProviderOptions();
+		rows.Add(("tenant", options.TenantId ?? "(az's current tenant)"));
+		rows.Add(("scope", options.Scope));
+		rows.Add(
+			("az",
+				AzureCli.Find(getEnvironmentVariable)
+				?? $"not found on PATH (install: {AzureCli.INSTALL_URL})"));
+		rows.Add(("sign in", AzureCli.SignInCommand(azure)));
 	}
 
 	private static void AppendRows(

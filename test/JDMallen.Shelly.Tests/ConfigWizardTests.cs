@@ -176,6 +176,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue("gpt-6-luna"); // azure.deployment
 		_io.ReadLines.Enqueue("y"); // azure.reasoningModel
 		_io.ReadLines.Enqueue("2048"); // azure.maxTokens
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // auth: current (API key)
 		_io.ReadKeys.Enqueue(
 			ConsoleKey.Enter); // set the user variable: yes (default)
 		_io.ReadSecrets.Enqueue(SECRET);
@@ -215,6 +216,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue("maybe");         // azure.reasoningModel: invalid
 		_io.ReadLines.Enqueue("");              // azure.reasoningModel: keep
 		_io.ReadLines.Enqueue("");              // azure.maxTokens
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // auth: current (API key)
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
 
 		Assert.Equal(ConfigWizardOutcome.Saved, Run());
@@ -222,6 +224,110 @@ public sealed class ConfigWizardTests : IDisposable
 		Assert.True(Saved().Azure.ReasoningModel);
 		Assert.Contains("  azure.reasoningModel (y/n) [y]: ", Output);
 		Assert.Contains(Strings.InvalidChoice, Output);
+	}
+
+	[Fact]
+	public void Azure_AzureCli_SkipsKeyStepAndPrintsSignInCommand()
+	{
+		string binDirectory = Directory.CreateDirectory(
+			Path.Combine(_directory, "bin")).FullName;
+
+		// Both names, so the lookup succeeds on Windows and Unix alike.
+		File.WriteAllText(Path.Combine(binDirectory, "az"), string.Empty);
+		File.WriteAllText(Path.Combine(binDirectory, "az.cmd"), string.Empty);
+		var environment = new FakeUserEnvironment
+		{
+			Variables = { ["PATH"] = binDirectory },
+		};
+		_io.ReadKeys.Enqueue(ConsoleKey.D3);       // provider: azure
+		_io.ReadLines.Enqueue("https://example.openai.azure.com");
+		_io.ReadLines.Enqueue("gpt-6-luna");       // azure.deployment
+		_io.ReadLines.Enqueue("");                 // azure.reasoningModel
+		_io.ReadLines.Enqueue("");                 // azure.maxTokens
+		_io.ReadKeys.Enqueue(ConsoleKey.D2);       // auth: Azure CLI
+		_io.ReadLines.Enqueue("contoso.onmicrosoft.com"); // azure.tenantId
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter);    // save
+
+		Assert.Equal(ConfigWizardOutcome.Saved, Run(environment));
+
+		AzureConfig saved = Saved().Azure;
+		Assert.Equal(AzureConfig.AZURE_CLI_AUTH, saved.Auth);
+		Assert.Equal("contoso.onmicrosoft.com", saved.TenantId);
+		Assert.Contains(Strings.AzureCliSignInHeader, Output);
+		Assert.Contains("Found az at ", Output);
+		Assert.Contains(
+			"az login --tenant contoso.onmicrosoft.com --scope https://ai.azure.com/.default",
+			Output);
+		Assert.Contains("Cognitive Services OpenAI User", Output);
+		Assert.DoesNotContain(Strings.ApiKeyHeader, Output);
+		Assert.DoesNotContain(ChatProvider.AZURE_API_KEY_ENV_VAR + " is", Output);
+	}
+
+	[Fact]
+	public void Azure_AzureCli_InvalidTenantRepromptsAndDashClears()
+	{
+		new ShellyConfig
+		{
+			Provider = "azure",
+			Azure = new AzureConfig
+			{
+				Endpoint = "https://example.openai.azure.com",
+				Deployment = "gpt-6-luna",
+				Auth = AzureConfig.AZURE_CLI_AUTH,
+				TenantId = "old.example.com",
+			},
+		}.Save(ConfigPath);
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // provider: current (azure)
+		_io.ReadLines.Enqueue("");              // azure.endpoint
+		_io.ReadLines.Enqueue("");              // azure.deployment
+		_io.ReadLines.Enqueue("");              // azure.reasoningModel
+		_io.ReadLines.Enqueue("");              // azure.maxTokens
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // auth: current (Azure CLI)
+		_io.ReadLines.Enqueue("not a tenant!"); // azure.tenantId: invalid
+		_io.ReadLines.Enqueue("-");             // azure.tenantId: clear
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
+
+		Assert.Equal(ConfigWizardOutcome.Saved, Run());
+
+		Assert.Equal(string.Empty, Saved().Azure.TenantId);
+		Assert.Contains(
+			"  azure.tenantId (optional, - clears it) [old.example.com]: ",
+			Output);
+		Assert.Contains(Strings.InvalidTenantId, Output);
+		Assert.Contains("az was not found on PATH.", Output);
+		Assert.Contains(
+			"az login --scope https://ai.azure.com/.default",
+			Output);
+	}
+
+	[Fact]
+	public void Azure_SwitchingBackToApiKey_ShowsKeyStep()
+	{
+		new ShellyConfig
+		{
+			Provider = "azure",
+			Azure = new AzureConfig
+			{
+				Endpoint = "https://example.openai.azure.com",
+				Deployment = "gpt-6-luna",
+				Auth = AzureConfig.AZURE_CLI_AUTH,
+			},
+		}.Save(ConfigPath);
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // provider: current (azure)
+		_io.ReadLines.Enqueue("");              // azure.endpoint
+		_io.ReadLines.Enqueue("");              // azure.deployment
+		_io.ReadLines.Enqueue("");              // azure.reasoningModel
+		_io.ReadLines.Enqueue("");              // azure.maxTokens
+		_io.ReadKeys.Enqueue(ConsoleKey.D1);    // auth: API key
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
+
+		Assert.Equal(ConfigWizardOutcome.Saved, Run());
+
+		Assert.Equal(AzureConfig.API_KEY_AUTH, Saved().Azure.Auth);
+		Assert.Contains(
+			Strings.ApiKeyNotSet(ChatProvider.AZURE_API_KEY_ENV_VAR),
+			Output);
+		Assert.DoesNotContain(Strings.AzureCliSignInHeader, Output);
 	}
 
 	[Fact]

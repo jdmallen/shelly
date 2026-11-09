@@ -64,7 +64,7 @@ internal static class ConfigCheck
 				NeedsMove(azure.ResolveDeployment(getEnv)),
 				"azure.deployment");
 			AddIf(missing, azure.MaxTokens <= 0, "azure.maxTokens");
-			AddIfUnset(missing, getEnv, ChatProvider.AZURE_API_KEY_ENV_VAR);
+			AddAzureAuth(missing, azure, getEnv);
 		}
 		else
 		{
@@ -73,6 +73,38 @@ internal static class ConfigCheck
 
 		return missing;
 	}
+
+	/// <summary>
+	/// The key variable for <c>apiKey</c>; for <c>azureCli</c>, valid tenant and
+	/// scope settings and an <c>az</c> on PATH. Whether az is signed in isn't
+	/// checked: that would start a process and may touch the network.
+	/// </summary>
+	private static void AddAzureAuth(
+		List<string> missing,
+		AzureConfig azure,
+		Func<string, string?> getEnv)
+	{
+		if (azure.UsesApiKey)
+		{
+			AddIfUnset(missing, getEnv, ChatProvider.AZURE_API_KEY_ENV_VAR);
+		}
+		else if (azure.UsesAzureCli)
+		{
+			if (azure.TryCreateTokenProvider(out string? invalidKey) is null)
+			{
+				missing.Add(invalidKey!);
+			}
+
+			AddIf(missing, AzureCli.Find(getEnv) is null, AZURE_CLI);
+		}
+		else
+		{
+			missing.Add("azure.auth");
+		}
+	}
+
+	/// <summary>Reported when <c>az</c> isn't on PATH.</summary>
+	internal const string AZURE_CLI = "az";
 
 	private static bool NeedsMove(AzureSetting setting) =>
 		!setting.IsSet || setting.DeprecatedVariable is not null;

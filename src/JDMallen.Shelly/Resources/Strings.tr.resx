@@ -274,4 +274,40 @@
 	<data name="UsageNotRecordedFormat" xml:space="preserve">
 		<value>Uyarı: token kullanımı {0} dosyasına kaydedilemedi: {1}</value>
 	</data>
+	<data name="AzureAuthHeader" xml:space="preserve">
+		<value>Kimlik doğrulama:</value>
+	</data>
+	<data name="AzureAuthApiKeyFormat" xml:space="preserve">
+		<value>API anahtarı ({0})</value>
+	</data>
+	<data name="AzureAuthAzureCli" xml:space="preserve">
+		<value>Azure CLI üzerinden Microsoft Entra ID (az login)</value>
+	</data>
+	<data name="OptionalTextHint" xml:space="preserve">
+		<value>isteğe bağlı, - değeri temizler</value>
+	</data>
+	<data name="InvalidTenantId" xml:space="preserve">
+		<value>Bir kiracı kimliği (GUID) veya contoso.onmicrosoft.com gibi bir alan adı gir.</value>
+	</data>
+	<data name="AzureCliSignInHeader" xml:space="preserve">
+		<value>Azure CLI ile oturum açma:</value>
+	</data>
+	<data name="AzureCliFoundFormat" xml:space="preserve">
+		<value>az bulundu: {0}.</value>
+	</data>
+	<data name="AzureCliNotFoundFormat" xml:space="preserve">
+		<value>az PATH içinde bulunamadı. Azure CLI'yi kur (2.54 veya üstü): {0}</value>
+	</data>
+	<data name="AzureCliSignIn" xml:space="preserve">
+		<value>Bu komutla bir kez oturum aç; sonra shelly belirteçleri az'dan kendisi alır:</value>
+	</data>
+	<data name="AzureCliRoleNoteFormat" xml:space="preserve">
+		<value>Hesabının ayrıca kaynakta '{0}' rolüne ihtiyacı var. Owner ve Contributor yeterli değil.</value>
+	</data>
+	<data name="InvalidSettingFormat" xml:space="preserve">
+		<value>{0} geçersiz. {1} içinde düzelt veya 'shelly --config' çalıştır.</value>
+	</data>
+	<data name="UnknownAzureAuthFormat" xml:space="preserve">
+		<value>{1} içinde bilinmeyen azure.auth '{0}'. 'apiKey' veya 'azureCli' bekleniyordu.</value>
+	</data>
 </root>

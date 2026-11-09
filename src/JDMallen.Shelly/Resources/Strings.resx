@@ -300,4 +300,50 @@
 		<value>Warning: could not record token usage in {0}: {1}</value>
 		<comment>{0} is the usage.json path, {1} the error message.</comment>
 	</data>
+	<data name="AzureAuthHeader" xml:space="preserve">
+		<value>Authentication:</value>
+	</data>
+	<data name="AzureAuthApiKeyFormat" xml:space="preserve">
+		<value>API key ({0})</value>
+		<comment>An auth method choice. {0} is the environment variable name AZURE_OPENAI_API_KEY.</comment>
+	</data>
+	<data name="AzureAuthAzureCli" xml:space="preserve">
+		<value>Microsoft Entra ID via the Azure CLI (az login)</value>
+		<comment>An auth method choice. Keep 'Microsoft Entra ID', 'Azure CLI' and 'az login' untranslated.</comment>
+	</data>
+	<data name="OptionalTextHint" xml:space="preserve">
+		<value>optional, - clears it</value>
+		<comment>Shown in parentheses after a setting name, e.g. 'azure.tenantId (optional, - clears it) [x]: '. Typing a single '-' empties the value.</comment>
+	</data>
+	<data name="InvalidTenantId" xml:space="preserve">
+		<value>Enter a tenant ID (a GUID) or a domain such as contoso.onmicrosoft.com.</value>
+		<comment>Keep contoso.onmicrosoft.com untranslated.</comment>
+	</data>
+	<data name="AzureCliSignInHeader" xml:space="preserve">
+		<value>Azure CLI sign-in:</value>
+	</data>
+	<data name="AzureCliFoundFormat" xml:space="preserve">
+		<value>Found az at {0}.</value>
+		<comment>{0} is the full path to the az executable.</comment>
+	</data>
+	<data name="AzureCliNotFoundFormat" xml:space="preserve">
+		<value>az was not found on PATH. Install the Azure CLI (2.54 or later): {0}</value>
+		<comment>{0} is the Azure CLI install URL.</comment>
+	</data>
+	<data name="AzureCliSignIn" xml:space="preserve">
+		<value>Sign in once with this command; shelly then gets tokens from az on its own:</value>
+		<comment>An 'az login ...' command follows on its own line.</comment>
+	</data>
+	<data name="AzureCliRoleNoteFormat" xml:space="preserve">
+		<value>Your account also needs the '{0}' role on the resource. Owner and Contributor are not enough.</value>
+		<comment>{0} is the Azure role name 'Cognitive Services OpenAI User'; Owner and Contributor are Azure role names too. Keep them untranslated.</comment>
+	</data>
+	<data name="InvalidSettingFormat" xml:space="preserve">
+		<value>{0} is not valid. Fix it in {1}, or run 'shelly --config'.</value>
+		<comment>{0} is a config key such as azure.tenantId, {1} the config file path.</comment>
+	</data>
+	<data name="UnknownAzureAuthFormat" xml:space="preserve">
+		<value>Unknown azure.auth '{0}' in {1}. Expected 'apiKey' or 'azureCli'.</value>
+		<comment>{0} is the value found, {1} the config file path. Keep azure.auth, apiKey and azureCli untranslated.</comment>
+	</data>
 </root>

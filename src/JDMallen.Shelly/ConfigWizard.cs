@@ -115,7 +115,7 @@ internal sealed class ConfigWizard
 
 		_io.WriteLine();
 		_io.WriteLine(Strings.SettingsHeader);
-		string apiKeyVariable = provider switch
+		string? apiKeyVariable = provider switch
 		{
 			ShellyConfig.AZURE_PROVIDER => ConfigureAzure(config.Azure),
 			ShellyConfig.OPENAI_PROVIDER => ConfigureOpenAI(config.OpenAI),
@@ -123,9 +123,17 @@ internal sealed class ConfigWizard
 		};
 
 		_io.WriteLine();
-		string? pendingApiKey = ConfigureApiKey(
-			apiKeyVariable,
-			provider == ShellyConfig.OPENAI_PROVIDER);
+		string? pendingApiKey = null;
+		if (apiKeyVariable is null)
+		{
+			WriteAzureCliSignIn(config.Azure);
+		}
+		else
+		{
+			pendingApiKey = ConfigureApiKey(
+				apiKeyVariable,
+				provider == ShellyConfig.OPENAI_PROVIDER);
+		}
 
 		_io.WriteLine();
 
@@ -159,7 +167,10 @@ internal sealed class ConfigWizard
 		return ChatProvider.OPEN_AI_API_KEY_ENV_VAR;
 	}
 
-	private string ConfigureAzure(AzureConfig azure)
+	/// <returns>
+	/// The API key variable, or null when the chosen auth needs no key.
+	/// </returns>
+	private string? ConfigureAzure(AzureConfig azure)
 	{
 		// Offer the deprecated variables' values, so saving once moves an
 		// env-only setup into the config file.
@@ -176,7 +187,68 @@ internal sealed class ConfigWizard
 			"azure.maxTokens",
 			azure.MaxTokens);
 
-		return ChatProvider.AZURE_API_KEY_ENV_VAR;
+		_io.WriteLine();
+		_io.WriteLine(Strings.AzureAuthHeader);
+		int chosen = _prompts.Choose(
+			[
+				Strings.AzureAuthApiKey(ChatProvider.AZURE_API_KEY_ENV_VAR),
+				Strings.AzureAuthAzureCli,
+			],
+			azure.UsesAzureCli ? 1 : 0);
+
+		// Esc keeps the current method; an unrecognized one becomes the key.
+		if (chosen != ConsolePrompts.CANCELLED
+			|| !(azure.UsesApiKey || azure.UsesAzureCli))
+		{
+			azure.Auth = chosen == 1
+				? AzureConfig.AZURE_CLI_AUTH
+				: AzureConfig.API_KEY_AUTH;
+		}
+
+		if (!azure.UsesAzureCli)
+		{
+			return ChatProvider.AZURE_API_KEY_ENV_VAR;
+		}
+
+		azure.TenantId = _prompts.OptionalText(
+			"azure.tenantId",
+			azure.TenantId,
+			value => IsValidTenant(azure, value)
+				? null
+				: Strings.InvalidTenantId);
+
+		return null;
+	}
+
+	private static bool IsValidTenant(AzureConfig azure, string tenantId)
+	{
+		var candidate = new AzureConfig
+		{
+			TenantId = tenantId,
+			TokenScope = azure.TokenScope,
+		};
+
+		return candidate.TryCreateTokenProvider(out string? invalidKey) is not null
+			|| invalidKey != "azure.tenantId";
+	}
+
+	/// <summary>
+	/// The Azure CLI counterpart of the API key step: whether <c>az</c> is on
+	/// PATH, the sign-in command, and the role the account needs. shelly
+	/// never runs <c>az login</c> itself (it's interactive).
+	/// </summary>
+	private void WriteAzureCliSignIn(AzureConfig azure)
+	{
+		_io.WriteLine(Strings.AzureCliSignInHeader);
+		string? azPath = AzureCli.Find(_environment.Get);
+		_io.Write(
+			$"  {(azPath is null ? Strings.AzureCliNotFound(AzureCli.INSTALL_URL) : Strings.AzureCliFound(azPath))}\n",
+			azPath is null ? ConsoleColor.Yellow : ConsoleColor.Green);
+		_io.WriteLine($"  {Strings.AzureCliSignIn}");
+		_io.WriteLine();
+		_io.Write($"    {AzureCli.SignInCommand(azure)}\n", ConsoleColor.Yellow);
+		_io.WriteLine();
+		_io.WriteLine($"  {Strings.AzureCliRoleNote(AzureCli.DATA_PLANE_ROLE)}");
 	}
 
 	/// <returns>
@@ -297,7 +369,7 @@ internal sealed class ConfigWizard
 	private ConfigWizardOutcome Save(
 		ShellyConfig config,
 		bool backUpFirst,
-		string apiKeyVariable,
+		string? apiKeyVariable,
 		string? pendingApiKey)
 	{
 		try
@@ -331,9 +403,9 @@ internal sealed class ConfigWizard
 			return ConfigWizardOutcome.Saved;
 		}
 
-		_environment.SetPersistent(apiKeyVariable, pendingApiKey);
+		_environment.SetPersistent(apiKeyVariable!, pendingApiKey);
 		_io.Write(
-			$"{Strings.UserVariableSaved(apiKeyVariable)}\n",
+			$"{Strings.UserVariableSaved(apiKeyVariable!)}\n",
 			ConsoleColor.Green);
 
 		return ConfigWizardOutcome.Saved;

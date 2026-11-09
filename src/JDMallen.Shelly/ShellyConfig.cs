@@ -212,6 +212,89 @@ public sealed class AzureConfig
 	/// reject sampling parameters.
 	/// </summary>
 	public bool ReasoningModel { get; set; }
+
+	/// <summary>
+	/// How requests authenticate: <see cref="API_KEY_AUTH" /> (the default)
+	/// sends <c>AZURE_OPENAI_API_KEY</c>; <see cref="AZURE_CLI_AUTH" /> sends a
+	/// Microsoft Entra ID token from <c>az account get-access-token</c>, for
+	/// resources that use RBAC instead of keys.
+	/// </summary>
+	public string Auth { get; set; } = API_KEY_AUTH;
+
+	/// <summary>
+	/// The Entra ID tenant to get tokens from, as a GUID or domain. Only used
+	/// with <see cref="AZURE_CLI_AUTH" />; empty means az's current tenant.
+	/// </summary>
+	public string TenantId { get; set; } = string.Empty;
+
+	/// <summary>
+	/// The token scope. Only used with <see cref="AZURE_CLI_AUTH" />; empty
+	/// means <see cref="AzureOpenAIScopes.DEFAULT" />.
+	/// </summary>
+	public string TokenScope { get; set; } = string.Empty;
+
+	internal const string API_KEY_AUTH = "apiKey";
+	internal const string AZURE_CLI_AUTH = "azureCli";
+
+	internal bool UsesApiKey =>
+		Auth.Equals(API_KEY_AUTH, StringComparison.OrdinalIgnoreCase);
+
+	internal bool UsesAzureCli =>
+		Auth.Equals(AZURE_CLI_AUTH, StringComparison.OrdinalIgnoreCase);
+
+	/// <summary>
+	/// The Azure CLI token options for <see cref="TenantId" /> and
+	/// <see cref="TokenScope" />, with empty values left at their defaults.
+	/// </summary>
+	internal AzureCliTokenProviderOptions TokenProviderOptions() =>
+		new()
+		{
+			Scope = string.IsNullOrWhiteSpace(TokenScope)
+				? AzureOpenAIScopes.DEFAULT
+				: TokenScope.Trim(),
+			TenantId = string.IsNullOrWhiteSpace(TenantId)
+				? null
+				: TenantId.Trim(),
+		};
+
+	/// <summary>
+	/// The provider for <see cref="AZURE_CLI_AUTH" />, or null with the config
+	/// key that is invalid. Only validates; no <c>az</c> process is started.
+	/// </summary>
+	internal AzureCliTokenProvider? TryCreateTokenProvider(
+		out string? invalidKey)
+	{
+		AzureCliTokenProviderOptions options = TokenProviderOptions();
+		invalidKey = null;
+		try
+		{
+			return new AzureCliTokenProvider(options);
+		}
+		catch (ArgumentException)
+		{
+			// The options are checked as a whole; retry without the tenant to
+			// tell which of the two settings is at fault.
+			invalidKey = IsValid(options with { TenantId = null })
+				? "azure.tenantId"
+				: "azure.tokenScope";
+
+			return null;
+		}
+	}
+
+	private static bool IsValid(AzureCliTokenProviderOptions options)
+	{
+		try
+		{
+			_ = new AzureCliTokenProvider(options);
+
+			return true;
+		}
+		catch (ArgumentException)
+		{
+			return false;
+		}
+	}
 }
 
 /// <summary>

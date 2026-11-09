@@ -133,6 +133,9 @@ one environment variable:
 | Azure OpenAI      | `AZURE_OPENAI_API_KEY`     |
 | OpenAI-compatible | `OPENAI_API_KEY_SHELLY` (optional: self-hosted runners usually accept anonymous requests) |
 
+Azure OpenAI can skip the key and sign in with Microsoft Entra ID instead; see
+[Keyless sign-in](#keyless-sign-in-microsoft-entra-id).
+
 > The Anthropic key is named `ANTHROPIC_API_KEY_SHELLY` (not
 > `ANTHROPIC_API_KEY`) so it doesn't collide with other tools, notably Claude
 > Code, that read the generic name.
@@ -175,7 +178,10 @@ Default contents:
     "endpoint": "",
     "deployment": "",
     "maxTokens": 500,
-    "reasoningModel": false
+    "reasoningModel": false,
+    "auth": "apiKey",
+    "tenantId": "",
+    "tokenScope": ""
   },
   "openai": {
     "baseUrl": "",
@@ -194,8 +200,10 @@ as an alias). You can pin a different Anthropic model with `anthropic.model`.
 
 Set `provider` to `"azure"` and fill in the `azure` block:
 
-- `azure.endpoint`: the resource endpoint, e.g.
-  `https://<your-resource>.openai.azure.com`.
+- `azure.endpoint`: the resource host only, e.g.
+  `https://<your-resource>.openai.azure.com` or
+  `https://<your-resource>.services.ai.azure.com`. A trailing `/openai` or
+  `/openai/v1` pasted from the portal is ignored.
 - `azure.deployment`: your deployment name.
 - `azure.maxTokens`: the generation budget, sent as `max_completion_tokens`.
 - `azure.reasoningModel`: set `true` for a reasoning deployment (o-series,
@@ -211,6 +219,53 @@ environment variables still work when `azure.endpoint` / `azure.deployment`
 are empty, but shelly prints a warning when it falls back to them. Running
 `shelly --config` once offers their values as the defaults, so saving moves
 them into the config file; you can then unset them.
+
+#### Keyless sign-in (Microsoft Entra ID)
+
+For resources that use role-based access instead of API keys, set
+`azure.auth` to `"azureCli"` (or pick it in `shelly --config`). shelly then
+gets a Microsoft Entra ID token from the Azure CLI and sends it in place of
+`AZURE_OPENAI_API_KEY`, which no longer needs to be set:
+
+```json
+"azure": {
+  "endpoint": "https://<your-resource>.openai.azure.com",
+  "deployment": "gpt-6-luna",
+  "reasoningModel": true,
+  "maxTokens": 2048,
+  "auth": "azureCli",
+  "tenantId": "",
+  "tokenScope": ""
+}
+```
+
+1. Install the [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
+   2.54 or later, so `az` is on your PATH.
+2. Sign in once (shelly never runs this for you):
+
+   ```sh
+   az login --scope https://ai.azure.com/.default
+   ```
+
+3. Your account needs the **Cognitive Services OpenAI User** role on the
+   resource. Owner and Contributor are not enough, and a new role assignment
+   can take up to 5 minutes to apply.
+
+Settings:
+
+- `azure.auth`: `"apiKey"` (the default) or `"azureCli"`.
+- `azure.tenantId`: the tenant to sign in to, as a GUID or a domain such as
+  `contoso.onmicrosoft.com`. Leave it empty to use az's current tenant. Set it
+  when your account belongs to more than one tenant, and pass the same value
+  to `az login --tenant`.
+- `azure.tokenScope`: leave empty for `https://ai.azure.com/.default`.
+  `https://cognitiveservices.azure.com/.default` also works.
+
+shelly asks az for a token on the first request of a run (about half a
+second) and reuses it until shortly before it expires. `shelly --info` shows
+the tenant, the scope, where az was found, and the matching `az login`
+command; it never shows a token. If a request fails with 401 or 403, the
+error lists the usual causes (role, propagation delay, endpoint, scope).
 
 ### Local and other OpenAI-compatible models
 

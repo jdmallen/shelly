@@ -106,6 +106,37 @@ internal static class Strings
 
 	public static string ApiKeyOptional => Get(nameof(ApiKeyOptional));
 
+	public static string AzureAuthHeader => Get(nameof(AzureAuthHeader));
+
+	public static string AzureAuthApiKey(string variableName) =>
+		Format("AzureAuthApiKeyFormat", variableName);
+
+	public static string AzureAuthAzureCli => Get(nameof(AzureAuthAzureCli));
+
+	public static string OptionalTextHint => Get(nameof(OptionalTextHint));
+
+	public static string InvalidTenantId => Get(nameof(InvalidTenantId));
+
+	public static string AzureCliSignInHeader
+		=> Get(nameof(AzureCliSignInHeader));
+
+	public static string AzureCliFound(string path) =>
+		Format("AzureCliFoundFormat", path);
+
+	public static string AzureCliNotFound(string installUrl) =>
+		Format("AzureCliNotFoundFormat", installUrl);
+
+	public static string AzureCliSignIn => Get(nameof(AzureCliSignIn));
+
+	public static string AzureCliRoleNote(string roleName) =>
+		Format("AzureCliRoleNoteFormat", roleName);
+
+	public static string InvalidSetting(string settingName, string configPath) =>
+		Format("InvalidSettingFormat", settingName, configPath);
+
+	public static string UnknownAzureAuth(string auth, string configPath) =>
+		Format("UnknownAzureAuthFormat", auth, configPath);
+
 	public static string EnterApiKey => Get(nameof(EnterApiKey));
 
 	public static string Skipped => Get(nameof(Skipped));

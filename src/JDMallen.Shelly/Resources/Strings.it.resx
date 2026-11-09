@@ -276,4 +276,40 @@
 	<data name="UsageNotRecordedFormat" xml:space="preserve">
 		<value>Avviso: impossibile registrare l'uso dei token in {0}: {1}</value>
 	</data>
+	<data name="AzureAuthHeader" xml:space="preserve">
+		<value>Autenticazione:</value>
+	</data>
+	<data name="AzureAuthApiKeyFormat" xml:space="preserve">
+		<value>Chiave API ({0})</value>
+	</data>
+	<data name="AzureAuthAzureCli" xml:space="preserve">
+		<value>Microsoft Entra ID tramite la Azure CLI (az login)</value>
+	</data>
+	<data name="OptionalTextHint" xml:space="preserve">
+		<value>facoltativo, - lo cancella</value>
+	</data>
+	<data name="InvalidTenantId" xml:space="preserve">
+		<value>Inserisci un ID tenant (un GUID) o un dominio come contoso.onmicrosoft.com.</value>
+	</data>
+	<data name="AzureCliSignInHeader" xml:space="preserve">
+		<value>Accesso con la Azure CLI:</value>
+	</data>
+	<data name="AzureCliFoundFormat" xml:space="preserve">
+		<value>az trovato in {0}.</value>
+	</data>
+	<data name="AzureCliNotFoundFormat" xml:space="preserve">
+		<value>az non è stato trovato nel PATH. Installa la Azure CLI (2.54 o successiva): {0}</value>
+	</data>
+	<data name="AzureCliSignIn" xml:space="preserve">
+		<value>Accedi una volta con questo comando; poi shelly ottiene i token da az da solo:</value>
+	</data>
+	<data name="AzureCliRoleNoteFormat" xml:space="preserve">
+		<value>Il tuo account deve avere anche il ruolo '{0}' sulla risorsa. Owner e Contributor non bastano.</value>
+	</data>
+	<data name="InvalidSettingFormat" xml:space="preserve">
+		<value>{0} non è valido. Correggilo in {1}, oppure esegui 'shelly --config'.</value>
+	</data>
+	<data name="UnknownAzureAuthFormat" xml:space="preserve">
+		<value>azure.auth sconosciuto '{0}' in {1}. Valori previsti: 'apiKey' o 'azureCli'.</value>
+	</data>
 </root>

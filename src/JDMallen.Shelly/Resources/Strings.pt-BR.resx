@@ -275,4 +275,40 @@
 	<data name="UsageNotRecordedFormat" xml:space="preserve">
 		<value>Aviso: falha ao registrar o uso de tokens em {0}: {1}</value>
 	</data>
+	<data name="AzureAuthHeader" xml:space="preserve">
+		<value>Autenticação:</value>
+	</data>
+	<data name="AzureAuthApiKeyFormat" xml:space="preserve">
+		<value>Chave de API ({0})</value>
+	</data>
+	<data name="AzureAuthAzureCli" xml:space="preserve">
+		<value>Microsoft Entra ID pela Azure CLI (az login)</value>
+	</data>
+	<data name="OptionalTextHint" xml:space="preserve">
+		<value>opcional, - limpa o valor</value>
+	</data>
+	<data name="InvalidTenantId" xml:space="preserve">
+		<value>Informe um ID de locatário (um GUID) ou um domínio como contoso.onmicrosoft.com.</value>
+	</data>
+	<data name="AzureCliSignInHeader" xml:space="preserve">
+		<value>Login pela Azure CLI:</value>
+	</data>
+	<data name="AzureCliFoundFormat" xml:space="preserve">
+		<value>az encontrado em {0}.</value>
+	</data>
+	<data name="AzureCliNotFoundFormat" xml:space="preserve">
+		<value>az não foi encontrado no PATH. Instale a Azure CLI (2.54 ou posterior): {0}</value>
+	</data>
+	<data name="AzureCliSignIn" xml:space="preserve">
+		<value>Faça login uma vez com este comando; depois o shelly obtém os tokens do az sozinho:</value>
+	</data>
+	<data name="AzureCliRoleNoteFormat" xml:space="preserve">
+		<value>Sua conta também precisa da função '{0}' no recurso. Owner e Contributor não bastam.</value>
+	</data>
+	<data name="InvalidSettingFormat" xml:space="preserve">
+		<value>{0} não é válido. Corrija em {1}, ou execute 'shelly --config'.</value>
+	</data>
+	<data name="UnknownAzureAuthFormat" xml:space="preserve">
+		<value>azure.auth desconhecido '{0}' em {1}. Esperado 'apiKey' ou 'azureCli'.</value>
+	</data>
 </root>

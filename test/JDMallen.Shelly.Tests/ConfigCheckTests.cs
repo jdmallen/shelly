@@ -121,4 +121,67 @@ public class ConfigCheckTests
 
 		Assert.Empty(FindMissing(config));
 	}
+
+	private static ShellyConfig AzureCliConfig(
+		string tenantId = "",
+		string tokenScope = "",
+		string auth = AzureConfig.AZURE_CLI_AUTH) =>
+		new()
+		{
+			Provider = "azure",
+			Azure = new AzureConfig
+			{
+				Endpoint = "https://example.openai.azure.com",
+				Deployment = "gpt-6-luna",
+				Auth = auth,
+				TenantId = tenantId,
+				TokenScope = tokenScope,
+			},
+		};
+
+	[Fact]
+	public void Azure_AzureCli_NeedsAzNotKey() => Assert.Equal(
+		[ConfigCheck.AZURE_CLI],
+		FindMissing(AzureCliConfig()));
+
+	[Theory]
+	[InlineData(AzureConfig.AZURE_CLI_AUTH)]
+	[InlineData("AZURECLI")]
+	public void Azure_AzureCli_WithAzOnPath_IsReady(string auth)
+	{
+		DirectoryInfo binDirectory =
+			Directory.CreateTempSubdirectory("shelly-az-");
+		try
+		{
+			File.WriteAllText(
+				Path.Combine(binDirectory.FullName, "az"),
+				string.Empty);
+			File.WriteAllText(
+				Path.Combine(binDirectory.FullName, "az.cmd"),
+				string.Empty);
+			_environment["PATH"] = binDirectory.FullName;
+
+			Assert.Empty(FindMissing(AzureCliConfig(auth: auth)));
+		}
+		finally
+		{
+			binDirectory.Delete(true);
+		}
+	}
+
+	[Theory]
+	[InlineData("not a tenant!", "", "azure.tenantId")]
+	[InlineData("", "http://insecure.example/.default", "azure.tokenScope")]
+	[InlineData("contoso.onmicrosoft.com", "not a url", "azure.tokenScope")]
+	public void Azure_AzureCli_InvalidSetting_IsListed(
+		string tenantId,
+		string tokenScope,
+		string expectedKey) => Assert.Equal(
+		[expectedKey, ConfigCheck.AZURE_CLI],
+		FindMissing(AzureCliConfig(tenantId, tokenScope)));
+
+	[Fact]
+	public void Azure_UnknownAuth_NeedsAuth() => Assert.Equal(
+		["azure.auth"],
+		FindMissing(AzureCliConfig(auth: "managedIdentity")));
 }

@@ -274,4 +274,40 @@
 	<data name="UsageNotRecordedFormat" xml:space="preserve">
 		<value>Cảnh báo: không thể ghi lượng token đã dùng vào {0}: {1}</value>
 	</data>
+	<data name="AzureAuthHeader" xml:space="preserve">
+		<value>Xác thực:</value>
+	</data>
+	<data name="AzureAuthApiKeyFormat" xml:space="preserve">
+		<value>Khóa API ({0})</value>
+	</data>
+	<data name="AzureAuthAzureCli" xml:space="preserve">
+		<value>Microsoft Entra ID qua Azure CLI (az login)</value>
+	</data>
+	<data name="OptionalTextHint" xml:space="preserve">
+		<value>tùy chọn, - để xóa</value>
+	</data>
+	<data name="InvalidTenantId" xml:space="preserve">
+		<value>Nhập ID tenant (GUID) hoặc tên miền như contoso.onmicrosoft.com.</value>
+	</data>
+	<data name="AzureCliSignInHeader" xml:space="preserve">
+		<value>Đăng nhập bằng Azure CLI:</value>
+	</data>
+	<data name="AzureCliFoundFormat" xml:space="preserve">
+		<value>Đã tìm thấy az tại {0}.</value>
+	</data>
+	<data name="AzureCliNotFoundFormat" xml:space="preserve">
+		<value>Không tìm thấy az trong PATH. Hãy cài Azure CLI (2.54 trở lên): {0}</value>
+	</data>
+	<data name="AzureCliSignIn" xml:space="preserve">
+		<value>Đăng nhập một lần bằng lệnh này; sau đó shelly tự lấy token từ az:</value>
+	</data>
+	<data name="AzureCliRoleNoteFormat" xml:space="preserve">
+		<value>Tài khoản của bạn cũng cần vai trò '{0}' trên tài nguyên. Owner và Contributor là không đủ.</value>
+	</data>
+	<data name="InvalidSettingFormat" xml:space="preserve">
+		<value>{0} không hợp lệ. Hãy sửa trong {1}, hoặc chạy 'shelly --config'.</value>
+	</data>
+	<data name="UnknownAzureAuthFormat" xml:space="preserve">
+		<value>azure.auth không xác định '{0}' trong {1}. Cần là 'apiKey' hoặc 'azureCli'.</value>
+	</data>
 </root>

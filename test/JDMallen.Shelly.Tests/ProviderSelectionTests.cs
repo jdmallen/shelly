@@ -1,5 +1,7 @@
 using System.Text.Json;
 
+using JDMallen.Toolbox.AI;
+
 using Xunit;
 
 namespace JDMallen.Shelly.Tests;
@@ -141,6 +143,53 @@ public class ProviderSelectionTests
 		Assert.Null(provider);
 		Assert.Contains("azure.maxTokens", error);
 	}
+
+	private static ShellyConfig AzureConfigWithAuth(
+		string auth,
+		string tenantId = "") =>
+		new()
+		{
+			Provider = "azure",
+			Azure = new AzureConfig
+			{
+				Endpoint = "https://example.openai.azure.com",
+				Deployment = "gpt-6-luna",
+				Auth = auth,
+				TenantId = tenantId,
+			},
+		};
+
+	// No az process starts here: the token is fetched on the first request.
+	[Fact]
+	public void CreateProvider_AzureCli_SucceedsWithoutApiKey()
+	{
+		(IChatProvider? provider, string error) = Create(
+			AzureConfigWithAuth(AzureConfig.AZURE_CLI_AUTH));
+
+		Assert.NotNull(provider);
+		Assert.Empty(error);
+	}
+
+	[Fact]
+	public void CreateProvider_AzureCliInvalidTenant_FailsNamingTheSetting()
+	{
+		(IChatProvider? provider, string error) = Create(
+			AzureConfigWithAuth(AzureConfig.AZURE_CLI_AUTH, "not a tenant!"));
+
+		Assert.Null(provider);
+		Assert.Contains("azure.tenantId", error);
+	}
+
+	[Fact]
+	public void CreateProvider_AzureUnknownAuth_FailsListingTheOptions()
+	{
+		(IChatProvider? provider, string error) = Create(
+			AzureConfigWithAuth("managedIdentity"));
+
+		Assert.Null(provider);
+		Assert.Contains("'managedIdentity'", error);
+		Assert.Contains("'apiKey' or 'azureCli'", error);
+	}
 }
 
 public class ShellyConfigTests
@@ -230,5 +279,39 @@ public class ShellyConfigTests
 		Assert.Contains("\"openai\"", json);
 		Assert.Contains("\"baseUrl\"", json);
 		Assert.Contains("\"timeoutSeconds\"", json);
+	}
+
+	[Fact]
+	public void Deserialize_AzureAuth_DefaultsToApiKey()
+	{
+		AzureConfig defaults = Deserialize("{ \"provider\": \"azure\" }").Azure;
+		Assert.Equal(AzureConfig.API_KEY_AUTH, defaults.Auth);
+		Assert.True(defaults.UsesApiKey);
+		Assert.Equal(string.Empty, defaults.TenantId);
+		Assert.Equal(string.Empty, defaults.TokenScope);
+
+		AzureConfig azureCli = Deserialize(
+				"{ \"azure\": { \"auth\": \"azureCli\", \"tenantId\": \"contoso.onmicrosoft.com\", \"tokenScope\": \"https://cognitiveservices.azure.com/.default\" } }")
+			.Azure;
+		Assert.True(azureCli.UsesAzureCli);
+		Assert.Equal(
+			new AzureCliTokenProviderOptions
+			{
+				TenantId = "contoso.onmicrosoft.com",
+				Scope = AzureOpenAIScopes.COGNITIVE_SERVICES,
+			},
+			azureCli.TokenProviderOptions());
+	}
+
+	[Fact]
+	public void Serialize_WritesAzureAuthSettingsAsATemplate()
+	{
+		string json = JsonSerializer.Serialize(
+			new ShellyConfig(),
+			ShellyConfigJsonContext.Default.ShellyConfig);
+
+		Assert.Contains("\"auth\": \"apiKey\"", json);
+		Assert.Contains("\"tenantId\"", json);
+		Assert.Contains("\"tokenScope\"", json);
 	}
 }

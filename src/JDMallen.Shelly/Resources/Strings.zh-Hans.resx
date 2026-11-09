@@ -274,4 +274,40 @@
 	<data name="UsageNotRecordedFormat" xml:space="preserve">
 		<value>警告：无法将 Token 用量记录到 {0}：{1}</value>
 	</data>
+	<data name="AzureAuthHeader" xml:space="preserve">
+		<value>身份验证：</value>
+	</data>
+	<data name="AzureAuthApiKeyFormat" xml:space="preserve">
+		<value>API 密钥 ({0})</value>
+	</data>
+	<data name="AzureAuthAzureCli" xml:space="preserve">
+		<value>通过 Azure CLI 使用 Microsoft Entra ID (az login)</value>
+	</data>
+	<data name="OptionalTextHint" xml:space="preserve">
+		<value>可选，输入 - 可清除</value>
+	</data>
+	<data name="InvalidTenantId" xml:space="preserve">
+		<value>请输入租户 ID（GUID）或域名，例如 contoso.onmicrosoft.com。</value>
+	</data>
+	<data name="AzureCliSignInHeader" xml:space="preserve">
+		<value>Azure CLI 登录：</value>
+	</data>
+	<data name="AzureCliFoundFormat" xml:space="preserve">
+		<value>已找到 az：{0}</value>
+	</data>
+	<data name="AzureCliNotFoundFormat" xml:space="preserve">
+		<value>在 PATH 中找不到 az。请安装 Azure CLI（2.54 或更高版本）：{0}</value>
+	</data>
+	<data name="AzureCliSignIn" xml:space="preserve">
+		<value>请用此命令登录一次；之后 shelly 会自行从 az 获取令牌：</value>
+	</data>
+	<data name="AzureCliRoleNoteFormat" xml:space="preserve">
+		<value>你的账户还需要该资源上的 '{0}' 角色。Owner 和 Contributor 不够。</value>
+	</data>
+	<data name="InvalidSettingFormat" xml:space="preserve">
+		<value>{0} 无效。请在 {1} 中修正，或运行 'shelly --config'。</value>
+	</data>
+	<data name="UnknownAzureAuthFormat" xml:space="preserve">
+		<value>{1} 中的 azure.auth '{0}' 未知。应为 'apiKey' 或 'azureCli'。</value>
+	</data>
 </root>

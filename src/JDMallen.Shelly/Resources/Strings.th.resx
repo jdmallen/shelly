@@ -274,4 +274,40 @@
 	<data name="UsageNotRecordedFormat" xml:space="preserve">
 		<value>คำเตือน: บันทึกการใช้โทเค็นลงใน {0} ไม่สำเร็จ: {1}</value>
 	</data>
+	<data name="AzureAuthHeader" xml:space="preserve">
+		<value>การยืนยันตัวตน:</value>
+	</data>
+	<data name="AzureAuthApiKeyFormat" xml:space="preserve">
+		<value>คีย์ API ({0})</value>
+	</data>
+	<data name="AzureAuthAzureCli" xml:space="preserve">
+		<value>Microsoft Entra ID ผ่าน Azure CLI (az login)</value>
+	</data>
+	<data name="OptionalTextHint" xml:space="preserve">
+		<value>ไม่บังคับ, - เพื่อล้างค่า</value>
+	</data>
+	<data name="InvalidTenantId" xml:space="preserve">
+		<value>ป้อน ID ผู้เช่า (GUID) หรือโดเมน เช่น contoso.onmicrosoft.com</value>
+	</data>
+	<data name="AzureCliSignInHeader" xml:space="preserve">
+		<value>ลงชื่อเข้าใช้ด้วย Azure CLI:</value>
+	</data>
+	<data name="AzureCliFoundFormat" xml:space="preserve">
+		<value>พบ az ที่ {0}</value>
+	</data>
+	<data name="AzureCliNotFoundFormat" xml:space="preserve">
+		<value>ไม่พบ az ใน PATH ให้ติดตั้ง Azure CLI (2.54 ขึ้นไป): {0}</value>
+	</data>
+	<data name="AzureCliSignIn" xml:space="preserve">
+		<value>ลงชื่อเข้าใช้หนึ่งครั้งด้วยคำสั่งนี้ จากนั้น shelly จะขอโทเค็นจาก az เอง:</value>
+	</data>
+	<data name="AzureCliRoleNoteFormat" xml:space="preserve">
+		<value>บัญชีของคุณต้องมีบทบาท '{0}' บนทรัพยากรนั้นด้วย Owner และ Contributor ไม่เพียงพอ</value>
+	</data>
+	<data name="InvalidSettingFormat" xml:space="preserve">
+		<value>{0} ไม่ถูกต้อง ให้แก้ไขใน {1} หรือเรียกใช้ 'shelly --config'</value>
+	</data>
+	<data name="UnknownAzureAuthFormat" xml:space="preserve">
+		<value>ไม่รู้จัก azure.auth '{0}' ใน {1} ต้องเป็น 'apiKey' หรือ 'azureCli'</value>
+	</data>
 </root>

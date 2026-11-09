@@ -135,6 +135,43 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 		}
 	}
 
+	/// <summary>
+	/// Reads a value that may be left empty: Enter keeps
+	/// <paramref name="current" />, a lone <c>-</c> clears it, and anything
+	/// else must pass <paramref name="validate" />.
+	/// </summary>
+	public string OptionalText(
+		string label,
+		string current,
+		Func<string, string?>? validate = null)
+	{
+		const string clear = "-";
+		string labelWithHint = $"{label} ({Strings.OptionalTextHint})";
+		while (true)
+		{
+			WriteLabel(labelWithHint, current);
+			string? line = io.ReadLine();
+			if (line is null || string.IsNullOrWhiteSpace(line))
+			{
+				return current;
+			}
+
+			string value = line.Trim();
+			if (value == clear)
+			{
+				return string.Empty;
+			}
+
+			string? error = validate?.Invoke(value);
+			if (error is null)
+			{
+				return value;
+			}
+
+			io.Write($"{INDENT}{error}\n", ConsoleColor.Yellow);
+		}
+	}
+
 	/// <summary>Reads a whole number greater than zero.</summary>
 	public int PositiveInteger(string label, int current)
 	{

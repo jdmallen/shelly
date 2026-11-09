@@ -274,4 +274,40 @@
 	<data name="UsageNotRecordedFormat" xml:space="preserve">
 		<value>Upozornění: nepodařilo se zaznamenat spotřebu tokenů do {0}: {1}</value>
 	</data>
+	<data name="AzureAuthHeader" xml:space="preserve">
+		<value>Ověření:</value>
+	</data>
+	<data name="AzureAuthApiKeyFormat" xml:space="preserve">
+		<value>Klíč API ({0})</value>
+	</data>
+	<data name="AzureAuthAzureCli" xml:space="preserve">
+		<value>Microsoft Entra ID přes Azure CLI (az login)</value>
+	</data>
+	<data name="OptionalTextHint" xml:space="preserve">
+		<value>volitelné, - hodnotu smaže</value>
+	</data>
+	<data name="InvalidTenantId" xml:space="preserve">
+		<value>Zadej ID tenanta (GUID) nebo doménu, například contoso.onmicrosoft.com.</value>
+	</data>
+	<data name="AzureCliSignInHeader" xml:space="preserve">
+		<value>Přihlášení přes Azure CLI:</value>
+	</data>
+	<data name="AzureCliFoundFormat" xml:space="preserve">
+		<value>az nalezeno v {0}.</value>
+	</data>
+	<data name="AzureCliNotFoundFormat" xml:space="preserve">
+		<value>az nebylo nalezeno v PATH. Nainstaluj Azure CLI (2.54 nebo novější): {0}</value>
+	</data>
+	<data name="AzureCliSignIn" xml:space="preserve">
+		<value>Jednou se přihlas tímto příkazem; shelly pak získává tokeny z az sám:</value>
+	</data>
+	<data name="AzureCliRoleNoteFormat" xml:space="preserve">
+		<value>Tvůj účet navíc potřebuje roli '{0}' na daném prostředku. Owner a Contributor nestačí.</value>
+	</data>
+	<data name="InvalidSettingFormat" xml:space="preserve">
+		<value>{0} není platné. Oprav to v {1}, nebo spusť 'shelly --config'.</value>
+	</data>
+	<data name="UnknownAzureAuthFormat" xml:space="preserve">
+		<value>Neznámé azure.auth '{0}' v {1}. Očekáváno 'apiKey' nebo 'azureCli'.</value>
+	</data>
 </root>

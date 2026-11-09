@@ -46,10 +46,60 @@ public class InfoReportTests
 			report.ReplaceLineEndings("\n"));
 		Assert.Contains("reasoning:  yes (temperature not sent)", report);
 		Assert.Contains("max tokens: 2048", report);
+		Assert.Contains("auth:       api key", report);
 		Assert.Contains("api key:    AZURE_OPENAI_API_KEY is set", report);
 		Assert.Contains("shell:      Zsh (/usr/bin/zsh -c)", report);
 		Assert.DoesNotContain(SECRET, report);
 	}
+
+	[Fact]
+	public void Azure_AzureCli_ReportsTenantScopeAndSignInButNoKey()
+	{
+		_environment[ChatProvider.AZURE_API_KEY_ENV_VAR] = SECRET;
+
+		string report = Build(
+			new ShellyConfig
+			{
+				Provider = "azure",
+				Azure = new AzureConfig
+				{
+					Endpoint = "https://example.openai.azure.com",
+					Deployment = "gpt-6-luna",
+					Auth = AzureConfig.AZURE_CLI_AUTH,
+					TenantId = "contoso.onmicrosoft.com",
+				},
+			}).ReplaceLineEndings("\n");
+
+		Assert.Contains("auth:       Microsoft Entra ID via the Azure CLI\n", report);
+		Assert.Contains("tenant:     contoso.onmicrosoft.com\n", report);
+		Assert.Contains("scope:      https://ai.azure.com/.default\n", report);
+		Assert.Contains("az:         not found on PATH", report);
+		Assert.Contains(
+			"sign in:    az login --tenant contoso.onmicrosoft.com --scope https://ai.azure.com/.default\n",
+			report);
+		Assert.DoesNotContain("api key", report);
+		Assert.DoesNotContain(SECRET, report);
+	}
+
+	[Fact]
+	public void Azure_AzureCli_NoTenant_SaysCurrentTenant() => Assert.Contains(
+		"tenant:     (az's current tenant)",
+		Build(
+			new ShellyConfig
+			{
+				Provider = "azure",
+				Azure = { Auth = AzureConfig.AZURE_CLI_AUTH },
+			}));
+
+	[Fact]
+	public void Azure_UnknownAuth_SaysSo() => Assert.Contains(
+		"auth:       managedIdentity (unknown; expected apiKey or azureCli)",
+		Build(
+			new ShellyConfig
+			{
+				Provider = "azure",
+				Azure = { Auth = "managedIdentity" },
+			}));
 
 	[Fact]
 	public void Azure_DeprecatedVariables_ReportedAsDeprecated()

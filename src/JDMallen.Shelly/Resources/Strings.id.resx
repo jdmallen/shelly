@@ -275,4 +275,40 @@
 	<data name="UsageNotRecordedFormat" xml:space="preserve">
 		<value>Peringatan: gagal mencatat penggunaan token di {0}: {1}</value>
 	</data>
+	<data name="AzureAuthHeader" xml:space="preserve">
+		<value>Autentikasi:</value>
+	</data>
+	<data name="AzureAuthApiKeyFormat" xml:space="preserve">
+		<value>Kunci API ({0})</value>
+	</data>
+	<data name="AzureAuthAzureCli" xml:space="preserve">
+		<value>Microsoft Entra ID melalui Azure CLI (az login)</value>
+	</data>
+	<data name="OptionalTextHint" xml:space="preserve">
+		<value>opsional, - mengosongkannya</value>
+	</data>
+	<data name="InvalidTenantId" xml:space="preserve">
+		<value>Masukkan ID tenant (GUID) atau domain seperti contoso.onmicrosoft.com.</value>
+	</data>
+	<data name="AzureCliSignInHeader" xml:space="preserve">
+		<value>Masuk dengan Azure CLI:</value>
+	</data>
+	<data name="AzureCliFoundFormat" xml:space="preserve">
+		<value>az ditemukan di {0}.</value>
+	</data>
+	<data name="AzureCliNotFoundFormat" xml:space="preserve">
+		<value>az tidak ditemukan di PATH. Instal Azure CLI (2.54 atau lebih baru): {0}</value>
+	</data>
+	<data name="AzureCliSignIn" xml:space="preserve">
+		<value>Masuk sekali dengan perintah ini; setelah itu shelly mengambil token dari az sendiri:</value>
+	</data>
+	<data name="AzureCliRoleNoteFormat" xml:space="preserve">
+		<value>Akunmu juga memerlukan peran '{0}' pada sumber daya tersebut. Owner dan Contributor tidak cukup.</value>
+	</data>
+	<data name="InvalidSettingFormat" xml:space="preserve">
+		<value>{0} tidak valid. Perbaiki di {1}, atau jalankan 'shelly --config'.</value>
+	</data>
+	<data name="UnknownAzureAuthFormat" xml:space="preserve">
+		<value>azure.auth tidak dikenal '{0}' di {1}. Seharusnya 'apiKey' atau 'azureCli'.</value>
+	</data>
 </root>

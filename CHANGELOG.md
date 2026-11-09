@@ -5,6 +5,31 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0]
+
+### Added
+
+- **Keyless Azure OpenAI (Microsoft Entra ID).** Set `azure.auth` to
+  `"azureCli"` and shelly sends a Microsoft Entra ID token from the Azure CLI
+  (`az login`) instead of `AZURE_OPENAI_API_KEY`, for resources that use
+  role-based access instead of keys. Optional `azure.tenantId` and
+  `azure.tokenScope` settings pick the tenant and scope. The token is fetched
+  on the first request and reused until shortly before it expires.
+  `"apiKey"` stays the default, so existing configs are unchanged.
+- `shelly --config` asks for the Azure authentication method. For the Azure
+  CLI it asks for an optional tenant (`-` clears it), skips the API key step,
+  and instead reports whether `az` is on PATH and prints the `az login`
+  command and the role the account needs.
+- `shelly --info` reports the Azure authentication method, and for the Azure
+  CLI the tenant, scope, az's location and the sign-in command.
+- The main menu's "needs setup" list names `az` when the Azure CLI isn't on
+  PATH, and `azure.auth`, `azure.tenantId` or `azure.tokenScope` when one is
+  invalid.
+
+### Changed
+
+- Requires `JDMallen.Toolbox.AI` 4.5.0.
+
 ## [1.6.1]
 
 ### Changed

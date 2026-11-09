@@ -344,26 +344,71 @@ public static class Program
 		WarnIfDeprecated(endpoint, "azure.endpoint");
 		WarnIfDeprecated(deployment, "azure.deployment");
 
-		string? apiKey =
-			Environment.GetEnvironmentVariable(
-				ChatProvider.AZURE_API_KEY_ENV_VAR);
-		if (string.IsNullOrEmpty(apiKey))
+		AzureOpenAIClientOptions? options =
+			CreateAzureOptions(cfg, endpoint.Value!, deployment.Value!);
+		if (options is null)
 		{
-			return Fail(
-				Strings.EnvVarNotSet(ChatProvider.AZURE_API_KEY_ENV_VAR));
+			return null;
 		}
 
 		return new ChatProvider(
 			new AzureOpenAIChatClient(
 				CreateHttpClient(HOSTED_TIMEOUT_SECONDS),
-				new AzureOpenAIClientOptions(
-					apiKey,
-					endpoint.Value!,
-					deployment.Value!)
-				{
-					IsReasoningModel = cfg.ReasoningModel,
-				}),
+				options with { IsReasoningModel = cfg.ReasoningModel }),
 			cfg.MaxTokens);
+	}
+
+	/// <summary>
+	/// Client options for <see cref="AzureConfig.Auth" />: the API key from
+	/// its environment variable, or an Entra ID token from the Azure CLI, which
+	/// is fetched on the first request and cached until shortly before it
+	/// expires. Null (after printing why) when the auth setup is incomplete.
+	/// </summary>
+	private static AzureOpenAIClientOptions? CreateAzureOptions(
+		AzureConfig cfg,
+		string endpoint,
+		string deployment)
+	{
+		if (cfg.UsesAzureCli)
+		{
+			AzureCliTokenProvider? tokenProvider =
+				cfg.TryCreateTokenProvider(out string? invalidKey);
+			if (tokenProvider is not null)
+			{
+				return AzureOpenAIClientOptions.ForEntraId(
+					endpoint,
+					deployment,
+					new CachingBearerTokenProvider(tokenProvider));
+			}
+
+			Fail(
+				Strings.InvalidSetting(
+					invalidKey!,
+					ShellyConfig.ConfigPath()));
+
+			return null;
+
+		}
+
+		if (!cfg.UsesApiKey)
+		{
+			Fail(Strings.UnknownAzureAuth(cfg.Auth, ShellyConfig.ConfigPath()));
+
+			return null;
+		}
+
+		string? apiKey =
+			Environment.GetEnvironmentVariable(
+				ChatProvider.AZURE_API_KEY_ENV_VAR);
+		if (!string.IsNullOrEmpty(apiKey))
+		{
+			return new AzureOpenAIClientOptions(apiKey, endpoint, deployment);
+		}
+
+		Fail(Strings.EnvVarNotSet(ChatProvider.AZURE_API_KEY_ENV_VAR));
+
+		return null;
+
 	}
 
 	private static void WarnIfDeprecated(AzureSetting setting, string configKey)
