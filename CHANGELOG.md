@@ -5,6 +5,31 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0]
+
+### Added
+
+- **Keyless Azure OpenAI without the Azure CLI.** Set `azure.auth` to
+  `"azureIdentity"` to sign in through a browser. The first request opens the
+  sign-in page; the tokens then stay in an encrypted cache in the system
+  keyring, and `auth-record.json` next to `config.json` remembers the account,
+  so later runs are silent.
+- `azure.credential` picks the sign-in: `interactiveBrowser` (default),
+  `deviceCode`, `default` (`DefaultAzureCredential`), `azureCli` or `azd`.
+- `shelly --config` offers the browser sign-in as a third authentication
+  method, then asks for the credential and an optional tenant, noting that
+  personal Microsoft accounts need one.
+- `shelly --info` reports the credential, tenant, scope and whether a sign-in
+  is saved. The main menu's "needs setup" list names `azure.credential` when
+  it is unknown.
+
+### Changed
+
+- Requires `JDMallen.Toolbox.AI` 4.6.0 and adds `JDMallen.Toolbox.AI.Azure`
+  4.6.0. The native binary grows from about 7.7 MB to 14 MB.
+- `shelly --config` text prompts accept a value wrapped in quotes (e.g. a
+  pasted `"<tenant id>"`); one matching pair of surrounding quotes is removed.
+
 ## [1.7.0]
 
 ### Added

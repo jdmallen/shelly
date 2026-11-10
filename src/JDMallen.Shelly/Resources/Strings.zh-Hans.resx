@@ -283,6 +283,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>通过 Azure CLI 使用 Microsoft Entra ID (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>通过浏览器登录的 Microsoft Entra ID (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>登录方式：</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>个人 Microsoft 帐户需要 azure.tenantId；'az account show --query tenantId' 可显示该值。</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Microsoft Entra ID 登录：</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly 会在首次请求时获取令牌。通过浏览器或设备代码完成的登录会保存在系统密钥环中，因此只需登录一次。</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>可选，输入 - 可清除</value>
 	</data>
@@ -308,6 +323,6 @@
 		<value>{0} 无效。请在 {1} 中修正，或运行 'shelly --config'。</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>{1} 中的 azure.auth '{0}' 未知。应为 'apiKey' 或 'azureCli'。</value>
+		<value>{1} 中的 azure.auth '{0}' 未知。应为 'apiKey'、'azureCli' 或 'azureIdentity'。</value>
 	</data>
 </root>

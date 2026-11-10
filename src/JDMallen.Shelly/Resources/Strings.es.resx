@@ -285,6 +285,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Microsoft Entra ID mediante la Azure CLI (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Microsoft Entra ID con inicio de sesión en el navegador (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>Iniciar sesión con:</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>Una cuenta personal de Microsoft necesita azure.tenantId; 'az account show --query tenantId' lo muestra.</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Inicio de sesión con Microsoft Entra ID:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly obtiene un token en la primera solicitud. El inicio de sesión en el navegador o con código de dispositivo se guarda en el llavero del sistema, así que solo inicias sesión una vez.</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>opcional, - lo borra</value>
 	</data>
@@ -310,6 +325,6 @@
 		<value>{0} no es válido. Corrígelo en {1}, o ejecuta 'shelly --config'.</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>azure.auth desconocido '{0}' en {1}. Se esperaba 'apiKey' o 'azureCli'.</value>
+		<value>azure.auth desconocido '{0}' en {1}. Se esperaba 'apiKey', 'azureCli' o 'azureIdentity'.</value>
 	</data>
 </root>

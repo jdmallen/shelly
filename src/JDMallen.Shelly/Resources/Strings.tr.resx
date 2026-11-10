@@ -283,6 +283,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Azure CLI üzerinden Microsoft Entra ID (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Tarayıcıda oturum açmalı Microsoft Entra ID (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>Oturum açma yöntemi:</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>Kişisel bir Microsoft hesabı azure.tenantId gerektirir; 'az account show --query tenantId' bunu gösterir.</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Microsoft Entra ID ile oturum açma:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly ilk istekte bir belirteç alır. Tarayıcıda veya cihaz koduyla açılan oturum sistem anahtarlığında saklanır, yani yalnızca bir kez oturum açarsın.</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>isteğe bağlı, - değeri temizler</value>
 	</data>
@@ -308,6 +323,6 @@
 		<value>{0} geçersiz. {1} içinde düzelt veya 'shelly --config' çalıştır.</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>{1} içinde bilinmeyen azure.auth '{0}'. 'apiKey' veya 'azureCli' bekleniyordu.</value>
+		<value>{1} içinde bilinmeyen azure.auth '{0}'. 'apiKey', 'azureCli' veya 'azureIdentity' bekleniyordu.</value>
 	</data>
 </root>

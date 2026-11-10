@@ -284,6 +284,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Microsoft Entra ID melalui Azure CLI (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Microsoft Entra ID dengan masuk lewat browser (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>Masuk dengan:</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>Akun Microsoft pribadi memerlukan azure.tenantId; 'az account show --query tenantId' menampilkannya.</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Masuk dengan Microsoft Entra ID:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly mengambil token pada permintaan pertama. Masuk lewat browser atau kode perangkat disimpan di keyring sistem, jadi kamu cukup masuk sekali.</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>opsional, - mengosongkannya</value>
 	</data>
@@ -309,6 +324,6 @@
 		<value>{0} tidak valid. Perbaiki di {1}, atau jalankan 'shelly --config'.</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>azure.auth tidak dikenal '{0}' di {1}. Seharusnya 'apiKey' atau 'azureCli'.</value>
+		<value>azure.auth tidak dikenal '{0}' di {1}. Seharusnya 'apiKey', 'azureCli' atau 'azureIdentity'.</value>
 	</data>
 </root>

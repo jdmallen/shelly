@@ -283,6 +283,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Microsoft Entra ID через Azure CLI (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Microsoft Entra ID со входом через браузер (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>Способ входа:</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>Личной учетной записи Microsoft нужен azure.tenantId; его выводит 'az account show --query tenantId'.</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Вход через Microsoft Entra ID:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly получает токен при первом запросе. Вход через браузер или по коду устройства сохраняется в системной связке ключей, поэтому входить нужно только один раз.</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>необязательно, - очищает значение</value>
 	</data>
@@ -308,6 +323,6 @@
 		<value>Недопустимое значение {0}. Исправьте его в {1} или выполните 'shelly --config'.</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>Неизвестное значение azure.auth '{0}' в {1}. Ожидается 'apiKey' или 'azureCli'.</value>
+		<value>Неизвестное значение azure.auth '{0}' в {1}. Ожидается 'apiKey', 'azureCli' или 'azureIdentity'.</value>
 	</data>
 </root>

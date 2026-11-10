@@ -76,8 +76,10 @@ internal static class ConfigCheck
 
 	/// <summary>
 	/// The key variable for <c>apiKey</c>; for <c>azureCli</c>, valid tenant and
-	/// scope settings and an <c>az</c> on PATH. Whether az is signed in isn't
-	/// checked: that would start a process and may touch the network.
+	/// scope settings and an <c>az</c> on PATH; for <c>azureIdentity</c>, a
+	/// known credential and valid tenant and scope. Whether anyone is signed in
+	/// isn't checked: that would start a process or touch the network, and a
+	/// browser sign-in happens on the first request anyway.
 	/// </summary>
 	private static void AddAzureAuth(
 		List<string> missing,
@@ -87,6 +89,14 @@ internal static class ConfigCheck
 		if (azure.UsesApiKey)
 		{
 			AddIfUnset(missing, getEnv, ChatProvider.AZURE_API_KEY_ENV_VAR);
+		}
+		else if (azure.UsesAzureIdentity)
+		{
+			AddIf(missing, azure.CredentialKind is null, "azure.credential");
+			if (azure.TryCreateTokenProvider(out string? invalidKey) is null)
+			{
+				missing.Add(invalidKey!);
+			}
 		}
 		else if (azure.UsesAzureCli)
 		{

@@ -113,6 +113,21 @@ internal static class Strings
 
 	public static string AzureAuthAzureCli => Get(nameof(AzureAuthAzureCli));
 
+	public static string AzureAuthAzureIdentity
+		=> Get(nameof(AzureAuthAzureIdentity));
+
+	public static string AzureCredentialHeader
+		=> Get(nameof(AzureCredentialHeader));
+
+	public static string AzureIdentityTenantHint
+		=> Get(nameof(AzureIdentityTenantHint));
+
+	public static string AzureIdentitySignInHeader
+		=> Get(nameof(AzureIdentitySignInHeader));
+
+	public static string AzureIdentitySignInNote
+		=> Get(nameof(AzureIdentitySignInNote));
+
 	public static string OptionalTextHint => Get(nameof(OptionalTextHint));
 
 	public static string InvalidTenantId => Get(nameof(InvalidTenantId));

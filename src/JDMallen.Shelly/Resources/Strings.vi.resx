@@ -283,6 +283,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Microsoft Entra ID qua Azure CLI (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Microsoft Entra ID với đăng nhập qua trình duyệt (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>Đăng nhập bằng:</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>Tài khoản Microsoft cá nhân cần azure.tenantId; 'az account show --query tenantId' sẽ in ra giá trị này.</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Đăng nhập bằng Microsoft Entra ID:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly lấy token ở yêu cầu đầu tiên. Đăng nhập qua trình duyệt hoặc mã thiết bị được ghi nhớ trong keyring của hệ thống, nên bạn chỉ cần đăng nhập một lần.</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>tùy chọn, - để xóa</value>
 	</data>
@@ -308,6 +323,6 @@
 		<value>{0} không hợp lệ. Hãy sửa trong {1}, hoặc chạy 'shelly --config'.</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>azure.auth không xác định '{0}' trong {1}. Cần là 'apiKey' hoặc 'azureCli'.</value>
+		<value>azure.auth không xác định '{0}' trong {1}. Cần là 'apiKey', 'azureCli' hoặc 'azureIdentity'.</value>
 	</data>
 </root>

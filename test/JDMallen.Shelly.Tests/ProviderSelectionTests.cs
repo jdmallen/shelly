@@ -1,6 +1,7 @@
 using System.Text.Json;
 
 using JDMallen.Toolbox.AI;
+using JDMallen.Toolbox.AI.Azure;
 
 using Xunit;
 
@@ -180,6 +181,42 @@ public class ProviderSelectionTests
 		Assert.Contains("azure.tenantId", error);
 	}
 
+	// Nothing signs in here either: the first request does.
+	[Fact]
+	public void CreateProvider_AzureIdentity_SucceedsWithoutApiKey()
+	{
+		(IChatProvider? provider, string error) = Create(
+			AzureConfigWithAuth(AzureConfig.AZURE_IDENTITY_AUTH));
+
+		Assert.NotNull(provider);
+		Assert.Empty(error);
+	}
+
+	[Fact]
+	public void CreateProvider_AzureIdentityUnknownCredential_FailsNamingTheSetting()
+	{
+		ShellyConfig config =
+			AzureConfigWithAuth(AzureConfig.AZURE_IDENTITY_AUTH);
+		config.Azure.Credential = "broker";
+
+		(IChatProvider? provider, string error) = Create(config);
+
+		Assert.Null(provider);
+		Assert.Contains("azure.credential", error);
+	}
+
+	[Fact]
+	public void CreateProvider_AzureIdentityInvalidTenant_FailsNamingTheSetting()
+	{
+		(IChatProvider? provider, string error) = Create(
+			AzureConfigWithAuth(
+				AzureConfig.AZURE_IDENTITY_AUTH,
+				"not a tenant!"));
+
+		Assert.Null(provider);
+		Assert.Contains("azure.tenantId", error);
+	}
+
 	[Fact]
 	public void CreateProvider_AzureUnknownAuth_FailsListingTheOptions()
 	{
@@ -188,7 +225,7 @@ public class ProviderSelectionTests
 
 		Assert.Null(provider);
 		Assert.Contains("'managedIdentity'", error);
-		Assert.Contains("'apiKey' or 'azureCli'", error);
+		Assert.Contains("'apiKey', 'azureCli' or 'azureIdentity'", error);
 	}
 }
 
@@ -314,5 +351,70 @@ public class ShellyConfigTests
 		Assert.Contains("\"auth\": \"apiKey\"", json);
 		Assert.Contains("\"tenantId\"", json);
 		Assert.Contains("\"tokenScope\"", json);
+	}
+
+	[Fact]
+	public void AzureIdentity_Deserializes_WithCredentialAndRecordNextToConfig()
+	{
+		AzureConfig azure = Deserialize(
+				"{ \"azure\": { \"auth\": \"azureIdentity\", \"credential\": \"DeviceCode\", \"tenantId\": \" contoso.com \" } }")
+			.Azure;
+
+		Assert.True(azure.UsesAzureIdentity);
+		Assert.Equal(AzureCredentialKind.DeviceCode, azure.CredentialKind);
+		Assert.True(azure.UsesInteractiveSignIn);
+
+		string recordPath = ShellyConfig.AuthenticationRecordPath(
+			Path.Combine("/home/me/.config/shelly", "config.json"));
+		AzureCredentialOptions options = azure.CredentialOptions(recordPath)!;
+		Assert.Equal(AzureCredentialKind.DeviceCode, options.Kind);
+		Assert.Equal("contoso.com", options.TenantId);
+		Assert.Equal("shelly", options.CacheName);
+		Assert.Equal(
+			Path.Combine(
+				Path.GetFullPath("/home/me/.config/shelly"),
+				"auth-record.json"),
+			options.AuthenticationRecordPath);
+		Assert.True(options.AllowInteractiveAuthentication);
+	}
+
+	[Fact]
+	public void AzureIdentity_MissingCredential_IsABrowserSignIn()
+	{
+		AzureConfig azure = Deserialize(
+				"{ \"azure\": { \"auth\": \"azureIdentity\" } }")
+			.Azure;
+
+		Assert.Equal(
+			AzureCredentialKind.InteractiveBrowser,
+			azure.CredentialKind);
+	}
+
+	[Theory]
+	[InlineData("default", false)]
+	[InlineData("azureCli", false)]
+	[InlineData("azd", false)]
+	[InlineData("interactiveBrowser", true)]
+	public void AzureIdentity_OnlyBrowserAndDeviceCodeAreInteractive(
+		string credential,
+		bool interactive) => Assert.Equal(
+		interactive,
+		new AzureConfig
+		{
+			Auth = AzureConfig.AZURE_IDENTITY_AUTH,
+			Credential = credential,
+		}.UsesInteractiveSignIn);
+
+	[Fact]
+	public void AzureIdentity_UnknownCredential_HasNoOptions()
+	{
+		var azure = new AzureConfig
+		{
+			Auth = AzureConfig.AZURE_IDENTITY_AUTH,
+			Credential = "broker",
+		};
+
+		Assert.Null(azure.CredentialKind);
+		Assert.Null(azure.CredentialOptions("/tmp/auth-record.json"));
 	}
 }

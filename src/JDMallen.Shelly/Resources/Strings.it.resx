@@ -285,6 +285,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Microsoft Entra ID tramite la Azure CLI (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Microsoft Entra ID con accesso dal browser (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>Accedi con:</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>Un account Microsoft personale richiede azure.tenantId; 'az account show --query tenantId' lo mostra.</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Accesso con Microsoft Entra ID:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly ottiene un token alla prima richiesta. L'accesso dal browser o con codice dispositivo viene ricordato nel portachiavi di sistema, quindi accedi una sola volta.</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>facoltativo, - lo cancella</value>
 	</data>
@@ -310,6 +325,6 @@
 		<value>{0} non è valido. Correggilo in {1}, oppure esegui 'shelly --config'.</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>azure.auth sconosciuto '{0}' in {1}. Valori previsti: 'apiKey' o 'azureCli'.</value>
+		<value>azure.auth sconosciuto '{0}' in {1}. Valori previsti: 'apiKey', 'azureCli' o 'azureIdentity'.</value>
 	</data>
 </root>

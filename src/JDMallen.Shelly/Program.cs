@@ -2,6 +2,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 
+using JDMallen.Toolbox.AI.Azure;
+
 namespace JDMallen.Shelly;
 
 public static class Program
@@ -360,9 +362,11 @@ public static class Program
 
 	/// <summary>
 	/// Client options for <see cref="AzureConfig.Auth" />: the API key from
-	/// its environment variable, or an Entra ID token from the Azure CLI, which
-	/// is fetched on the first request and cached until shortly before it
-	/// expires. Null (after printing why) when the auth setup is incomplete.
+	/// its environment variable, or an Entra ID token from the Azure CLI or
+	/// Azure.Identity, which is fetched on the first request and cached until
+	/// shortly before it expires. A browser or device code sign-in happens on
+	/// that first request, and is remembered for later runs. Null (after
+	/// printing why) when the auth setup is incomplete.
 	/// </summary>
 	private static AzureOpenAIClientOptions? CreateAzureOptions(
 		AzureConfig cfg,
@@ -387,6 +391,32 @@ public static class Program
 					ShellyConfig.ConfigPath()));
 
 			return null;
+		}
+
+		if (cfg.UsesAzureIdentity)
+		{
+			string configPath = ShellyConfig.ConfigPath();
+			AzureCredentialOptions? credentialOptions =
+				cfg.CredentialOptions(
+					ShellyConfig.AuthenticationRecordPath(configPath));
+			string? invalid = credentialOptions is null
+				? "azure.credential"
+				: cfg.TryCreateTokenProvider(out string? invalidKey) is null
+					? invalidKey
+					: null;
+			if (invalid is not null)
+			{
+				Fail(Strings.InvalidSetting(invalid, configPath));
+
+				return null;
+			}
+
+			return AzureOpenAIClientOptions.ForEntraId(
+				endpoint,
+				deployment,
+				AzureCredentialFactory.CreateTokenProvider(
+					credentialOptions!,
+					cfg.TokenProviderOptions().Scope));
 		}
 
 		if (!cfg.UsesApiKey)

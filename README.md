@@ -253,7 +253,8 @@ gets a Microsoft Entra ID token from the Azure CLI and sends it in place of
 
 Settings:
 
-- `azure.auth`: `"apiKey"` (the default) or `"azureCli"`.
+- `azure.auth`: `"apiKey"` (the default), `"azureCli"`, or `"azureIdentity"`
+  (below).
 - `azure.tenantId`: the tenant to sign in to, as a GUID or a domain such as
   `contoso.onmicrosoft.com`. Leave it empty to use az's current tenant. Set it
   when your account belongs to more than one tenant, and pass the same value
@@ -266,6 +267,49 @@ second) and reuses it until shortly before it expires. `shelly --info` shows
 the tenant, the scope, where az was found, and the matching `az login`
 command; it never shows a token. If a request fails with 401 or 403, the
 error lists the usual causes (role, propagation delay, endpoint, scope).
+
+#### Keyless sign-in without the Azure CLI
+
+Set `azure.auth` to `"azureIdentity"` (or pick "browser sign-in" in
+`shelly --config`) to sign in through your browser instead, with no `az`
+needed. The first request of the first run opens the sign-in page; after that
+shelly remembers the sign-in and gets tokens silently. The role in step 3
+above still applies.
+
+```json
+"azure": {
+  "endpoint": "https://<your-resource>.openai.azure.com",
+  "deployment": "gpt-6-luna",
+  "auth": "azureIdentity",
+  "credential": "interactiveBrowser",
+  "tenantId": "<your tenant id>"
+}
+```
+
+`azure.credential` picks the sign-in:
+
+| Value                          | Signs in with                                                      |
+|--------------------------------|--------------------------------------------------------------------|
+| `interactiveBrowser` (default) | A browser window.                                                  |
+| `deviceCode`                   | A code you enter at a sign-in page on any device (no local browser needed). |
+| `default`                      | Azure.Identity's `DefaultAzureCredential`: environment variables, managed identity, then developer tools. |
+| `azureCli` / `azd`             | The signed-in Azure CLI or Azure Developer CLI.                    |
+
+**A personal Microsoft account (outlook.com, or a gmail address added to a
+tenant) needs `azure.tenantId`**, or sign-in fails with "Selected user account
+does not exist in tenant 'Microsoft Services'". `az account show --query
+tenantId` prints it.
+
+Where things are kept:
+
+- **Tokens:** in an encrypted cache in your system keyring (libsecret on
+  Linux, Keychain on macOS, DPAPI on Windows), never in plain text. Without a
+  keyring (over SSH, or in a container), use `"azureCli"` instead.
+- **The account and tenant ids** (no tokens): `auth-record.json` next to
+  `config.json`. Delete it to sign in again.
+
+`shelly --info` shows the credential, tenant, scope, and whether a sign-in is
+saved.
 
 ### Local and other OpenAI-compatible models
 

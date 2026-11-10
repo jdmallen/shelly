@@ -184,4 +184,26 @@ public class ConfigCheckTests
 	public void Azure_UnknownAuth_NeedsAuth() => Assert.Equal(
 		["azure.auth"],
 		FindMissing(AzureCliConfig(auth: "managedIdentity")));
+
+	[Fact]
+	public void Azure_AzureIdentity_NeedsNoKeyAndNoAz() => Assert.Empty(
+		FindMissing(AzureCliConfig(auth: AzureConfig.AZURE_IDENTITY_AUTH)));
+
+	[Fact]
+	public void Azure_AzureIdentity_UnknownCredential_IsListed()
+	{
+		ShellyConfig config =
+			AzureCliConfig(auth: AzureConfig.AZURE_IDENTITY_AUTH);
+		config.Azure.Credential = "broker";
+
+		Assert.Equal(["azure.credential"], FindMissing(config));
+	}
+
+	[Fact]
+	public void Azure_AzureIdentity_InvalidTenant_IsListed() => Assert.Equal(
+		["azure.tenantId"],
+		FindMissing(
+			AzureCliConfig(
+				"not a tenant!",
+				auth: AzureConfig.AZURE_IDENTITY_AUTH)));
 }

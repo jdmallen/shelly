@@ -284,6 +284,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Microsoft Entra ID pela Azure CLI (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Microsoft Entra ID com login pelo navegador (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>Fazer login com:</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>Uma conta Microsoft pessoal precisa de azure.tenantId; 'az account show --query tenantId' mostra o valor.</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Login pelo Microsoft Entra ID:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>O shelly obtém um token na primeira solicitação. O login pelo navegador ou por código de dispositivo fica guardado no chaveiro do sistema, então você faz login só uma vez.</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>opcional, - limpa o valor</value>
 	</data>
@@ -309,6 +324,6 @@
 		<value>{0} não é válido. Corrija em {1}, ou execute 'shelly --config'.</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>azure.auth desconhecido '{0}' em {1}. Esperado 'apiKey' ou 'azureCli'.</value>
+		<value>azure.auth desconhecido '{0}' em {1}. Esperado 'apiKey', 'azureCli' ou 'azureIdentity'.</value>
 	</data>
 </root>

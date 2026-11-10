@@ -286,6 +286,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Microsoft Entra ID via de Azure CLI (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Microsoft Entra ID met aanmelden in de browser (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>Aanmelden met:</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>Een persoonlijk Microsoft-account heeft azure.tenantId nodig; 'az account show --query tenantId' toont die.</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Aanmelden met Microsoft Entra ID:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly haalt bij het eerste verzoek een token op. Aanmelden in de browser of met een apparaatcode wordt onthouden in de sleutelbos van het systeem, dus je meldt je maar één keer aan.</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>optioneel, - wist het</value>
 	</data>
@@ -311,6 +326,6 @@
 		<value>{0} is ongeldig. Corrigeer het in {1}, of voer 'shelly --config' uit.</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>Onbekende azure.auth '{0}' in {1}. Verwacht 'apiKey' of 'azureCli'.</value>
+		<value>Onbekende azure.auth '{0}' in {1}. Verwacht 'apiKey', 'azureCli' of 'azureIdentity'.</value>
 	</data>
 </root>

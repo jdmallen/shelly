@@ -1,5 +1,7 @@
 using System.Globalization;
 
+using JDMallen.Toolbox.AI.Azure;
+
 namespace JDMallen.Shelly;
 
 internal enum ConfigWizardOutcome
@@ -124,7 +126,11 @@ internal sealed class ConfigWizard
 
 		_io.WriteLine();
 		string? pendingApiKey = null;
-		if (apiKeyVariable is null)
+		if (apiKeyVariable is null && config.Azure.UsesAzureIdentity)
+		{
+			WriteAzureIdentitySignIn();
+		}
+		else if (apiKeyVariable is null)
 		{
 			WriteAzureCliSignIn(config.Azure);
 		}
@@ -189,25 +195,44 @@ internal sealed class ConfigWizard
 
 		_io.WriteLine();
 		_io.WriteLine(Strings.AzureAuthHeader);
+		string[] authMethods =
+		[
+			AzureConfig.API_KEY_AUTH,
+			AzureConfig.AZURE_CLI_AUTH,
+			AzureConfig.AZURE_IDENTITY_AUTH,
+		];
+		int current = Array.FindIndex(
+			authMethods,
+			method => method.Equals(
+				azure.Auth,
+				StringComparison.OrdinalIgnoreCase));
 		int chosen = _prompts.Choose(
 			[
 				Strings.AzureAuthApiKey(ChatProvider.AZURE_API_KEY_ENV_VAR),
 				Strings.AzureAuthAzureCli,
+				Strings.AzureAuthAzureIdentity,
 			],
-			azure.UsesAzureCli ? 1 : 0);
+			Math.Max(current, 0));
 
 		// Esc keeps the current method; an unrecognized one becomes the key.
-		if (chosen != ConsolePrompts.CANCELLED
-		    || !(azure.UsesApiKey || azure.UsesAzureCli))
+		if (chosen != ConsolePrompts.CANCELLED || current < 0)
 		{
-			azure.Auth = chosen == 1
-				? AzureConfig.AZURE_CLI_AUTH
-				: AzureConfig.API_KEY_AUTH;
+			azure.Auth = authMethods[Math.Max(chosen, 0)];
 		}
 
-		if (!azure.UsesAzureCli)
+		if (azure.UsesAzureIdentity)
+		{
+			ConfigureAzureCredential(azure);
+		}
+		else if (!azure.UsesAzureCli)
 		{
 			return ChatProvider.AZURE_API_KEY_ENV_VAR;
+		}
+
+		if (azure.UsesInteractiveSignIn)
+		{
+			_io.WriteLine();
+			_io.WriteLine(Strings.AzureIdentityTenantHint);
 		}
 
 		azure.TenantId = _prompts.OptionalText(
@@ -218,6 +243,30 @@ internal sealed class ConfigWizard
 				: Strings.InvalidTenantId);
 
 		return null;
+	}
+
+	/// <summary>
+	/// Which Azure.Identity sign-in to use. The choices are the config values
+	/// themselves, so they read the same in every language.
+	/// </summary>
+	private void ConfigureAzureCredential(AzureConfig azure)
+	{
+		_io.WriteLine();
+		_io.WriteLine(Strings.AzureCredentialHeader);
+		AzureCredentialKind? currentKind = azure.CredentialKind;
+		int current = Array.FindIndex(
+			AzureConfig.Credentials,
+			entry => entry.Kind == currentKind);
+		int chosen = _prompts.Choose(
+			[.. AzureConfig.Credentials.Select(entry => entry.Name)],
+			Math.Max(current, 0));
+
+		// Esc keeps the current credential; an unrecognized one becomes the
+		// browser sign-in.
+		if (chosen != ConsolePrompts.CANCELLED || current < 0)
+		{
+			azure.Credential = AzureConfig.Credentials[Math.Max(chosen, 0)].Name;
+		}
 	}
 
 	private static bool IsValidTenant(AzureConfig azure, string tenantId)
@@ -250,6 +299,19 @@ internal sealed class ConfigWizard
 		_io.Write(
 			$"    {AzureCli.SignInCommand(azure)}\n",
 			ConsoleColor.Yellow);
+		_io.WriteLine();
+		_io.WriteLine(
+			$"  {Strings.AzureCliRoleNote(AzureCli.DATA_PLANE_ROLE)}");
+	}
+
+	/// <summary>
+	/// The Azure.Identity counterpart of the API key step: when the sign-in
+	/// happens, and the role the account needs.
+	/// </summary>
+	private void WriteAzureIdentitySignIn()
+	{
+		_io.WriteLine(Strings.AzureIdentitySignInHeader);
+		_io.WriteLine($"  {Strings.AzureIdentitySignInNote}");
 		_io.WriteLine();
 		_io.WriteLine(
 			$"  {Strings.AzureCliRoleNote(AzureCli.DATA_PLANE_ROLE)}");

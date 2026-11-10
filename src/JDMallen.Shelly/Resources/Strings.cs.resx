@@ -283,6 +283,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Microsoft Entra ID přes Azure CLI (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Microsoft Entra ID s přihlášením v prohlížeči (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>Přihlásit se pomocí:</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>Osobní účet Microsoft potřebuje azure.tenantId; vypíše ho 'az account show --query tenantId'.</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Přihlášení přes Microsoft Entra ID:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly získá token při prvním požadavku. Přihlášení v prohlížeči nebo kódem zařízení si zapamatuje v systémové klíčence, takže se přihlásíš jen jednou.</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>volitelné, - hodnotu smaže</value>
 	</data>
@@ -308,6 +323,6 @@
 		<value>{0} není platné. Oprav to v {1}, nebo spusť 'shelly --config'.</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>Neznámé azure.auth '{0}' v {1}. Očekáváno 'apiKey' nebo 'azureCli'.</value>
+		<value>Neznámé azure.auth '{0}' v {1}. Očekáváno 'apiKey', 'azureCli' nebo 'azureIdentity'.</value>
 	</data>
 </root>

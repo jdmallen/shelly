@@ -283,6 +283,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Azure CLI 経由の Microsoft Entra ID (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>ブラウザーでサインインする Microsoft Entra ID (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>サインイン方法:</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>個人の Microsoft アカウントには azure.tenantId が必要です。'az account show --query tenantId' で確認できます。</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Microsoft Entra ID のサインイン:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly は最初のリクエストでトークンを取得します。ブラウザーまたはデバイス コードでのサインインはシステムのキーリングに保存されるため、サインインは一度だけで済みます。</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>省略可、- でクリア</value>
 	</data>
@@ -308,6 +323,6 @@
 		<value>{0} が無効です。{1} で修正するか、'shelly --config' を実行してください。</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>{1} の azure.auth '{0}' は不明です。'apiKey' または 'azureCli' を指定してください。</value>
+		<value>{1} の azure.auth '{0}' は不明です。'apiKey'、'azureCli' または 'azureIdentity' を指定してください。</value>
 	</data>
 </root>

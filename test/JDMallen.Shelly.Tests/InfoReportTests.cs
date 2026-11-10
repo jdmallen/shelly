@@ -96,13 +96,93 @@ public class InfoReportTests
 
 	[Fact]
 	public void Azure_UnknownAuth_SaysSo() => Assert.Contains(
-		"auth:       managedIdentity (unknown; expected apiKey or azureCli)",
+		"auth:       managedIdentity (unknown; expected apiKey, azureCli or azureIdentity)",
 		Build(
 			new ShellyConfig
 			{
 				Provider = "azure",
 				Azure = { Auth = "managedIdentity" },
 			}));
+
+	[Fact]
+	public void Azure_AzureIdentity_ReportsCredentialTenantAndSignIn()
+	{
+		_environment[ChatProvider.AZURE_API_KEY_ENV_VAR] = SECRET;
+
+		string report = Build(
+			new ShellyConfig
+			{
+				Provider = "azure",
+				Azure =
+				{
+					Auth = AzureConfig.AZURE_IDENTITY_AUTH,
+					TenantId = "contoso.onmicrosoft.com",
+				},
+			});
+
+		Assert.Contains(
+			"auth:       Microsoft Entra ID via Azure.Identity",
+			report);
+		Assert.Contains("credential: interactiveBrowser", report);
+		Assert.Contains("tenant:     contoso.onmicrosoft.com", report);
+		Assert.Contains("scope:      https://ai.azure.com/.default", report);
+		Assert.Contains(
+			"signed in:  no; the first request signs in",
+			report);
+		Assert.DoesNotContain("api key", report);
+		Assert.DoesNotContain(SECRET, report);
+	}
+
+	[Fact]
+	public void Azure_AzureIdentity_SavedSignIn_ShowsWhere()
+	{
+		DirectoryInfo directory =
+			Directory.CreateTempSubdirectory("shelly-info-");
+		try
+		{
+			string configPath = Path.Combine(directory.FullName, "config.json");
+			string recordPath = Path.Combine(
+				directory.FullName,
+				"auth-record.json");
+			File.WriteAllText(recordPath, "{}");
+
+			string report = InfoReport.Build(
+				"shelly 9.9.9",
+				configPath,
+				new ShellyConfig
+				{
+					Provider = "azure",
+					Azure = { Auth = AzureConfig.AZURE_IDENTITY_AUTH },
+				},
+				Shell.FromNameOrPath("/usr/bin/zsh"),
+				name => _environment.GetValueOrDefault(name));
+
+			Assert.Contains($"signed in:  yes, saved in {recordPath}", report);
+		}
+		finally
+		{
+			directory.Delete(true);
+		}
+	}
+
+	[Fact]
+	public void Azure_AzureIdentity_NonInteractiveCredential_HasNoSignInRow()
+	{
+		string report = Build(
+			new ShellyConfig
+			{
+				Provider = "azure",
+				Azure =
+				{
+					Auth = AzureConfig.AZURE_IDENTITY_AUTH,
+					Credential = "default",
+				},
+			});
+
+		Assert.Contains("credential: default", report);
+		Assert.Contains("tenant:     (the credential's default)", report);
+		Assert.DoesNotContain("signed in", report);
+	}
 
 	[Fact]
 	public void Azure_DeprecatedVariables_ReportedAsDeprecated()

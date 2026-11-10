@@ -283,6 +283,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Microsoft Entra ID ผ่าน Azure CLI (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Microsoft Entra ID แบบลงชื่อเข้าใช้ผ่านเบราว์เซอร์ (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>ลงชื่อเข้าใช้ด้วย:</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>บัญชี Microsoft ส่วนตัวต้องมี azure.tenantId ใช้ 'az account show --query tenantId' เพื่อดูค่า</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>ลงชื่อเข้าใช้ด้วย Microsoft Entra ID:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly จะขอโทเค็นในคำขอแรก การลงชื่อเข้าใช้ผ่านเบราว์เซอร์หรือรหัสอุปกรณ์จะถูกจำไว้ในคีย์ริงของระบบ จึงลงชื่อเข้าใช้เพียงครั้งเดียว</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>ไม่บังคับ, - เพื่อล้างค่า</value>
 	</data>
@@ -308,6 +323,6 @@
 		<value>{0} ไม่ถูกต้อง ให้แก้ไขใน {1} หรือเรียกใช้ 'shelly --config'</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>ไม่รู้จัก azure.auth '{0}' ใน {1} ต้องเป็น 'apiKey' หรือ 'azureCli'</value>
+		<value>ไม่รู้จัก azure.auth '{0}' ใน {1} ต้องเป็น 'apiKey', 'azureCli' หรือ 'azureIdentity'</value>
 	</data>
 </root>

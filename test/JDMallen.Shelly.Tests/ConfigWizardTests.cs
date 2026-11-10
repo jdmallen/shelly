@@ -334,6 +334,67 @@ public sealed class ConfigWizardTests : IDisposable
 	}
 
 	[Fact]
+	public void Azure_AzureIdentity_AsksForCredentialAndTenant_SkipsKeyStep()
+	{
+		_io.ReadKeys.Enqueue(ConsoleKey.D3); // provider: azure
+		_io.ReadLines.Enqueue("https://example.openai.azure.com");
+		_io.ReadLines.Enqueue("gpt-6-luna"); // azure.deployment
+		_io.ReadLines.Enqueue(""); // azure.reasoningModel
+		_io.ReadLines.Enqueue(""); // azure.maxTokens
+		_io.ReadKeys.Enqueue(ConsoleKey.D3); // auth: Azure.Identity
+		_io.ReadKeys.Enqueue(ConsoleKey.D2); // credential: deviceCode
+		_io.ReadLines.Enqueue("contoso.onmicrosoft.com"); // azure.tenantId
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
+
+		Assert.Equal(ConfigWizardOutcome.Saved, Run());
+
+		AzureConfig saved = Saved().Azure;
+		Assert.Equal(AzureConfig.AZURE_IDENTITY_AUTH, saved.Auth);
+		Assert.Equal("deviceCode", saved.Credential);
+		Assert.Equal("contoso.onmicrosoft.com", saved.TenantId);
+		string output = Output.ReplaceLineEndings("\n");
+		Assert.Contains(Strings.AzureCredentialHeader, output);
+		Assert.Contains("  1) interactiveBrowser (default)\n", output);
+		Assert.Contains(Strings.AzureIdentityTenantHint, output);
+		Assert.Contains(Strings.AzureIdentitySignInHeader, output);
+		Assert.Contains(Strings.AzureIdentitySignInNote, output);
+		Assert.Contains("Cognitive Services OpenAI User", output);
+		Assert.DoesNotContain(Strings.ApiKeyHeader, output);
+		Assert.DoesNotContain(Strings.AzureCliSignInHeader, output);
+	}
+
+	[Fact]
+	public void Azure_AzureIdentity_NonInteractiveCredential_HasNoTenantHint()
+	{
+		new ShellyConfig
+		{
+			Provider = "azure",
+			Azure = new AzureConfig
+			{
+				Endpoint = "https://example.openai.azure.com",
+				Deployment = "gpt-6-luna",
+				Auth = AzureConfig.AZURE_IDENTITY_AUTH,
+				Credential = "default",
+			},
+		}.Save(ConfigPath);
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // provider: current (azure)
+		_io.ReadLines.Enqueue("");              // azure.endpoint
+		_io.ReadLines.Enqueue("");              // azure.deployment
+		_io.ReadLines.Enqueue("");              // azure.reasoningModel
+		_io.ReadLines.Enqueue("");              // azure.maxTokens
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // auth: current (Azure.Identity)
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // credential: current (default)
+		_io.ReadLines.Enqueue("");              // azure.tenantId
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
+
+		Assert.Equal(ConfigWizardOutcome.Saved, Run());
+
+		Assert.Equal("default", Saved().Azure.Credential);
+		Assert.Contains("  3) default (default)", Output);
+		Assert.DoesNotContain(Strings.AzureIdentityTenantHint, Output);
+	}
+
+	[Fact]
 	public void Windows_DecliningSave_DoesNotPersistTypedKey()
 	{
 		var environment = new FakeUserEnvironment(true);

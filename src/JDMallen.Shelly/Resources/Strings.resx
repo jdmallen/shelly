@@ -311,6 +311,25 @@
 		<value>Microsoft Entra ID via the Azure CLI (az login)</value>
 		<comment>An auth method choice. Keep 'Microsoft Entra ID', 'Azure CLI' and 'az login' untranslated.</comment>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Microsoft Entra ID with a browser sign-in (Azure.Identity)</value>
+		<comment>An auth method choice. Keep 'Microsoft Entra ID' and 'Azure.Identity' untranslated.</comment>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>Sign in with:</value>
+		<comment>Followed by a list of sign-in methods: interactiveBrowser, deviceCode, default, azureCli, azd (config values, shown untranslated).</comment>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>A personal Microsoft account needs azure.tenantId; 'az account show --query tenantId' prints it.</value>
+		<comment>Keep azure.tenantId and the az command untranslated.</comment>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Microsoft Entra ID sign-in:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly gets a token on its first request. A browser or device code sign-in is remembered in your system keyring, so you sign in once.</value>
+		<comment>Shown in place of the API key step for the azureIdentity auth method.</comment>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>optional, - clears it</value>
 		<comment>Shown in parentheses after a setting name, e.g. 'azure.tenantId (optional, - clears it) [x]: '. Typing a single '-' empties the value.</comment>
@@ -343,7 +362,7 @@
 		<comment>{0} is a config key such as azure.tenantId, {1} the config file path.</comment>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>Unknown azure.auth '{0}' in {1}. Expected 'apiKey' or 'azureCli'.</value>
-		<comment>{0} is the value found, {1} the config file path. Keep azure.auth, apiKey and azureCli untranslated.</comment>
+		<value>Unknown azure.auth '{0}' in {1}. Expected 'apiKey', 'azureCli' or 'azureIdentity'.</value>
+		<comment>{0} is the value found, {1} the config file path. Keep azure.auth, apiKey, azureCli and azureIdentity untranslated.</comment>
 	</data>
 </root>

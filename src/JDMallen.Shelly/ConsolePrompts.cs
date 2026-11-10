@@ -121,7 +121,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 
 			string value = string.IsNullOrWhiteSpace(line)
 				? current
-				: line.Trim();
+				: Unquote(line);
 			string? error = string.IsNullOrWhiteSpace(value)
 				? Strings.ValueRequired
 				: validate?.Invoke(value);
@@ -156,7 +156,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 				return current;
 			}
 
-			string value = line.Trim();
+			string value = Unquote(line);
 			if (value == clear)
 			{
 				return string.Empty;
@@ -170,6 +170,22 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 
 			io.Write($"{INDENT}{error}\n", ConsoleColor.Yellow);
 		}
+	}
+
+	/// <summary>
+	/// <paramref name="line" /> trimmed, without one pair of matching
+	/// surrounding quotes, so a value pasted as <c>"abc"</c> or <c>'abc'</c>
+	/// reads as <c>abc</c>.
+	/// </summary>
+	internal static string Unquote(string line)
+	{
+		string value = line.Trim();
+
+		return value.Length >= 2
+		       && value[0] is '"' or '\''
+		       && value[^1] == value[0]
+			? value[1..^1].Trim()
+			: value;
 	}
 
 	/// <summary>Reads a whole number greater than zero.</summary>

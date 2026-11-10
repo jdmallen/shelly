@@ -283,6 +283,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Microsoft Entra ID via l'Azure CLI (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Microsoft Entra ID avec connexion dans le navigateur (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>Se connecter avec :</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>Un compte Microsoft personnel a besoin de azure.tenantId ; 'az account show --query tenantId' l'affiche.</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Connexion avec Microsoft Entra ID :</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly obtient un jeton à la première requête. Une connexion dans le navigateur ou par code d'appareil est mémorisée dans le trousseau du système : tu ne te connectes qu'une fois.</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>facultatif, - l'efface</value>
 	</data>
@@ -308,6 +323,6 @@
 		<value>{0} n'est pas valide. Corrige-le dans {1}, ou lance 'shelly --config'.</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>azure.auth inconnu '{0}' dans {1}. Valeurs attendues : 'apiKey' ou 'azureCli'.</value>
+		<value>azure.auth inconnu '{0}' dans {1}. Valeurs attendues : 'apiKey', 'azureCli' ou 'azureIdentity'.</value>
 	</data>
 </root>

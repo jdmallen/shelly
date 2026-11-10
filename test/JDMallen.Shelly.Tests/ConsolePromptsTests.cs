@@ -137,4 +137,38 @@ public class ConsolePromptsTests
 			$"  flag (y/n) [{(current ? "y" : "n")}]: ",
 			_io.Output.ToString());
 	}
+
+	[Theory]
+	[InlineData("\"c1d94805-5918-40a2-a8d8-9d8452889856\"", "c1d94805-5918-40a2-a8d8-9d8452889856")]
+	[InlineData(" 'contoso.com' ", "contoso.com")]
+	[InlineData("\" spaced \"", "spaced")]
+	[InlineData("\"mismatched'", "\"mismatched'")]
+	[InlineData("\"", "\"")]
+	[InlineData("it's", "it's")]
+	public void Unquote_StripsOneMatchingPair(string line, string expected) =>
+		Assert.Equal(expected, ConsolePrompts.Unquote(line));
+
+	[Fact]
+	public void OptionalText_QuotedValue_IsValidatedWithoutQuotes()
+	{
+		_io.ReadLines.Enqueue("\"contoso.com\"");
+
+		Assert.Equal(
+			"contoso.com",
+			Prompts.OptionalText(
+				"azure.tenantId",
+				"",
+				value => value.Contains('"') ? "quoted" : null));
+		Assert.DoesNotContain("quoted", _io.Output.ToString());
+	}
+
+	[Fact]
+	public void Text_QuotedValue_IsUnquoted()
+	{
+		_io.ReadLines.Enqueue("'https://example.openai.azure.com'");
+
+		Assert.Equal(
+			"https://example.openai.azure.com",
+			Prompts.HttpUrl("azure.endpoint", ""));
+	}
 }

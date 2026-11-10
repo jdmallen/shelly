@@ -54,7 +54,11 @@ internal static class InfoReport
 					("max tokens",
 						config.Azure.MaxTokens.ToString(
 							CultureInfo.CurrentCulture)));
-				AddAzureAuthRows(rows, config.Azure, getEnvironmentVariable);
+				AddAzureAuthRows(
+					rows,
+					config.Azure,
+					getEnvironmentVariable,
+					ShellyConfig.AuthenticationRecordPath(configPath));
 
 				break;
 			case ShellyConfig.ANTHROPIC_PROVIDER:
@@ -125,8 +129,16 @@ internal static class InfoReport
 	private static void AddAzureAuthRows(
 		List<(string Label, string Value)> rows,
 		AzureConfig azure,
-		Func<string, string?> getEnvironmentVariable)
+		Func<string, string?> getEnvironmentVariable,
+		string authenticationRecordPath)
 	{
+		if (azure.UsesAzureIdentity)
+		{
+			AddAzureIdentityRows(rows, azure, authenticationRecordPath);
+
+			return;
+		}
+
 		if (azure.UsesApiKey)
 		{
 			rows.Add(("auth", "api key"));
@@ -143,7 +155,7 @@ internal static class InfoReport
 		{
 			rows.Add(
 				("auth",
-					$"{azure.Auth} (unknown; expected {AzureConfig.API_KEY_AUTH} or {AzureConfig.AZURE_CLI_AUTH})"));
+					$"{azure.Auth} (unknown; expected {AzureConfig.API_KEY_AUTH}, {AzureConfig.AZURE_CLI_AUTH} or {AzureConfig.AZURE_IDENTITY_AUTH})"));
 
 			return;
 		}
@@ -162,6 +174,41 @@ internal static class InfoReport
 				AzureCli.Find(getEnvironmentVariable)
 				?? $"not found on PATH (install: {AzureCli.INSTALL_URL})"));
 		rows.Add(("sign in", AzureCli.SignInCommand(azure)));
+	}
+
+	/// <summary>
+	/// The Azure.Identity sign-in and what it depends on; no token is fetched
+	/// or shown.
+	/// </summary>
+	private static void AddAzureIdentityRows(
+		List<(string Label, string Value)> rows,
+		AzureConfig azure,
+		string authenticationRecordPath)
+	{
+		rows.Add(("auth", "Microsoft Entra ID via Azure.Identity"));
+		rows.Add(
+			("credential",
+				azure.CredentialKind is null
+					? $"{azure.Credential} (unknown; expected {string.Join(", ", AzureConfig.Credentials.Select(entry => entry.Name))})"
+					: string.IsNullOrWhiteSpace(azure.Credential)
+						? AzureConfig.INTERACTIVE_BROWSER_CREDENTIAL
+						: azure.Credential.Trim()));
+		if (azure.TryCreateTokenProvider(out string? invalidKey) is null)
+		{
+			rows.Add(("error", $"{invalidKey} is not valid"));
+		}
+
+		AzureCliTokenProviderOptions options = azure.TokenProviderOptions();
+		rows.Add(("tenant", options.TenantId ?? "(the credential's default)"));
+		rows.Add(("scope", options.Scope));
+		if (azure.UsesInteractiveSignIn)
+		{
+			rows.Add(
+				("signed in",
+					File.Exists(authenticationRecordPath)
+						? $"yes, saved in {authenticationRecordPath}"
+						: "no; the first request signs in"));
+		}
 	}
 
 	private static void AppendRows(

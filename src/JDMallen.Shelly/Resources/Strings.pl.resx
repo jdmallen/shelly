@@ -283,6 +283,21 @@
 	<data name="AzureAuthAzureCli" xml:space="preserve">
 		<value>Microsoft Entra ID przez Azure CLI (az login)</value>
 	</data>
+	<data name="AzureAuthAzureIdentity" xml:space="preserve">
+		<value>Microsoft Entra ID z logowaniem w przeglądarce (Azure.Identity)</value>
+	</data>
+	<data name="AzureCredentialHeader" xml:space="preserve">
+		<value>Zaloguj się przez:</value>
+	</data>
+	<data name="AzureIdentityTenantHint" xml:space="preserve">
+		<value>Osobiste konto Microsoft wymaga azure.tenantId; wyświetli je 'az account show --query tenantId'.</value>
+	</data>
+	<data name="AzureIdentitySignInHeader" xml:space="preserve">
+		<value>Logowanie przez Microsoft Entra ID:</value>
+	</data>
+	<data name="AzureIdentitySignInNote" xml:space="preserve">
+		<value>shelly pobiera token przy pierwszym żądaniu. Logowanie w przeglądarce lub kodem urządzenia jest zapamiętywane w systemowym pęku kluczy, więc logujesz się tylko raz.</value>
+	</data>
 	<data name="OptionalTextHint" xml:space="preserve">
 		<value>opcjonalne, - czyści wartość</value>
 	</data>
@@ -308,6 +323,6 @@
 		<value>{0} jest nieprawidłowe. Popraw to w {1} albo uruchom 'shelly --config'.</value>
 	</data>
 	<data name="UnknownAzureAuthFormat" xml:space="preserve">
-		<value>Nieznane azure.auth '{0}' w {1}. Oczekiwano 'apiKey' lub 'azureCli'.</value>
+		<value>Nieznane azure.auth '{0}' w {1}. Oczekiwano 'apiKey', 'azureCli' lub 'azureIdentity'.</value>
 	</data>
 </root>
