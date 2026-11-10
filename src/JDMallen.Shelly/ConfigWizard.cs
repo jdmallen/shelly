@@ -110,7 +110,7 @@ internal sealed class ConfigWizard
 
 		// Keep the "local" alias if that's what the user already had.
 		if (provider != ShellyConfig.OPENAI_PROVIDER
-		    || !ShellyConfig.IsOpenAIProvider(config.Provider))
+			|| !ShellyConfig.IsOpenAIProvider(config.Provider))
 		{
 			config.Provider = provider;
 		}
@@ -126,19 +126,22 @@ internal sealed class ConfigWizard
 
 		_io.WriteLine();
 		string? pendingApiKey = null;
-		if (apiKeyVariable is null && config.Azure.UsesAzureIdentity)
+		switch (apiKeyVariable)
 		{
-			WriteAzureIdentitySignIn();
-		}
-		else if (apiKeyVariable is null)
-		{
-			WriteAzureCliSignIn(config.Azure);
-		}
-		else
-		{
-			pendingApiKey = ConfigureApiKey(
-				apiKeyVariable,
-				provider == ShellyConfig.OPENAI_PROVIDER);
+			case null when config.Azure.UsesAzureIdentity:
+				WriteAzureIdentitySignIn();
+
+				break;
+			case null:
+				WriteAzureCliSignIn(config.Azure);
+
+				break;
+			default:
+				pendingApiKey = ConfigureApiKey(
+					apiKeyVariable,
+					provider == ShellyConfig.OPENAI_PROVIDER);
+
+				break;
 		}
 
 		_io.WriteLine();
@@ -265,7 +268,8 @@ internal sealed class ConfigWizard
 		// browser sign-in.
 		if (chosen != ConsolePrompts.CANCELLED || current < 0)
 		{
-			azure.Credential = AzureConfig.Credentials[Math.Max(chosen, 0)].Name;
+			azure.Credential =
+				AzureConfig.Credentials[Math.Max(chosen, 0)].Name;
 		}
 	}
 
@@ -350,9 +354,9 @@ internal sealed class ConfigWizard
 	private string? AskForKeyToPersist(string variable, bool defaultYes)
 	{
 		if (!_prompts.YesNo(
-			    Strings.SetUserVariablePrompt(variable),
-			    defaultYes,
-			    true))
+				Strings.SetUserVariablePrompt(variable),
+				defaultYes,
+				true))
 		{
 			return null;
 		}
@@ -454,7 +458,7 @@ internal sealed class ConfigWizard
 			config.Save(_configPath);
 		}
 		catch (Exception ex) when (ex is IOException
-			                           or UnauthorizedAccessException)
+									   or UnauthorizedAccessException)
 		{
 			_io.Write(
 				$"{Strings.Error(Strings.ConfigSaveFailed(_configPath, ex.Message))}\n",

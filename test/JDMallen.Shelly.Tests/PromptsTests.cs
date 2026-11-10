@@ -9,10 +9,10 @@ public class PromptsTests
 	private const string CONTEXT_LINE = "Shell: Bash, OS: os, PWD: /pwd";
 
 	private const string ENGLISH_EXPLAIN = """
-	                                       You are a shell command expert. The user will give you a shell command. Explain in 1-3 short sentences what it does, including what each pipe stage or flag contributes. Plain text only — no markdown, no code fences, no bullet lists. Be concise. The command is for Bash; explain it in terms of that shell's syntax.
+										   You are a shell command expert. The user will give you a shell command. Explain in 1-3 short sentences what it does, including what each pipe stage or flag contributes. Plain text only — no markdown, no code fences, no bullet lists. Be concise. The command is for Bash; explain it in terms of that shell's syntax.
 
-	                                       Context: Shell: Bash, OS: os, PWD: /pwd
-	                                       """;
+										   Context: Shell: Bash, OS: os, PWD: /pwd
+										   """;
 
 	private static ShellContext ContextFor(
 		string shellName,
@@ -23,23 +23,23 @@ public class PromptsTests
 	public void Suggestion_Bash_MatchesEnglishPrompt()
 	{
 		const string expected = """
-		                        You are a shell command expert. Given a description of what the user wants to do, output ONLY the shell command(s) that accomplish it. No explanations, no markdown, no code fences, no backticks, no language tags — just the raw command(s). If multiple commands are needed, separate them with && or use appropriate shell syntax.
+								You are a shell command expert. Given a description of what the user wants to do, output ONLY the shell command(s) that accomplish it. No explanations, no markdown, no code fences, no backticks, no language tags — just the raw command(s). If multiple commands are needed, separate them with && or use appropriate shell syntax.
 
-		                        The user's shell is Bash. Write the command(s) for Bash specifically, using its syntax and builtins, so they run correctly when typed into it.
+								The user's shell is Bash. Write the command(s) for Bash specifically, using its syntax and builtins, so they run correctly when typed into it.
 
-		                        EXAMPLES:
-		                        Bad:
-		                        ```bash
-		                        ls -la
-		                        ```
-		                        Good:
-		                        ls -la
+								EXAMPLES:
+								Bad:
+								```bash
+								ls -la
+								```
+								Good:
+								ls -la
 
-		                        Bad: `find . -name '*.cs'`
-		                        Good: find . -name '*.cs'
+								Bad: `find . -name '*.cs'`
+								Good: find . -name '*.cs'
 
-		                        Context: Shell: Bash, OS: os, PWD: /pwd
-		                        """;
+								Context: Shell: Bash, OS: os, PWD: /pwd
+								""";
 
 		Assert.Equal(expected, Prompts.Suggestion(ContextFor("bash")));
 	}

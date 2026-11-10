@@ -87,9 +87,9 @@ internal sealed class SystemClipboard : IClipboard
 		}
 
 		foreach (ClipboardCommand candidate in LinuxCandidates(
-				         hasWayland,
-				         hasX11)
-			         .Where(candidate => IsOnPath(candidate.FileName)))
+						 hasWayland,
+						 hasX11)
+					 .Where(candidate => IsOnPath(candidate.FileName)))
 		{
 			return candidate;
 		}

@@ -139,7 +139,9 @@ public class ConsolePromptsTests
 	}
 
 	[Theory]
-	[InlineData("\"c1d94805-5918-40a2-a8d8-9d8452889856\"", "c1d94805-5918-40a2-a8d8-9d8452889856")]
+	[InlineData(
+		"\"c1d94805-5918-40a2-a8d8-9d8452889856\"",
+		"c1d94805-5918-40a2-a8d8-9d8452889856")]
 	[InlineData(" 'contoso.com' ", "contoso.com")]
 	[InlineData("\" spaced \"", "spaced")]
 	[InlineData("\"mismatched'", "\"mismatched'")]

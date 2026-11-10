@@ -40,10 +40,10 @@ internal static class Prompts
 			: $" Write your explanation in {responseLanguage}.";
 
 		return $"""
-		        You are a shell command expert. The user will give you a shell command. Explain in 1-3 short sentences what it does, including what each pipe stage or flag contributes. Plain text only — no markdown, no code fences, no bullet lists. Be concise. The command is for {context.Shell.DisplayName}; explain it in terms of that shell's syntax.{languageInstruction}
+				You are a shell command expert. The user will give you a shell command. Explain in 1-3 short sentences what it does, including what each pipe stage or flag contributes. Plain text only — no markdown, no code fences, no bullet lists. Be concise. The command is for {context.Shell.DisplayName}; explain it in terms of that shell's syntax.{languageInstruction}
 
-		        Context: {context.Describe()}
-		        """;
+				Context: {context.Describe()}
+				""";
 	}
 
 	/// <summary>

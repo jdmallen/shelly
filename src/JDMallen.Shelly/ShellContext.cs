@@ -73,8 +73,8 @@ internal static class ShellDetector
 		int ancestorId = processTree.Get(processId)?.ParentId ?? 0;
 
 		for (var depth = 0;
-		     depth < MAX_ANCESTORS && ancestorId > 0 && visited.Add(ancestorId);
-		     depth++)
+			 depth < MAX_ANCESTORS && ancestorId > 0 && visited.Add(ancestorId);
+			 depth++)
 		{
 			ProcessEntry? ancestor = processTree.Get(ancestorId);
 			if (ancestor is null)
@@ -86,7 +86,7 @@ internal static class ShellDetector
 				ancestor.Value.Name,
 				ancestor.Value.ExecutablePath);
 			if (shell is null
-			    && !string.IsNullOrEmpty(ancestor.Value.ExecutablePath))
+				&& !string.IsNullOrEmpty(ancestor.Value.ExecutablePath))
 			{
 				shell = Shell.TryResolveKnown(
 					ancestor.Value.ExecutablePath,

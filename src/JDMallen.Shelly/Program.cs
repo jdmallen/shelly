@@ -132,21 +132,21 @@ public static class Program
 			?.Copyright;
 
 		return $"""
-		        {BuildVersionLine()}
-		        {copyright}
+				{BuildVersionLine()}
+				{copyright}
 
-		          --help             {Strings.HelpOptionHelp}
+				  --help             {Strings.HelpOptionHelp}
 
-		          --version          {Strings.HelpOptionVersion}
+				  --version          {Strings.HelpOptionVersion}
 
-		          --info             {Strings.HelpOptionInfo}
+				  --info             {Strings.HelpOptionInfo}
 
-		          --config           {Strings.HelpOptionConfig}
+				  --config           {Strings.HelpOptionConfig}
 
-		          --                 {Strings.HelpOptionTerminator}
+				  --                 {Strings.HelpOptionTerminator}
 
-		          prompt (pos. 0)    {Strings.HelpPrompt}
-		        """;
+				  prompt (pos. 0)    {Strings.HelpPrompt}
+				""";
 	}
 
 	private static async Task<int> RunAsync(string? prompt)
@@ -191,10 +191,10 @@ public static class Program
 	{
 		string path = TokenUsageLog.DefaultPath("shelly");
 		if (!TokenUsageLog.TryRecord(
-			    path,
-			    sessionUsage,
-			    DateTimeOffset.Now,
-			    out string? error))
+				path,
+				sessionUsage,
+				DateTimeOffset.Now,
+				out string? error))
 		{
 			Console.Error.WriteLine(Strings.UsageNotRecorded(path, error!));
 		}
@@ -404,6 +404,7 @@ public static class Program
 				: cfg.TryCreateTokenProvider(out string? invalidKey) is null
 					? invalidKey
 					: null;
+			// ReSharper disable once InvertIf
 			if (invalid is not null)
 			{
 				Fail(Strings.InvalidSetting(invalid, configPath));

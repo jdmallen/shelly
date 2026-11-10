@@ -382,9 +382,10 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue("");              // azure.deployment
 		_io.ReadLines.Enqueue("");              // azure.reasoningModel
 		_io.ReadLines.Enqueue("");              // azure.maxTokens
-		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // auth: current (Azure.Identity)
+		_io.ReadKeys.Enqueue(
+			ConsoleKey.Enter); // auth: current (Azure.Identity)
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // credential: current (default)
-		_io.ReadLines.Enqueue("");              // azure.tenantId
+		_io.ReadLines.Enqueue(""); // azure.tenantId
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
 
 		Assert.Equal(ConfigWizardOutcome.Saved, Run());

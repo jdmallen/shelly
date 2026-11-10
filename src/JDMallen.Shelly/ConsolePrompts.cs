@@ -45,7 +45,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 			}
 
 			if (warnings is not null
-			    && warnings.TryGetValue(index, out string? warning))
+				&& warnings.TryGetValue(index, out string? warning))
 			{
 				io.Write($" ({warning})", ConsoleColor.Yellow);
 			}
@@ -181,11 +181,10 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 	{
 		string value = line.Trim();
 
-		return value.Length >= 2
-		       && value[0] is '"' or '\''
-		       && value[^1] == value[0]
-			? value[1..^1].Trim()
-			: value;
+		return value is ['"' or '\'', _, ..]
+			&& value[^1] == value[0]
+				? value[1..^1].Trim()
+				: value;
 	}
 
 	/// <summary>Reads a whole number greater than zero.</summary>

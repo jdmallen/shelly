@@ -193,7 +193,8 @@ public class ProviderSelectionTests
 	}
 
 	[Fact]
-	public void CreateProvider_AzureIdentityUnknownCredential_FailsNamingTheSetting()
+	public void
+		CreateProvider_AzureIdentityUnknownCredential_FailsNamingTheSetting()
 	{
 		ShellyConfig config =
 			AzureConfigWithAuth(AzureConfig.AZURE_IDENTITY_AUTH);
@@ -206,7 +207,8 @@ public class ProviderSelectionTests
 	}
 
 	[Fact]
-	public void CreateProvider_AzureIdentityInvalidTenant_FailsNamingTheSetting()
+	public void
+		CreateProvider_AzureIdentityInvalidTenant_FailsNamingTheSetting()
 	{
 		(IChatProvider? provider, string error) = Create(
 			AzureConfigWithAuth(
