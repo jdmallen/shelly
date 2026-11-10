@@ -58,19 +58,22 @@ public class InfoReportTests
 		_environment[ChatProvider.AZURE_API_KEY_ENV_VAR] = SECRET;
 
 		string report = Build(
-			new ShellyConfig
-			{
-				Provider = "azure",
-				Azure = new AzureConfig
+				new ShellyConfig
 				{
-					Endpoint = "https://example.openai.azure.com",
-					Deployment = "gpt-6-luna",
-					Auth = AzureConfig.AZURE_CLI_AUTH,
-					TenantId = "contoso.onmicrosoft.com",
-				},
-			}).ReplaceLineEndings("\n");
+					Provider = "azure",
+					Azure = new AzureConfig
+					{
+						Endpoint = "https://example.openai.azure.com",
+						Deployment = "gpt-6-luna",
+						Auth = AzureConfig.AZURE_CLI_AUTH,
+						TenantId = "contoso.onmicrosoft.com",
+					},
+				})
+			.ReplaceLineEndings("\n");
 
-		Assert.Contains("auth:       Microsoft Entra ID via the Azure CLI\n", report);
+		Assert.Contains(
+			"auth:       Microsoft Entra ID via the Azure CLI\n",
+			report);
 		Assert.Contains("tenant:     contoso.onmicrosoft.com\n", report);
 		Assert.Contains("scope:      https://ai.azure.com/.default\n", report);
 		Assert.Contains("az:         not found on PATH", report);
@@ -199,7 +202,14 @@ public class InfoReportTests
 				Requests = 6,
 				InputTokens = 10_000,
 				OutputTokens = 2_345,
-				Since = new DateTimeOffset(2026, 11, 6, 9, 0, 0, TimeSpan.Zero),
+				Since = new DateTimeOffset(
+					2026,
+					11,
+					6,
+					9,
+					0,
+					0,
+					TimeSpan.Zero),
 			});
 
 		Assert.Contains($"usage log: {USAGE_PATH}", report);

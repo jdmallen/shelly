@@ -45,7 +45,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 			}
 
 			if (warnings is not null
-				&& warnings.TryGetValue(index, out string? warning))
+			    && warnings.TryGetValue(index, out string? warning))
 			{
 				io.Write($" ({warning})", ConsoleColor.Yellow);
 			}
@@ -68,7 +68,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 
 			int chosen = key switch
 			{
-				ConsoleKey.Enter => defaultIndex,
+				ConsoleKey.Enter  => defaultIndex,
 				ConsoleKey.Escape => CANCELLED,
 				ConsoleKey.D0 or ConsoleKey.NumPad0 when zeroOption is not null
 					=> CANCELLED,
@@ -146,7 +146,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 		Func<string, string?>? validate = null)
 	{
 		const string clear = "-";
-		string labelWithHint = $"{label} ({Strings.OptionalTextHint})";
+		var labelWithHint = $"{label} ({Strings.OptionalTextHint})";
 		while (true)
 		{
 			WriteLabel(labelWithHint, current);
@@ -210,8 +210,8 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 		value.ToLowerInvariant() switch
 		{
 			"y" or "yes" => true,
-			"n" or "no" => false,
-			_ => null,
+			"n" or "no"  => false,
+			_            => null,
 		};
 
 	/// <summary>
@@ -230,11 +230,11 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 
 			bool? answer = key switch
 			{
-				ConsoleKey.Y => true,
-				ConsoleKey.N => false,
-				ConsoleKey.Enter => defaultYes,
+				ConsoleKey.Y      => true,
+				ConsoleKey.N      => false,
+				ConsoleKey.Enter  => defaultYes,
 				ConsoleKey.Escape => false,
-				_ => null,
+				_                 => null,
 			};
 
 			if (answer is not null)

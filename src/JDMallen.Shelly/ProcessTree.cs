@@ -67,8 +67,8 @@ internal sealed class LinuxProcessTree : IProcessTree
 				TryReadExecutable(processDirectory));
 		}
 		catch (Exception ex) when (ex is IOException
-									   or UnauthorizedAccessException
-									   or FormatException)
+			                           or UnauthorizedAccessException
+			                           or FormatException)
 		{
 			return null;
 		}
@@ -97,7 +97,7 @@ internal sealed class LinuxProcessTree : IProcessTree
 			return new FileInfo($"{processDirectory}/exe").LinkTarget;
 		}
 		catch (Exception ex) when (ex is IOException
-									   or UnauthorizedAccessException)
+			                           or UnauthorizedAccessException)
 		{
 			// Another user's process (e.g. under sudo): the name still identifies it.
 			return null;
@@ -125,12 +125,12 @@ internal sealed partial class MacProcessTree : IProcessTree
 		{
 			var bsdInfo = new byte[BSD_INFO_SIZE];
 			if (ProcPidInfo(
-					processId,
-					PROC_PIDTBSDINFO,
-					0,
-					bsdInfo,
-					BSD_INFO_SIZE)
-				!= BSD_INFO_SIZE)
+				    processId,
+				    PROC_PIDTBSDINFO,
+				    0,
+				    bsdInfo,
+				    BSD_INFO_SIZE)
+			    != BSD_INFO_SIZE)
 			{
 				return null;
 			}
@@ -153,7 +153,7 @@ internal sealed partial class MacProcessTree : IProcessTree
 				path);
 		}
 		catch (Exception ex) when (ex is DllNotFoundException
-									   or EntryPointNotFoundException)
+			                           or EntryPointNotFoundException)
 		{
 			return null;
 		}
@@ -210,12 +210,12 @@ internal sealed partial class WindowsProcessTree : IProcessTree
 			{
 				var basicInfo = new ProcessBasicInformation();
 				if (NtQueryInformationProcess(
-						handle,
-						PROCESS_BASIC_INFORMATION_CLASS,
-						ref basicInfo,
-						Marshal.SizeOf<ProcessBasicInformation>(),
-						out _)
-					!= 0)
+					    handle,
+					    PROCESS_BASIC_INFORMATION_CLASS,
+					    ref basicInfo,
+					    Marshal.SizeOf<ProcessBasicInformation>(),
+					    out _)
+				    != 0)
 				{
 					return null;
 				}
@@ -247,7 +247,7 @@ internal sealed partial class WindowsProcessTree : IProcessTree
 			}
 		}
 		catch (Exception ex) when (ex is DllNotFoundException
-									   or EntryPointNotFoundException)
+			                           or EntryPointNotFoundException)
 		{
 			return null;
 		}

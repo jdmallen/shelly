@@ -387,7 +387,6 @@ public static class Program
 					ShellyConfig.ConfigPath()));
 
 			return null;
-
 		}
 
 		if (!cfg.UsesApiKey)
@@ -408,7 +407,6 @@ public static class Program
 		Fail(Strings.EnvVarNotSet(ChatProvider.AZURE_API_KEY_ENV_VAR));
 
 		return null;
-
 	}
 
 	private static void WarnIfDeprecated(AzureSetting setting, string configKey)

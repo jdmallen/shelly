@@ -81,6 +81,6 @@ public sealed class AzureCliTests : IDisposable
 			new AzureConfig
 			{
 				TenantId = tenantId,
-				TokenScope = tokenScope
+				TokenScope = tokenScope,
 			}));
 }

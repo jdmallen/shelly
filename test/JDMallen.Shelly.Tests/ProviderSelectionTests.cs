@@ -231,7 +231,8 @@ public class ShellyConfigTests
 	[Fact]
 	public void Deserialize_ShowTokenUsage_DefaultsToTrue()
 	{
-		Assert.True(Deserialize("""{ "provider": "anthropic" }""").ShowTokenUsage);
+		Assert.True(
+			Deserialize("""{ "provider": "anthropic" }""").ShowTokenUsage);
 		Assert.False(
 			Deserialize("""{ "showTokenUsage": false }""").ShowTokenUsage);
 	}

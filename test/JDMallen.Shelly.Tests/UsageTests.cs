@@ -26,7 +26,9 @@ public sealed class UsageTests
 		_io.ReadKeys.Enqueue(ConsoleKey.Q);
 
 		ReplLoop loop = NewLoop();
-		await loop.RunAsync("list files", TestContext.Current.CancellationToken);
+		await loop.RunAsync(
+			"list files",
+			TestContext.Current.CancellationToken);
 
 		Assert.Contains("[q]uit   1,234 tokens", _io.Output.ToString());
 		Assert.Equal(1, loop.SessionUsage.Requests);
@@ -48,9 +50,11 @@ public sealed class UsageTests
 		_io.ReadKeys.Enqueue(ConsoleKey.Q);
 
 		ReplLoop loop = NewLoop();
-		await loop.RunAsync("list files", TestContext.Current.CancellationToken);
+		await loop.RunAsync(
+			"list files",
+			TestContext.Current.CancellationToken);
 
-		string output = _io.Output.ToString();
+		var output = _io.Output.ToString();
 		Assert.Contains("110 tokens", output);
 		Assert.Contains("330 tokens", output);
 		Assert.Contains("660 tokens", output);
@@ -66,7 +70,9 @@ public sealed class UsageTests
 		_io.ReadKeys.Enqueue(ConsoleKey.Q);
 
 		ReplLoop loop = NewLoop();
-		await loop.RunAsync("list files", TestContext.Current.CancellationToken);
+		await loop.RunAsync(
+			"list files",
+			TestContext.Current.CancellationToken);
 
 		Assert.DoesNotContain("tokens", _io.Output.ToString());
 		Assert.False(loop.SessionUsage.HasUsage);
@@ -80,7 +86,9 @@ public sealed class UsageTests
 		_io.ReadKeys.Enqueue(ConsoleKey.Q);
 
 		ReplLoop loop = NewLoop(false);
-		await loop.RunAsync("list files", TestContext.Current.CancellationToken);
+		await loop.RunAsync(
+			"list files",
+			TestContext.Current.CancellationToken);
 
 		Assert.DoesNotContain("tokens", _io.Output.ToString());
 		Assert.Equal(1234, loop.SessionUsage.TotalTokens);

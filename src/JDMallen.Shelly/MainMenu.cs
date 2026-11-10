@@ -51,10 +51,10 @@ internal static class MainMenu
 
 		return chosen switch
 		{
-			0 => MainMenuChoice.Ask,
+			0               => MainMenuChoice.Ask,
 			CONFIGURE_INDEX => MainMenuChoice.Configure,
-			2 => MainMenuChoice.Info,
-			_ => MainMenuChoice.Exit,
+			2               => MainMenuChoice.Info,
+			_               => MainMenuChoice.Exit,
 		};
 	}
 }

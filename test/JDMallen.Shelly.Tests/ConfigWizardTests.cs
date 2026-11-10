@@ -230,7 +230,8 @@ public sealed class ConfigWizardTests : IDisposable
 	public void Azure_AzureCli_SkipsKeyStepAndPrintsSignInCommand()
 	{
 		string binDirectory = Directory.CreateDirectory(
-			Path.Combine(_directory, "bin")).FullName;
+				Path.Combine(_directory, "bin"))
+			.FullName;
 
 		// Both names, so the lookup succeeds on Windows and Unix alike.
 		File.WriteAllText(Path.Combine(binDirectory, "az"), string.Empty);
@@ -239,14 +240,14 @@ public sealed class ConfigWizardTests : IDisposable
 		{
 			Variables = { ["PATH"] = binDirectory },
 		};
-		_io.ReadKeys.Enqueue(ConsoleKey.D3);       // provider: azure
+		_io.ReadKeys.Enqueue(ConsoleKey.D3); // provider: azure
 		_io.ReadLines.Enqueue("https://example.openai.azure.com");
-		_io.ReadLines.Enqueue("gpt-6-luna");       // azure.deployment
-		_io.ReadLines.Enqueue("");                 // azure.reasoningModel
-		_io.ReadLines.Enqueue("");                 // azure.maxTokens
-		_io.ReadKeys.Enqueue(ConsoleKey.D2);       // auth: Azure CLI
+		_io.ReadLines.Enqueue("gpt-6-luna"); // azure.deployment
+		_io.ReadLines.Enqueue(""); // azure.reasoningModel
+		_io.ReadLines.Enqueue(""); // azure.maxTokens
+		_io.ReadKeys.Enqueue(ConsoleKey.D2); // auth: Azure CLI
 		_io.ReadLines.Enqueue("contoso.onmicrosoft.com"); // azure.tenantId
-		_io.ReadKeys.Enqueue(ConsoleKey.Enter);    // save
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
 
 		Assert.Equal(ConfigWizardOutcome.Saved, Run(environment));
 
@@ -260,7 +261,9 @@ public sealed class ConfigWizardTests : IDisposable
 			Output);
 		Assert.Contains("Cognitive Services OpenAI User", Output);
 		Assert.DoesNotContain(Strings.ApiKeyHeader, Output);
-		Assert.DoesNotContain(ChatProvider.AZURE_API_KEY_ENV_VAR + " is", Output);
+		Assert.DoesNotContain(
+			ChatProvider.AZURE_API_KEY_ENV_VAR + " is",
+			Output);
 	}
 
 	[Fact]

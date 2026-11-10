@@ -14,7 +14,8 @@ internal static class AzureCli
 
 	// On Windows, az is az.cmd (a batch wrapper); the toolbox runs it via
 	// cmd.exe, which resolves it the same way.
-	private static readonly string[] WindowsNames = ["az.cmd", "az.exe", "az.bat"];
+	private static readonly string[] WindowsNames =
+		["az.cmd", "az.exe", "az.bat"];
 
 	private static readonly string[] UnixNames = ["az"];
 
@@ -36,14 +37,15 @@ internal static class AzureCli
 			? WindowsNames
 			: UnixNames;
 
-		return (path
+		return path
 			.Split(
 				Path.PathSeparator,
 				StringSplitOptions.RemoveEmptyEntries
 				| StringSplitOptions.TrimEntries)
 			.SelectMany(
 				_ => names,
-				Path.Combine)).FirstOrDefault(File.Exists);
+				Path.Combine)
+			.FirstOrDefault(File.Exists);
 	}
 
 	/// <summary>

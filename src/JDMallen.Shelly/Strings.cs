@@ -131,8 +131,9 @@ internal static class Strings
 	public static string AzureCliRoleNote(string roleName) =>
 		Format("AzureCliRoleNoteFormat", roleName);
 
-	public static string InvalidSetting(string settingName, string configPath) =>
-		Format("InvalidSettingFormat", settingName, configPath);
+	public static string InvalidSetting(string settingName, string configPath)
+		=>
+			Format("InvalidSettingFormat", settingName, configPath);
 
 	public static string UnknownAzureAuth(string auth, string configPath) =>
 		Format("UnknownAzureAuthFormat", auth, configPath);

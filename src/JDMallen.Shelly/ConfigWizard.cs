@@ -108,7 +108,7 @@ internal sealed class ConfigWizard
 
 		// Keep the "local" alias if that's what the user already had.
 		if (provider != ShellyConfig.OPENAI_PROVIDER
-			|| !ShellyConfig.IsOpenAIProvider(config.Provider))
+		    || !ShellyConfig.IsOpenAIProvider(config.Provider))
 		{
 			config.Provider = provider;
 		}
@@ -198,7 +198,7 @@ internal sealed class ConfigWizard
 
 		// Esc keeps the current method; an unrecognized one becomes the key.
 		if (chosen != ConsolePrompts.CANCELLED
-			|| !(azure.UsesApiKey || azure.UsesAzureCli))
+		    || !(azure.UsesApiKey || azure.UsesAzureCli))
 		{
 			azure.Auth = chosen == 1
 				? AzureConfig.AZURE_CLI_AUTH
@@ -228,7 +228,8 @@ internal sealed class ConfigWizard
 			TokenScope = azure.TokenScope,
 		};
 
-		return candidate.TryCreateTokenProvider(out string? invalidKey) is not null
+		return candidate.TryCreateTokenProvider(out string? invalidKey) is not
+				null
 			|| invalidKey != "azure.tenantId";
 	}
 
@@ -246,9 +247,12 @@ internal sealed class ConfigWizard
 			azPath is null ? ConsoleColor.Yellow : ConsoleColor.Green);
 		_io.WriteLine($"  {Strings.AzureCliSignIn}");
 		_io.WriteLine();
-		_io.Write($"    {AzureCli.SignInCommand(azure)}\n", ConsoleColor.Yellow);
+		_io.Write(
+			$"    {AzureCli.SignInCommand(azure)}\n",
+			ConsoleColor.Yellow);
 		_io.WriteLine();
-		_io.WriteLine($"  {Strings.AzureCliRoleNote(AzureCli.DATA_PLANE_ROLE)}");
+		_io.WriteLine(
+			$"  {Strings.AzureCliRoleNote(AzureCli.DATA_PLANE_ROLE)}");
 	}
 
 	/// <returns>
@@ -284,9 +288,9 @@ internal sealed class ConfigWizard
 	private string? AskForKeyToPersist(string variable, bool defaultYes)
 	{
 		if (!_prompts.YesNo(
-				Strings.SetUserVariablePrompt(variable),
-				defaultYes,
-				true))
+			    Strings.SetUserVariablePrompt(variable),
+			    defaultYes,
+			    true))
 		{
 			return null;
 		}
@@ -328,10 +332,10 @@ internal sealed class ConfigWizard
 		return shell.Name switch
 		{
 			"fish" => ($"set -Ux {variable} {value}", null),
-			"zsh" => ($"export {variable}={value}", "~/.zshrc"),
+			"zsh"  => ($"export {variable}={value}", "~/.zshrc"),
 			"bash" => ($"export {variable}={value}", "~/.bashrc"),
 			"tcsh" => ($"setenv {variable} {value}", "~/.tcshrc"),
-			"csh" => ($"setenv {variable} {value}", "~/.cshrc"),
+			"csh"  => ($"setenv {variable} {value}", "~/.cshrc"),
 			"pwsh" or "powershell" => ($"$env:{variable} = {value}",
 				"$PROFILE"),
 			"nu" => ($"$env.{variable} = {value}", "$nu.env-path"),
@@ -388,7 +392,7 @@ internal sealed class ConfigWizard
 			config.Save(_configPath);
 		}
 		catch (Exception ex) when (ex is IOException
-									   or UnauthorizedAccessException)
+			                           or UnauthorizedAccessException)
 		{
 			_io.Write(
 				$"{Strings.Error(Strings.ConfigSaveFailed(_configPath, ex.Message))}\n",
