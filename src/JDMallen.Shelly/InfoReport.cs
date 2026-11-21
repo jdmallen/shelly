@@ -155,7 +155,7 @@ internal static class InfoReport
 		}
 
 		rows.Add(("auth", "Microsoft Entra ID via the Azure CLI"));
-		if (azure.TryCreateTokenProvider(out string? invalidKey) is null)
+		if (azure.InvalidTokenSetting() is { } invalidKey)
 		{
 			rows.Add(("error", $"{invalidKey} is not valid"));
 		}
@@ -187,7 +187,7 @@ internal static class InfoReport
 					: string.IsNullOrWhiteSpace(azure.Credential)
 						? AzureConfig.INTERACTIVE_BROWSER_CREDENTIAL
 						: azure.Credential.Trim()));
-		if (azure.TryCreateTokenProvider(out string? invalidKey) is null)
+		if (azure.InvalidTokenSetting() is { } invalidKey)
 		{
 			rows.Add(("error", $"{invalidKey} is not valid"));
 		}

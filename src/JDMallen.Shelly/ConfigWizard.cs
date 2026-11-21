@@ -243,9 +243,9 @@ internal sealed class ConfigWizard
 		azure.TenantId = _prompts.OptionalText(
 			"azure.tenantId",
 			azure.TenantId,
-			value => IsValidTenant(azure, value)
-				? null
-				: Strings.InvalidTenantId);
+			value => IsInvalidTenant(azure, value)
+				? Strings.InvalidTenantId
+				: null);
 
 		return null;
 	}
@@ -275,18 +275,10 @@ internal sealed class ConfigWizard
 		}
 	}
 
-	private static bool IsValidTenant(AzureConfig azure, string tenantId)
-	{
-		var candidate = new AzureConfig
-		{
-			TenantId = tenantId,
-			TokenScope = azure.TokenScope,
-		};
-
-		return candidate.TryCreateTokenProvider(out string? invalidKey) is not
-				null
-			|| invalidKey != "azure.tenantId";
-	}
+	private static bool IsInvalidTenant(AzureConfig azure, string tenantId) =>
+		new AzureConfig { TenantId = tenantId, TokenScope = azure.TokenScope }
+			.InvalidTokenSetting()
+		== "azure.tenantId";
 
 	/// <summary>
 	/// The Azure CLI counterpart of the API key step: whether <c>az</c> is on

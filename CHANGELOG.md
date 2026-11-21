@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Requires `JDMallen.Toolbox.AI` and `JDMallen.Toolbox.AI.Azure` 4.7.0.
 - `shelly --config` with stdout redirected now stops with "interactive
   terminal required", as it already did with stdin redirected, instead of
   writing the wizard's screens into the redirect target.
@@ -50,6 +51,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Building the chat provider moved out of `Program` into its own
     `ProviderFactory`, which takes the environment and an error writer, so
     its tests no longer redirect `Console.Error`.
+  - An invalid `azure.tenantId` or `azure.tokenScope` is identified with
+    the toolbox's new `AzureCliTokenProviderOptions.FindInvalidProperty()`,
+    instead of building a token provider, catching its exception, and
+    building another without the tenant to tell the two apart.
 
 ## [1.8.0]
 

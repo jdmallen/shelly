@@ -173,16 +173,17 @@ internal sealed class ProviderFactory(
 						deployment);
 
 			case AzureAuthKind.AzureCli:
-				AzureCliTokenProvider? cliTokenProvider =
-					cfg.TryCreateTokenProvider(out string? invalidCliKey);
+				string? invalidCliKey = cfg.InvalidTokenSetting();
 
-				return cliTokenProvider is null
+				return invalidCliKey is not null
 					? Fail<AzureOpenAIClientOptions>(
-						Strings.InvalidSetting(invalidCliKey!, _configPath))
+						Strings.InvalidSetting(invalidCliKey, _configPath))
 					: AzureOpenAIClientOptions.ForEntraId(
 						endpoint,
 						deployment,
-						new CachingBearerTokenProvider(cliTokenProvider));
+						new CachingBearerTokenProvider(
+							new AzureCliTokenProvider(
+								cfg.TokenProviderOptions())));
 
 			case AzureAuthKind.AzureIdentity:
 				AzureCredentialOptions? credentialOptions =
@@ -190,10 +191,7 @@ internal sealed class ProviderFactory(
 						ShellyConfig.AuthenticationRecordPath(_configPath));
 				string? invalidKey = credentialOptions is null
 					? "azure.credential"
-					: cfg.TryCreateTokenProvider(out string? invalidTokenKey)
-						is null
-						? invalidTokenKey
-						: null;
+					: cfg.InvalidTokenSetting();
 
 				return invalidKey is not null
 					? Fail<AzureOpenAIClientOptions>(

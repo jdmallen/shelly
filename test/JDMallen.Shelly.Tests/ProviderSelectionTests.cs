@@ -342,6 +342,21 @@ public class ShellyConfigTests
 		Assert.Contains("\"timeoutSeconds\"", json);
 	}
 
+	[Theory]
+	[InlineData("", "", null)]
+	[InlineData("contoso.onmicrosoft.com", "", null)]
+	[InlineData("not a tenant!", "", "azure.tenantId")]
+	[InlineData("", "ftp://bad.example/.default", "azure.tokenScope")]
+	[InlineData("not a tenant!", "ftp://bad.example/.default", "azure.tokenScope")]
+	public void InvalidTokenSetting_NamesTheConfigKey(
+		string tenantId,
+		string tokenScope,
+		string? expected) =>
+		Assert.Equal(
+			expected,
+			new AzureConfig { TenantId = tenantId, TokenScope = tokenScope }
+				.InvalidTokenSetting());
+
 	[Fact]
 	public void Deserialize_AzureAuth_DefaultsToApiKey()
 	{

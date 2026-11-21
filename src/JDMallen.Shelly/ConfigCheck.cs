@@ -114,9 +114,9 @@ internal static class ConfigCheck
 			missing,
 			auth == AzureAuthKind.AzureIdentity && azure.CredentialKind is null,
 			"azure.credential");
-		if (azure.TryCreateTokenProvider(out string? invalidKey) is null)
+		if (azure.InvalidTokenSetting() is { } invalidKey)
 		{
-			missing.Add(invalidKey!);
+			missing.Add(invalidKey);
 		}
 
 		AddIf(

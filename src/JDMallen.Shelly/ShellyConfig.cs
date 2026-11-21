@@ -380,45 +380,20 @@ internal sealed class AzureConfig
 		};
 
 	/// <summary>
-	/// The provider for <see cref="AZURE_CLI_AUTH" />, or null with the config
-	/// key that is invalid. Only validates; no <c>az</c> process is started.
-	/// Azure.Identity takes the same tenant and scope forms, so
-	/// <see cref="AZURE_IDENTITY_AUTH" /> is validated with it too.
+	/// The config key of the token setting the Azure CLI provider would
+	/// reject: <c>azure.tokenScope</c> or <c>azure.tenantId</c>; null when
+	/// both are valid. Azure.Identity takes the same tenant and scope forms,
+	/// so <see cref="AZURE_IDENTITY_AUTH" /> is checked with it too.
 	/// </summary>
-	internal AzureCliTokenProvider? TryCreateTokenProvider(
-		out string? invalidKey)
-	{
-		AzureCliTokenProviderOptions options = TokenProviderOptions();
-		invalidKey = null;
-		try
+	internal string? InvalidTokenSetting() =>
+		TokenProviderOptions().FindInvalidProperty() switch
 		{
-			return new AzureCliTokenProvider(options);
-		}
-		catch (ArgumentException)
-		{
-			// The options are checked as a whole; retry without the tenant to
-			// tell which of the two settings is at fault.
-			invalidKey = IsValid(options with { TenantId = null })
-				? "azure.tenantId"
-				: "azure.tokenScope";
+			nameof(AzureCliTokenProviderOptions.Scope) => "azure.tokenScope",
+			nameof(AzureCliTokenProviderOptions.TenantId) => "azure.tenantId",
 
-			return null;
-		}
-	}
-
-	private static bool IsValid(AzureCliTokenProviderOptions options)
-	{
-		try
-		{
-			_ = new AzureCliTokenProvider(options);
-
-			return true;
-		}
-		catch (ArgumentException)
-		{
-			return false;
-		}
-	}
+			// Timeout isn't a shelly setting, so it is always the default.
+			_ => null,
+		};
 }
 
 /// <summary>
