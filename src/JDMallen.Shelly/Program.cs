@@ -2,16 +2,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 
-using JDMallen.Toolbox.AI.Azure;
-
 namespace JDMallen.Shelly;
 
 internal static class Program
 {
-	// Hosted providers answer in seconds; a self-hosted model may need minutes,
-	// so its timeout comes from config instead.
-	private const int HOSTED_TIMEOUT_SECONDS = 30;
-
 	private static readonly IConsoleIO Io = new SystemConsoleIO();
 
 	public static async Task<int> Main(string[] args)
@@ -154,7 +148,10 @@ internal static class Program
 	{
 		ShellyConfig config = ShellyConfig.Load();
 
-		IChatProvider? provider = CreateProvider(config);
+		IChatProvider? provider = new ProviderFactory(
+				Environment.GetEnvironmentVariable,
+				Io.WriteError)
+			.Create(config);
 		if (provider is null)
 		{
 			return 1;
@@ -216,248 +213,6 @@ internal static class Program
 		File.WriteAllText(path, command);
 
 		return 0;
-	}
-
-	// One REPL session, one client; the caller-owned lifetime spans the process.
-	private static HttpClient CreateHttpClient(int timeoutSeconds) =>
-		new()
-		{
-			Timeout = TimeSpan.FromSeconds(timeoutSeconds),
-		};
-
-	internal static IChatProvider? CreateProvider(ShellyConfig config)
-		=> config.Provider.ToLowerInvariant() switch
-		{
-			ShellyConfig.AZURE_PROVIDER => CreateAzureProvider(config.Azure),
-			ShellyConfig.ANTHROPIC_PROVIDER => CreateAnthropicProvider(
-				config.Anthropic),
-			ShellyConfig.OPENAI_PROVIDER
-				or ShellyConfig.LOCAL_PROVIDER_ALIAS => CreateOpenAIProvider(
-					config.OpenAI),
-			_ => Fail(
-				Strings.UnknownProvider(
-					config.Provider,
-					ShellyConfig.ConfigPath())),
-		};
-
-	private static IChatProvider? CreateAnthropicProvider(AnthropicConfig cfg)
-	{
-		string? apiKey =
-			Environment.GetEnvironmentVariable(
-				ChatProvider.ANTHROPIC_API_KEY_ENV_VAR);
-		if (string.IsNullOrEmpty(apiKey))
-		{
-			return Fail(
-				Strings.EnvVarNotSet(ChatProvider.ANTHROPIC_API_KEY_ENV_VAR));
-		}
-
-		return new ChatProvider(
-			new AnthropicChatClient(
-				CreateHttpClient(HOSTED_TIMEOUT_SECONDS),
-				new AnthropicClientOptions(apiKey, cfg.Model)));
-	}
-
-	private static IChatProvider? CreateOpenAIProvider(OpenAIConfig cfg)
-	{
-		var missing = new List<string>();
-		if (string.IsNullOrWhiteSpace(cfg.BaseUrl))
-		{
-			missing.Add("openai.baseUrl");
-		}
-
-		if (string.IsNullOrWhiteSpace(cfg.Model))
-		{
-			missing.Add("openai.model");
-		}
-
-		if (missing.Count > 0)
-		{
-			return Fail(
-				Strings.OpenAIMisconfigured(
-					string.Join($" {Strings.ListConjunction} ", missing),
-					ShellyConfig.ConfigPath()));
-		}
-
-		if (cfg.TimeoutSeconds <= 0)
-		{
-			return Fail(
-				Strings.MustBeGreaterThanZero(
-					"openai.timeoutSeconds",
-					cfg.TimeoutSeconds));
-		}
-
-		if (cfg.MaxTokens <= 0)
-		{
-			return Fail(
-				Strings.MustBeGreaterThanZero(
-					"openai.maxTokens",
-					cfg.MaxTokens));
-		}
-
-		// Self-hosted runners usually accept anonymous requests, so the key is
-		// optional: supply it only if the env var is set.
-		string? apiKey =
-			Environment.GetEnvironmentVariable(
-				ChatProvider.OPEN_AI_API_KEY_ENV_VAR);
-
-		return new ChatProvider(
-			new OpenAICompatibleChatClient(
-				CreateHttpClient(cfg.TimeoutSeconds),
-				new OpenAICompatibleClientOptions(
-					cfg.BaseUrl,
-					cfg.Model,
-					apiKey)),
-			cfg.MaxTokens);
-	}
-
-	private static IChatProvider? CreateAzureProvider(AzureConfig cfg)
-	{
-		if (cfg.MaxTokens <= 0)
-		{
-			return Fail(
-				Strings.MustBeGreaterThanZero(
-					"azure.maxTokens",
-					cfg.MaxTokens));
-		}
-
-		AzureSetting endpoint =
-			cfg.ResolveEndpoint(Environment.GetEnvironmentVariable);
-		AzureSetting deployment =
-			cfg.ResolveDeployment(Environment.GetEnvironmentVariable);
-
-		var missing = new List<string>();
-		if (!endpoint.IsSet)
-		{
-			missing.Add("azure.endpoint");
-		}
-
-		if (!deployment.IsSet)
-		{
-			missing.Add("azure.deployment");
-		}
-
-		if (missing.Count > 0)
-		{
-			return Fail(
-				Strings.AzureMisconfigured(
-					string.Join($" {Strings.ListConjunction} ", missing),
-					ShellyConfig.ConfigPath()));
-		}
-
-		WarnIfDeprecated(endpoint, "azure.endpoint");
-		WarnIfDeprecated(deployment, "azure.deployment");
-
-		AzureOpenAIClientOptions? options =
-			CreateAzureOptions(cfg, endpoint.Value!, deployment.Value!);
-		if (options is null)
-		{
-			return null;
-		}
-
-		return new ChatProvider(
-			new AzureOpenAIChatClient(
-				CreateHttpClient(HOSTED_TIMEOUT_SECONDS),
-				options with { IsReasoningModel = cfg.ReasoningModel }),
-			cfg.MaxTokens);
-	}
-
-	/// <summary>
-	/// Client options for <see cref="AzureConfig.Auth" />: the API key from
-	/// its environment variable, or an Entra ID token from the Azure CLI or
-	/// Azure.Identity, which is fetched on the first request and cached until
-	/// shortly before it expires. A browser or device code sign-in happens on
-	/// that first request, and is remembered for later runs. Null (after
-	/// printing why) when the auth setup is incomplete.
-	/// </summary>
-	private static AzureOpenAIClientOptions? CreateAzureOptions(
-		AzureConfig cfg,
-		string endpoint,
-		string deployment)
-	{
-		if (cfg.UsesAzureCli)
-		{
-			AzureCliTokenProvider? tokenProvider =
-				cfg.TryCreateTokenProvider(out string? invalidKey);
-			if (tokenProvider is not null)
-			{
-				return AzureOpenAIClientOptions.ForEntraId(
-					endpoint,
-					deployment,
-					new CachingBearerTokenProvider(tokenProvider));
-			}
-
-			Fail(
-				Strings.InvalidSetting(
-					invalidKey!,
-					ShellyConfig.ConfigPath()));
-
-			return null;
-		}
-
-		if (cfg.UsesAzureIdentity)
-		{
-			string configPath = ShellyConfig.ConfigPath();
-			AzureCredentialOptions? credentialOptions =
-				cfg.CredentialOptions(
-					ShellyConfig.AuthenticationRecordPath(configPath));
-			string? invalid = credentialOptions is null
-				? "azure.credential"
-				: cfg.TryCreateTokenProvider(out string? invalidKey) is null
-					? invalidKey
-					: null;
-			// ReSharper disable once InvertIf
-			if (invalid is not null)
-			{
-				Fail(Strings.InvalidSetting(invalid, configPath));
-
-				return null;
-			}
-
-			return AzureOpenAIClientOptions.ForEntraId(
-				endpoint,
-				deployment,
-				AzureCredentialFactory.CreateTokenProvider(
-					credentialOptions!,
-					cfg.TokenProviderOptions().Scope));
-		}
-
-		if (!cfg.UsesApiKey)
-		{
-			Fail(Strings.UnknownAzureAuth(cfg.Auth, ShellyConfig.ConfigPath()));
-
-			return null;
-		}
-
-		string? apiKey =
-			Environment.GetEnvironmentVariable(
-				ChatProvider.AZURE_API_KEY_ENV_VAR);
-		if (!string.IsNullOrEmpty(apiKey))
-		{
-			return new AzureOpenAIClientOptions(apiKey, endpoint, deployment);
-		}
-
-		Fail(Strings.EnvVarNotSet(ChatProvider.AZURE_API_KEY_ENV_VAR));
-
-		return null;
-	}
-
-	private static void WarnIfDeprecated(AzureSetting setting, string configKey)
-	{
-		if (setting.DeprecatedVariable is not null)
-		{
-			Io.WriteError(
-				Strings.DeprecatedEnvVar(
-					setting.DeprecatedVariable,
-					configKey,
-					ShellyConfig.ConfigPath()));
-		}
-	}
-
-	private static IChatProvider? Fail(string message)
-	{
-		Io.WriteError(Strings.Error(message));
-
-		return null;
 	}
 
 	// Runs in the shell the command was written for, i.e. the one shelly was

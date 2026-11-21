@@ -21,25 +21,46 @@ public class ProviderSelectionTests
 		};
 
 	/// <summary>
-	/// Runs <see cref="Program.CreateProvider" /> with stderr captured, so the
-	/// failure message is assertable without leaking into the test output.
+	/// Runs <see cref="ProviderFactory.Create" /> with its error lines
+	/// collected, so the failure message is assertable.
 	/// </summary>
 	private static (IChatProvider? Provider, string Error) Create(
 		ShellyConfig config)
 	{
-		TextWriter original = Console.Error;
-		var captured = new StringWriter();
-		Console.SetError(captured);
+		var errors = new List<string>();
+		IChatProvider? provider =
+			new ProviderFactory(Environment.GetEnvironmentVariable, errors.Add)
+				.Create(config);
 
-		try
-		{
-			return (Program.CreateProvider(config), captured.ToString());
-		}
-		finally
-		{
-			Console.SetError(original);
-		}
+		return (provider, string.Join(Environment.NewLine, errors));
 	}
+
+	[Theory]
+	[InlineData("anthropic", "Anthropic")]
+	[InlineData("Anthropic", "Anthropic")]
+	[InlineData("openai", "OpenAI")]
+	[InlineData("LOCAL", "OpenAI")]
+	[InlineData("azure", "Azure")]
+	[InlineData("llama", null)]
+	[InlineData(" azure", null)]
+	public void Kind_ParsesProviderIgnoringCase(
+		string provider,
+		string? expected) =>
+		Assert.Equal(
+			expected,
+			new ShellyConfig { Provider = provider }.Kind?.ToString());
+
+	[Theory]
+	[InlineData("apiKey", "ApiKey")]
+	[InlineData("AZURECLI", "AzureCli")]
+	[InlineData("azureIdentity", "AzureIdentity")]
+	[InlineData("managedIdentity", null)]
+	public void AuthKind_ParsesAuthIgnoringCase(
+		string auth,
+		string? expected) =>
+		Assert.Equal(
+			expected,
+			new AzureConfig { Auth = auth }.AuthKind?.ToString());
 
 	[Theory]
 	[InlineData("openai")]
@@ -326,14 +347,14 @@ public class ShellyConfigTests
 	{
 		AzureConfig defaults = Deserialize("{ \"provider\": \"azure\" }").Azure;
 		Assert.Equal(AzureConfig.API_KEY_AUTH, defaults.Auth);
-		Assert.True(defaults.UsesApiKey);
+		Assert.Equal(AzureAuthKind.ApiKey, defaults.AuthKind);
 		Assert.Equal(string.Empty, defaults.TenantId);
 		Assert.Equal(string.Empty, defaults.TokenScope);
 
 		AzureConfig azureCli = Deserialize(
 				"{ \"azure\": { \"auth\": \"azureCli\", \"tenantId\": \"contoso.onmicrosoft.com\", \"tokenScope\": \"https://cognitiveservices.azure.com/.default\" } }")
 			.Azure;
-		Assert.True(azureCli.UsesAzureCli);
+		Assert.Equal(AzureAuthKind.AzureCli, azureCli.AuthKind);
 		Assert.Equal(
 			new AzureCliTokenProviderOptions
 			{
@@ -362,7 +383,7 @@ public class ShellyConfigTests
 				"{ \"azure\": { \"auth\": \"azureIdentity\", \"credential\": \"DeviceCode\", \"tenantId\": \" contoso.com \" } }")
 			.Azure;
 
-		Assert.True(azure.UsesAzureIdentity);
+		Assert.Equal(AzureAuthKind.AzureIdentity, azure.AuthKind);
 		Assert.Equal(AzureCredentialKind.DeviceCode, azure.CredentialKind);
 		Assert.True(azure.UsesInteractiveSignIn);
 

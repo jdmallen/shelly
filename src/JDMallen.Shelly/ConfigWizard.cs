@@ -28,12 +28,19 @@ internal sealed class ConfigWizard
 
 	private static readonly ProviderOption[] Providers =
 	[
-		new(ShellyConfig.ANTHROPIC_PROVIDER, () => "Anthropic (Claude)"),
 		new(
+			ProviderKind.Anthropic,
+			ShellyConfig.ANTHROPIC_PROVIDER,
+			() => "Anthropic (Claude)"),
+		new(
+			ProviderKind.OpenAI,
 			ShellyConfig.OPENAI_PROVIDER,
 			()
 				=> $"{Strings.ProviderOpenAICompatible} (openai.com, llama.cpp, Ollama, vLLM, ...)"),
-		new(ShellyConfig.AZURE_PROVIDER, () => "Azure OpenAI"),
+		new(
+			ProviderKind.Azure,
+			ShellyConfig.AZURE_PROVIDER,
+			() => "Azure OpenAI"),
 	];
 
 	private readonly IConsoleIO _io;
@@ -96,7 +103,7 @@ internal sealed class ConfigWizard
 		_io.WriteLine(Strings.ProviderHeader);
 		int chosen = _prompts.Choose(
 			[.. Providers.Select(provider => provider.Label())],
-			CurrentProviderIndex(config.Provider),
+			CurrentProviderIndex(config.Kind),
 			zeroOption: fromMainMenu
 				? Strings.MenuBackToMainMenu
 				: Strings.MainMenuExit);
@@ -106,29 +113,30 @@ internal sealed class ConfigWizard
 			return ConfigWizardOutcome.Discarded;
 		}
 
-		string provider = Providers[chosen].Name;
+		ProviderKind provider = Providers[chosen].Kind;
 
 		// Keep the "local" alias if that's what the user already had.
-		if (provider != ShellyConfig.OPENAI_PROVIDER
-			|| !ShellyConfig.IsOpenAIProvider(config.Provider))
+		if (provider != ProviderKind.OpenAI
+			|| config.Kind != ProviderKind.OpenAI)
 		{
-			config.Provider = provider;
+			config.Provider = Providers[chosen].Name;
 		}
 
 		_io.WriteLine();
 		_io.WriteLine(Strings.SettingsHeader);
 		string? apiKeyVariable = provider switch
 		{
-			ShellyConfig.AZURE_PROVIDER => ConfigureAzure(config.Azure),
-			ShellyConfig.OPENAI_PROVIDER => ConfigureOpenAI(config.OpenAI),
-			_ => ConfigureAnthropic(config.Anthropic),
+			ProviderKind.Azure  => ConfigureAzure(config.Azure),
+			ProviderKind.OpenAI => ConfigureOpenAI(config.OpenAI),
+			_                   => ConfigureAnthropic(config.Anthropic),
 		};
 
 		_io.WriteLine();
 		string? pendingApiKey = null;
 		switch (apiKeyVariable)
 		{
-			case null when config.Azure.UsesAzureIdentity:
+			case null
+				when config.Azure.AuthKind == AzureAuthKind.AzureIdentity:
 				WriteAzureIdentitySignIn();
 
 				break;
@@ -139,7 +147,7 @@ internal sealed class ConfigWizard
 			default:
 				pendingApiKey = ConfigureApiKey(
 					apiKeyVariable,
-					provider == ShellyConfig.OPENAI_PROVIDER);
+					provider == ProviderKind.OpenAI);
 
 				break;
 		}
@@ -198,17 +206,10 @@ internal sealed class ConfigWizard
 
 		_io.WriteLine();
 		_io.WriteLine(Strings.AzureAuthHeader);
-		string[] authMethods =
-		[
-			AzureConfig.API_KEY_AUTH,
-			AzureConfig.AZURE_CLI_AUTH,
-			AzureConfig.AZURE_IDENTITY_AUTH,
-		];
+		AzureAuthKind? currentKind = azure.AuthKind;
 		int current = Array.FindIndex(
-			authMethods,
-			method => method.Equals(
-				azure.Auth,
-				StringComparison.OrdinalIgnoreCase));
+			AzureConfig.AuthMethods,
+			method => method.Kind == currentKind);
 		int chosen = _prompts.Choose(
 			[
 				Strings.AzureAuthApiKey(ChatProvider.AZURE_API_KEY_ENV_VAR),
@@ -220,16 +221,17 @@ internal sealed class ConfigWizard
 		// Esc keeps the current method; an unrecognized one becomes the key.
 		if (chosen != ConsolePrompts.CANCELLED || current < 0)
 		{
-			azure.Auth = authMethods[Math.Max(chosen, 0)];
+			azure.Auth = AzureConfig.AuthMethods[Math.Max(chosen, 0)].Name;
 		}
 
-		if (azure.UsesAzureIdentity)
+		switch (azure.AuthKind)
 		{
-			ConfigureAzureCredential(azure);
-		}
-		else if (!azure.UsesAzureCli)
-		{
-			return ChatProvider.AZURE_API_KEY_ENV_VAR;
+			case AzureAuthKind.AzureIdentity:
+				ConfigureAzureCredential(azure);
+
+				break;
+			case AzureAuthKind.ApiKey:
+				return ChatProvider.AZURE_API_KEY_ENV_VAR;
 		}
 
 		if (azure.UsesInteractiveSignIn)
@@ -397,23 +399,8 @@ internal sealed class ConfigWizard
 			?? ($"export {variable}={value}", Strings.UnknownShellStartupFile);
 	}
 
-	private static int CurrentProviderIndex(string provider)
-	{
-		if (ShellyConfig.IsOpenAIProvider(provider))
-		{
-			return Array.FindIndex(
-				Providers,
-				option => option.Name == ShellyConfig.OPENAI_PROVIDER);
-		}
-
-		int index = Array.FindIndex(
-			Providers,
-			option => option.Name.Equals(
-				provider,
-				StringComparison.OrdinalIgnoreCase));
-
-		return Math.Max(index, 0);
-	}
+	private static int CurrentProviderIndex(ProviderKind? provider) =>
+		Math.Max(Array.FindIndex(Providers, option => option.Kind == provider), 0);
 
 	// The key waits for the config save, so declining "Save changes?" (or a
 	// failed write) leaves the user's environment untouched too.
@@ -470,5 +457,8 @@ internal sealed class ConfigWizard
 	}
 
 	// The label is looked up when shown, so it follows CurrentUICulture.
-	private sealed record ProviderOption(string Name, Func<string> Label);
+	private sealed record ProviderOption(
+		ProviderKind Kind,
+		string Name,
+		Func<string> Label);
 }

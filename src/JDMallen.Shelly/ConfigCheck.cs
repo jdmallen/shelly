@@ -2,7 +2,7 @@ namespace JDMallen.Shelly;
 
 /// <summary>
 /// What the active provider still needs before shelly can ask it anything:
-/// the same conditions <c>Program.CreateProvider</c> fails on, reported as
+/// the same conditions <see cref="ProviderFactory" /> fails on, reported as
 /// the config keys and environment variable names to fix, without printing
 /// anything. The main menu shows these next to "Configure".
 /// </summary>
@@ -29,46 +29,54 @@ internal static class ConfigCheck
 			missing.Add(CONFIG_FILE);
 		}
 
-		string provider = config.Provider.ToLowerInvariant();
-		if (provider == ShellyConfig.ANTHROPIC_PROVIDER)
+		switch (config.Kind)
 		{
-			AddIfUnset(missing, getEnv, ChatProvider.ANTHROPIC_API_KEY_ENV_VAR);
-		}
-		else if (ShellyConfig.IsOpenAIProvider(provider))
-		{
-			// The key is optional here: self-hosted runners rarely check one.
-			OpenAIConfig openAI = config.OpenAI;
-			AddIf(
-				missing,
-				string.IsNullOrWhiteSpace(openAI.BaseUrl),
-				"openai.baseUrl");
-			AddIf(
-				missing,
-				string.IsNullOrWhiteSpace(openAI.Model),
-				"openai.model");
-			AddIf(missing, openAI.TimeoutSeconds <= 0, "openai.timeoutSeconds");
-			AddIf(missing, openAI.MaxTokens <= 0, "openai.maxTokens");
-		}
-		else if (provider == ShellyConfig.AZURE_PROVIDER)
-		{
-			AzureConfig azure = config.Azure;
+			case ProviderKind.Anthropic:
+				AddIfUnset(
+					missing,
+					getEnv,
+					ChatProvider.ANTHROPIC_API_KEY_ENV_VAR);
 
-			// A value still coming from a deprecated variable works, but
-			// belongs in the config file; saving the wizard once moves it.
-			AddIf(
-				missing,
-				NeedsMove(azure.ResolveEndpoint(getEnv)),
-				"azure.endpoint");
-			AddIf(
-				missing,
-				NeedsMove(azure.ResolveDeployment(getEnv)),
-				"azure.deployment");
-			AddIf(missing, azure.MaxTokens <= 0, "azure.maxTokens");
-			AddAzureAuth(missing, azure, getEnv);
-		}
-		else
-		{
-			missing.Add(PROVIDER_KEY);
+				break;
+			case ProviderKind.OpenAI:
+				// The key is optional here: self-hosted runners rarely check one.
+				OpenAIConfig openAI = config.OpenAI;
+				AddIf(
+					missing,
+					string.IsNullOrWhiteSpace(openAI.BaseUrl),
+					"openai.baseUrl");
+				AddIf(
+					missing,
+					string.IsNullOrWhiteSpace(openAI.Model),
+					"openai.model");
+				AddIf(
+					missing,
+					openAI.TimeoutSeconds <= 0,
+					"openai.timeoutSeconds");
+				AddIf(missing, openAI.MaxTokens <= 0, "openai.maxTokens");
+
+				break;
+			case ProviderKind.Azure:
+				AzureConfig azure = config.Azure;
+
+				// A value still coming from a deprecated variable works, but
+				// belongs in the config file; saving the wizard once moves it.
+				AddIf(
+					missing,
+					NeedsMove(azure.ResolveEndpoint(getEnv)),
+					"azure.endpoint");
+				AddIf(
+					missing,
+					NeedsMove(azure.ResolveDeployment(getEnv)),
+					"azure.deployment");
+				AddIf(missing, azure.MaxTokens <= 0, "azure.maxTokens");
+				AddAzureAuth(missing, azure, getEnv);
+
+				break;
+			default:
+				missing.Add(PROVIDER_KEY);
+
+				break;
 		}
 
 		return missing;
@@ -86,31 +94,35 @@ internal static class ConfigCheck
 		AzureConfig azure,
 		Func<string, string?> getEnv)
 	{
-		if (azure.UsesApiKey)
-		{
-			AddIfUnset(missing, getEnv, ChatProvider.AZURE_API_KEY_ENV_VAR);
-		}
-		else if (azure.UsesAzureIdentity)
-		{
-			AddIf(missing, azure.CredentialKind is null, "azure.credential");
-			if (azure.TryCreateTokenProvider(out string? invalidKey) is null)
-			{
-				missing.Add(invalidKey!);
-			}
-		}
-		else if (azure.UsesAzureCli)
-		{
-			if (azure.TryCreateTokenProvider(out string? invalidKey) is null)
-			{
-				missing.Add(invalidKey!);
-			}
-
-			AddIf(missing, AzureCli.Find(getEnv) is null, AZURE_CLI);
-		}
-		else
+		AzureAuthKind? auth = azure.AuthKind;
+		if (auth is null)
 		{
 			missing.Add("azure.auth");
+
+			return;
 		}
+
+		if (auth == AzureAuthKind.ApiKey)
+		{
+			AddIfUnset(missing, getEnv, ChatProvider.AZURE_API_KEY_ENV_VAR);
+
+			return;
+		}
+
+		// Both Entra ID methods take a tenant and scope; each has one more need.
+		AddIf(
+			missing,
+			auth == AzureAuthKind.AzureIdentity && azure.CredentialKind is null,
+			"azure.credential");
+		if (azure.TryCreateTokenProvider(out string? invalidKey) is null)
+		{
+			missing.Add(invalidKey!);
+		}
+
+		AddIf(
+			missing,
+			auth == AzureAuthKind.AzureCli && AzureCli.Find(getEnv) is null,
+			AZURE_CLI);
 	}
 
 	/// <summary>Reported when <c>az</c> isn't on PATH.</summary>

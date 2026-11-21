@@ -28,9 +28,9 @@ internal static class InfoReport
 			("provider", config.Provider),
 		};
 
-		switch (config.Provider.ToLowerInvariant())
+		switch (config.Kind)
 		{
-			case ShellyConfig.AZURE_PROVIDER:
+			case ProviderKind.Azure:
 				rows.Add(
 					(
 						"endpoint",
@@ -61,7 +61,7 @@ internal static class InfoReport
 					ShellyConfig.AuthenticationRecordPath(configPath));
 
 				break;
-			case ShellyConfig.ANTHROPIC_PROVIDER:
+			case ProviderKind.Anthropic:
 				rows.Add(("endpoint", ANTHROPIC_ENDPOINT));
 				rows.Add(("model", config.Anthropic.Model));
 				rows.Add(
@@ -75,8 +75,7 @@ internal static class InfoReport
 							getEnvironmentVariable)));
 
 				break;
-			case ShellyConfig.OPENAI_PROVIDER
-				or ShellyConfig.LOCAL_PROVIDER_ALIAS:
+			case ProviderKind.OpenAI:
 				rows.Add(
 					("endpoint",
 						OrNotSet(config.OpenAI.BaseUrl, "openai.baseUrl")));
@@ -132,32 +131,27 @@ internal static class InfoReport
 		Func<string, string?> getEnvironmentVariable,
 		string authenticationRecordPath)
 	{
-		if (azure.UsesAzureIdentity)
+		switch (azure.AuthKind)
 		{
-			AddAzureIdentityRows(rows, azure, authenticationRecordPath);
+			case AzureAuthKind.AzureIdentity:
+				AddAzureIdentityRows(rows, azure, authenticationRecordPath);
 
-			return;
-		}
+				return;
+			case AzureAuthKind.ApiKey:
+				rows.Add(("auth", "api key"));
+				rows.Add(
+					("api key",
+						KeyStatus(
+							ChatProvider.AZURE_API_KEY_ENV_VAR,
+							getEnvironmentVariable)));
 
-		if (azure.UsesApiKey)
-		{
-			rows.Add(("auth", "api key"));
-			rows.Add(
-				("api key",
-					KeyStatus(
-						ChatProvider.AZURE_API_KEY_ENV_VAR,
-						getEnvironmentVariable)));
+				return;
+			case null:
+				rows.Add(
+					("auth",
+						$"{azure.Auth} (unknown; expected {AzureConfig.API_KEY_AUTH}, {AzureConfig.AZURE_CLI_AUTH} or {AzureConfig.AZURE_IDENTITY_AUTH})"));
 
-			return;
-		}
-
-		if (!azure.UsesAzureCli)
-		{
-			rows.Add(
-				("auth",
-					$"{azure.Auth} (unknown; expected {AzureConfig.API_KEY_AUTH}, {AzureConfig.AZURE_CLI_AUTH} or {AzureConfig.AZURE_IDENTITY_AUTH})"));
-
-			return;
+				return;
 		}
 
 		rows.Add(("auth", "Microsoft Entra ID via the Azure CLI"));

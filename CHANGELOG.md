@@ -45,6 +45,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - One shared `PATH` lookup replaces the separate ones for the Azure CLI
     and the clipboard tools.
   - All types are `internal`; `ShellDetector` has its own file.
+  - `provider` and `azure.auth` are parsed once, into enums, instead of
+    being compared as strings in each place that reads them.
+  - Building the chat provider moved out of `Program` into its own
+    `ProviderFactory`, which takes the environment and an error writer, so
+    its tests no longer redirect `Console.Error`.
 
 ## [1.8.0]
 

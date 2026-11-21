@@ -5,6 +5,24 @@ using JDMallen.Toolbox.AI.Azure;
 
 namespace JDMallen.Shelly;
 
+/// <summary>The providers <see cref="ShellyConfig.Provider" /> can name.</summary>
+internal enum ProviderKind
+{
+	Anthropic,
+
+	/// <summary>Any OpenAI-compatible server, named "openai" or "local".</summary>
+	OpenAI,
+	Azure,
+}
+
+/// <summary>The methods <see cref="AzureConfig.Auth" /> can name.</summary>
+internal enum AzureAuthKind
+{
+	ApiKey,
+	AzureCli,
+	AzureIdentity,
+}
+
 internal sealed class ShellyConfig
 {
 	internal const string ANTHROPIC_PROVIDER = "anthropic";
@@ -15,6 +33,19 @@ internal sealed class ShellyConfig
 	internal const string LOCAL_PROVIDER_ALIAS = "local";
 
 	public string Provider { get; set; } = ANTHROPIC_PROVIDER;
+
+	/// <summary>
+	/// The provider <see cref="Provider" /> names, ignoring case; null when it
+	/// names none.
+	/// </summary>
+	internal ProviderKind? Kind =>
+		Provider.ToLowerInvariant() switch
+		{
+			ANTHROPIC_PROVIDER => ProviderKind.Anthropic,
+			OPENAI_PROVIDER or LOCAL_PROVIDER_ALIAS => ProviderKind.OpenAI,
+			AZURE_PROVIDER => ProviderKind.Azure,
+			_ => null,
+		};
 
 	public AnthropicConfig Anthropic { get; set; } = new();
 
@@ -111,16 +142,6 @@ internal sealed class ShellyConfig
 			File.Delete(temporaryPath);
 		}
 	}
-
-	/// <summary>
-	/// Whether <paramref name="provider" /> names the OpenAI-compatible
-	/// provider, by its name or its alias.
-	/// </summary>
-	internal static bool IsOpenAIProvider(string provider) =>
-		provider.Equals(OPENAI_PROVIDER, StringComparison.OrdinalIgnoreCase)
-		|| provider.Equals(
-			LOCAL_PROVIDER_ALIAS,
-			StringComparison.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// Where an Azure browser or device code sign-in is remembered (account
@@ -279,8 +300,21 @@ internal sealed class AzureConfig
 			("azd", AzureCredentialKind.AzureDeveloperCli),
 		];
 
-	internal bool UsesAzureIdentity =>
-		Auth.Equals(AZURE_IDENTITY_AUTH, StringComparison.OrdinalIgnoreCase);
+	/// <summary>
+	/// The <see cref="Auth" /> names, in the order the wizard offers them.
+	/// </summary>
+	internal static readonly (string Name, AzureAuthKind Kind)[] AuthMethods =
+	[
+		(API_KEY_AUTH, AzureAuthKind.ApiKey),
+		(AZURE_CLI_AUTH, AzureAuthKind.AzureCli),
+		(AZURE_IDENTITY_AUTH, AzureAuthKind.AzureIdentity),
+	];
+
+	/// <summary>
+	/// The method <see cref="Auth" /> names, ignoring case; null when it names
+	/// none.
+	/// </summary>
+	internal AzureAuthKind? AuthKind => Find(AuthMethods, Auth);
 
 	/// <summary>
 	/// The credential <see cref="Credential" /> names, or null when it names
@@ -289,21 +323,27 @@ internal sealed class AzureConfig
 	internal AzureCredentialKind? CredentialKind =>
 		string.IsNullOrWhiteSpace(Credential)
 			? AzureCredentialKind.InteractiveBrowser
-			: Array.FindIndex(
-					Credentials,
-					entry => entry.Name.Equals(
-						Credential.Trim(),
-						StringComparison.OrdinalIgnoreCase))
-				is var index and >= 0
-				? Credentials[index].Kind
-				: null;
+			: Find(Credentials, Credential.Trim());
+
+	private static TKind? Find<TKind>(
+		(string Name, TKind Kind)[] entries,
+		string name)
+		where TKind : struct =>
+		Array.FindIndex(
+				entries,
+				entry => entry.Name.Equals(
+					name,
+					StringComparison.OrdinalIgnoreCase))
+			is var index and >= 0
+			? entries[index].Kind
+			: null;
 
 	/// <summary>
 	/// Whether this config signs in through a browser or device code (and so
 	/// keeps a sign-in next to the config file).
 	/// </summary>
 	internal bool UsesInteractiveSignIn =>
-		UsesAzureIdentity
+		AuthKind == AzureAuthKind.AzureIdentity
 		&& CredentialKind is { } kind
 		&& AzureCredentialFactory.IsInteractive(kind);
 
@@ -323,12 +363,6 @@ internal sealed class AzureConfig
 				AuthenticationRecordPath = authenticationRecordPath,
 			}
 			: null;
-
-	internal bool UsesApiKey =>
-		Auth.Equals(API_KEY_AUTH, StringComparison.OrdinalIgnoreCase);
-
-	internal bool UsesAzureCli =>
-		Auth.Equals(AZURE_CLI_AUTH, StringComparison.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// The Azure CLI token options for <see cref="TenantId" /> and
