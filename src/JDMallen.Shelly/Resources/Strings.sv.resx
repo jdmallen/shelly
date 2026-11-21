@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>Inget förslag mottogs från API:et</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>Svaret kapades vid tokengränsen och visas därför inte. Försök igen eller be om något enklare.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Förslag:</value>
 	</data>

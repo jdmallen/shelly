@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>API не вернул предложение</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>Ответ обрезан на лимите токенов, поэтому он не показан. Попробуйте ещё раз или попросите что-нибудь попроще.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Предложение:</value>
 	</data>

@@ -21,6 +21,8 @@ internal static class Strings
 
 	public static string NoSuggestion => Get(nameof(NoSuggestion));
 
+	public static string ResponseTruncated => Get(nameof(ResponseTruncated));
+
 	public static string SuggestionHeader => Get(nameof(SuggestionHeader));
 
 	public static string Explaining => Get(nameof(Explaining));

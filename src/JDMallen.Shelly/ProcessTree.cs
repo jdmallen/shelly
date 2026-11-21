@@ -5,7 +5,9 @@ using System.Text;
 namespace JDMallen.Shelly;
 
 /// <param name="ParentId">The parent's process id; 0 when it has none.</param>
-/// <param name="Name">The process name, e.g. <c>zsh</c> or <c>pwsh.exe</c>.</param>
+/// <param name="Name">
+/// The process name, e.g. <c>zsh</c> or <c>pwsh.exe</c>; empty when unreadable.
+/// </param>
 /// <param name="ExecutablePath">The full executable path, when readable.</param>
 internal readonly record struct ProcessEntry(
 	int ParentId,
@@ -79,6 +81,9 @@ internal sealed class LinuxProcessTree : IProcessTree
 	/// <c>pid (comm) state ppid ...</c>. The comm may itself contain spaces
 	/// and parentheses, so fields are counted from the last <c>)</c>.
 	/// </summary>
+	/// <exception cref="FormatException">
+	/// The line is not in that shape.
+	/// </exception>
 	internal static int ParseParentId(string stat)
 	{
 		int commEnd = stat.LastIndexOf(')');
@@ -86,8 +91,12 @@ internal sealed class LinuxProcessTree : IProcessTree
 			.Split(
 				' ',
 				StringSplitOptions.RemoveEmptyEntries);
+		if (commEnd < 0 || fields.Length < 2)
+		{
+			throw new FormatException($"Unexpected /proc stat line: {stat}");
+		}
 
-		return int.Parse(fields[1], CultureInfo.CurrentCulture);
+		return int.Parse(fields[1], CultureInfo.InvariantCulture);
 	}
 
 	private static string? TryReadExecutable(string processDirectory)
@@ -185,13 +194,16 @@ internal sealed partial class MacProcessTree : IProcessTree
 /// <summary>
 /// Reads the parent id through <c>NtQueryInformationProcess</c> and the image
 /// path through <c>QueryFullProcessImageNameW</c>, both of which need only
-/// limited query access.
+/// limited query access. Not thread-safe: lookups share one path buffer.
 /// </summary>
 internal sealed partial class WindowsProcessTree : IProcessTree
 {
 	private const uint PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
 	private const int PROCESS_BASIC_INFORMATION_CLASS = 0;
 	private const int MAX_PATH_LENGTH = 32768;
+
+	// One buffer for every lookup in a run, instead of 64 KB per ancestor.
+	private readonly ushort[] _pathBuffer = new ushort[MAX_PATH_LENGTH];
 
 	public ProcessEntry? Get(int processId)
 	{
@@ -220,25 +232,24 @@ internal sealed partial class WindowsProcessTree : IProcessTree
 					return null;
 				}
 
-				var pathBuffer = new ushort[MAX_PATH_LENGTH];
 				uint pathLength = MAX_PATH_LENGTH;
 				string? path = QueryFullProcessImageName(
 					handle,
 					0,
-					pathBuffer,
+					_pathBuffer,
 					ref pathLength)
 					? new string(
 						MemoryMarshal.Cast<ushort, char>(
-							pathBuffer.AsSpan(0, (int)pathLength)))
+							_pathBuffer.AsSpan(0, (int)pathLength)))
 					: null;
-				if (path is null)
-				{
-					return null;
-				}
 
+				// An unreadable path still has a known parent, so the
+				// ancestor walk carries on past it, as it does on Linux.
 				return new ProcessEntry(
 					(int)basicInfo.InheritedFromUniqueProcessId,
-					Path.GetFileName(path.Replace('\\', '/')),
+					path is null
+						? string.Empty
+						: Path.GetFileName(path.Replace('\\', '/')),
 					path);
 			}
 			finally
@@ -264,7 +275,7 @@ internal sealed partial class WindowsProcessTree : IProcessTree
 		public nint InheritedFromUniqueProcessId;
 	}
 
-	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[LibraryImport("kernel32.dll")]
 	private static partial nint OpenProcess(
 		uint desiredAccess,
 		[MarshalAs(UnmanagedType.Bool)] bool inheritHandle,
@@ -272,12 +283,9 @@ internal sealed partial class WindowsProcessTree : IProcessTree
 
 	[LibraryImport("kernel32.dll")]
 	[return: MarshalAs(UnmanagedType.Bool)]
-	private static partial void CloseHandle(IntPtr handle);
+	private static partial bool CloseHandle(nint handle);
 
-	[LibraryImport(
-		"kernel32.dll",
-		EntryPoint = "QueryFullProcessImageNameW",
-		SetLastError = true)]
+	[LibraryImport("kernel32.dll", EntryPoint = "QueryFullProcessImageNameW")]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	private static partial bool QueryFullProcessImageName(
 		nint process,

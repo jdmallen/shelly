@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>API'den öneri alınamadı</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>Yanıt token sınırında kesildiği için gösterilmiyor. Tekrar deneyin veya daha basit bir şey isteyin.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Öneri:</value>
 	</data>

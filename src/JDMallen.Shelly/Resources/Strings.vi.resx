@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>Không nhận được gợi ý nào từ API</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>Câu trả lời bị cắt ở giới hạn token nên không được hiển thị. Hãy thử lại hoặc yêu cầu điều gì đó đơn giản hơn.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Gợi ý:</value>
 	</data>

@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>Aucune suggestion reçue de l'API</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>La réponse a été coupée à la limite de jetons, elle n'est donc pas affichée. Réessayez ou demandez quelque chose de plus simple.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Suggestion :</value>
 	</data>

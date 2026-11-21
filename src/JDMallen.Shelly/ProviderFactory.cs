@@ -43,7 +43,11 @@ internal sealed class ProviderFactory(
 			: new ChatProvider(
 				new AnthropicChatClient(
 					CreateHttpClient(HOSTED_TIMEOUT_SECONDS),
-					new AnthropicClientOptions(apiKey, cfg.Model)));
+					new AnthropicClientOptions(apiKey, cfg.Model)
+					{
+						OmitTemperature = !cfg.AcceptsTemperature,
+					}),
+					cfg.MaxTokens);
 	}
 
 	private IChatProvider? CreateOpenAI(OpenAIConfig cfg)

@@ -16,7 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   recording its token usage. It now prints only the suggested command to
   stdout and exits 0. The same happens when stdout is captured, so
   `$(shelly "...")` returns the command instead of waiting on a menu nobody
-  can see.
+  can see. If the request fails, the error goes to stderr and shelly exits
+  1, so stdout only ever holds a command. A bare `x=$(shelly)` still asks
+  what you want to do, on stderr; with stdin piped there is nobody to ask,
+  so it doesn't.
 - **Error messages are readable again.** The native binary showed framework
   errors as bare resource keys, e.g. a trailing comma in `config.json` was
   reported as `TrailingCommaNotAllowedBeforeObjectEnd`. The full messages
@@ -30,10 +33,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   "same thing, but recursive" or "without sudo" has something to refer to.
   Repeated retries carry every earlier suggestion. Leaving the change empty
   asks for a different command instead of repeating the same request.
+- **Newer Claude models work.** Models such as Claude Haiku 5.5 rejected
+  every request with "`temperature` is deprecated for this model". shelly now
+  sends a temperature only to the older models that accept one, and gives
+  the newer ones, which think before answering, a 2048 token budget instead
+  of 500 so the command isn't cut off.
+- **A cut-off answer is no longer offered as a command.** When the model
+  hit its token limit mid-answer, shelly showed whatever it had, ready to
+  run: a command cut short can do something else entirely (`rm -rf
+  /tmp/build` stopping at `rm -rf /tmp/bui`). It now reports that the answer
+  was cut off and shows nothing; a cut-off explanation is reported the same
+  way, and you're returned to the menu. Applies to every provider.
+- **Shell detection on Windows no longer stops at an unreadable process.**
+  An ancestor whose path can't be read (e.g. one running elevated) used to
+  end the search, falling back to the environment; it is now skipped like
+  any other process that isn't a shell.
 
 ### Changed
 
-- Requires `JDMallen.Toolbox.AI` and `JDMallen.Toolbox.AI.Azure` 4.7.0.
+- **The default Anthropic model is now `claude-haiku-5-5`** (was
+  `claude-haiku-4-5-20251001`). This only affects new installs: shelly writes
+  the model into `config.json` on first run, so an existing config keeps its
+  model until you change `anthropic.model`.
+- Requires `JDMallen.Toolbox.AI` and `JDMallen.Toolbox.AI.Azure` 4.8.0.
 - `shelly --config` with stdout redirected now stops with "interactive
   terminal required", as it already did with stdin redirected, instead of
   writing the wizard's screens into the redirect target.
@@ -55,6 +77,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     the toolbox's new `AzureCliTokenProviderOptions.FindInvalidProperty()`,
     instead of building a token provider, catching its exception, and
     building another without the tenant to tell the two apart.
+  - Process lookups: `/proc` is parsed culture-independently and a malformed
+    stat line is reported as unreadable instead of throwing; on Windows the
+    path buffer is allocated once per run instead of per process, and the
+    P/Invoke declarations are corrected (`CloseHandle` returns `bool`, and
+    error codes that were never read are no longer captured).
 
 ## [1.8.0]
 

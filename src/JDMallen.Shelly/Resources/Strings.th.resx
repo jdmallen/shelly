@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>ไม่ได้รับคำแนะนำจาก API</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>คำตอบถูกตัดที่ขีดจำกัดโทเค็น จึงไม่แสดง ลองอีกครั้ง หรือขอสิ่งที่ง่ายกว่านี้</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>คำแนะนำ:</value>
 	</data>

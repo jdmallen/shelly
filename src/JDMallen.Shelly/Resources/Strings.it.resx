@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>Nessun suggerimento ricevuto dall'API</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>La risposta è stata troncata al limite di token, quindi non viene mostrata. Riprova o chiedi qualcosa di più semplice.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Suggerimento:</value>
 	</data>

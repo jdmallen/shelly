@@ -59,6 +59,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>No se recibió ninguna sugerencia de la API</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>La respuesta se cortó al alcanzar el límite de tokens, así que no se muestra. Inténtalo de nuevo o pide algo más sencillo.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Sugerencia:</value>
 	</data>

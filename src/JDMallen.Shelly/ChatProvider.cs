@@ -60,6 +60,12 @@ internal sealed class ChatProvider(
 
 		return new ChatReply(
 			sanitize ? CommandSanitizer.Strip(text) : text,
-			result.Usage);
+			result.Usage,
+			IsTruncated(result.StopReason));
 	}
+
+	// Anthropic reports "max_tokens"; OpenAI-compatible servers, Azure
+	// included, report "length".
+	internal static bool IsTruncated(string? stopReason) =>
+		stopReason is "max_tokens" or "length";
 }

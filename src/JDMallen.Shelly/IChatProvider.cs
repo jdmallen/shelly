@@ -21,4 +21,12 @@ internal interface IChatProvider
 /// The request's token counts, or null when the provider reported none (some
 /// self-hosted runners don't).
 /// </param>
-internal readonly record struct ChatReply(string Text, TokenUsage? Usage = null);
+/// <param name="Truncated">
+/// True when the model hit its token limit before finishing. The text is
+/// then incomplete (a cut-off command can do something else entirely), so it
+/// must not be shown as an answer.
+/// </param>
+internal readonly record struct ChatReply(
+	string Text,
+	TokenUsage? Usage = null,
+	bool Truncated = false);

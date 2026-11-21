@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>API не повернув пропозицію</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>Відповідь обрізано на ліміті токенів, тому її не показано. Спробуйте ще раз або попросіть щось простіше.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Пропозиція:</value>
 	</data>

@@ -12,12 +12,25 @@ internal interface IConsoleIO
 	/// </summary>
 	bool IsInteractive { get; }
 
+	/// <summary>
+	/// True when stdin is piped or from a file. Distinguishes
+	/// <c>x=$(shelly)</c>, where someone is still typing at a keyboard, from
+	/// <c>echo "..." | shelly</c>, where nobody is.
+	/// </summary>
+	bool IsInputRedirected { get; }
+
 	void Write(string text, ConsoleColor? color = null);
 
 	void WriteLine(string text = "", ConsoleColor? color = null);
 
 	/// <summary>Writes a line to stderr, uncolored.</summary>
 	void WriteError(string text);
+
+	/// <summary>
+	/// Writes to stderr with no newline, uncolored: a question asked while
+	/// stdout is captured.
+	/// </summary>
+	void WriteErrorInline(string text);
 
 	string? ReadLine();
 
@@ -34,6 +47,8 @@ internal sealed class SystemConsoleIO : IConsoleIO
 {
 	public bool IsInteractive =>
 		!Console.IsInputRedirected && !Console.IsOutputRedirected;
+
+	public bool IsInputRedirected => Console.IsInputRedirected;
 
 	public void Write(string text, ConsoleColor? color = null)
 	{
@@ -59,6 +74,8 @@ internal sealed class SystemConsoleIO : IConsoleIO
 	}
 
 	public void WriteError(string text) => Console.Error.WriteLine(text);
+
+	public void WriteErrorInline(string text) => Console.Error.Write(text);
 
 	public string? ReadLine() => Console.ReadLine();
 

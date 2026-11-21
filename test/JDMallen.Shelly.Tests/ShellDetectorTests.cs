@@ -54,6 +54,15 @@ public class ShellDetectorTests
 	}
 
 	[Fact]
+	public void UnreadableAncestor_IsSkipped()
+	{
+		// What WindowsProcessTree returns when it can't read the image path.
+		GivenAncestors((string.Empty, null), ("pwsh.exe", @"C:\pwsh\pwsh.exe"));
+
+		Assert.Equal("pwsh", Detect(isWindows: true).Name);
+	}
+
+	[Fact]
 	public void NonShellAncestors_AreSkipped()
 	{
 		GivenAncestors(
@@ -212,6 +221,14 @@ public class ShellDetectorTests
 	public void ParseParentId_CommWithSpacesAndParens() => Assert.Equal(
 		42,
 		LinuxProcessTree.ParseParentId("123 (my (odd) proc) S 42 123 123 0"));
+
+	[Theory]
+	[InlineData("")]
+	[InlineData("123 (zsh)")]
+	[InlineData("123 zsh S 42")]
+	public void ParseParentId_Malformed_ThrowsFormatException(string stat) =>
+		Assert.Throws<FormatException>(() =>
+			LinuxProcessTree.ParseParentId(stat));
 
 	[Fact]
 	public void LinuxProcessTree_ReadsThisProcess()

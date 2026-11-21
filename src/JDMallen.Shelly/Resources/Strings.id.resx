@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>Tidak ada saran yang diterima dari API</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>Jawaban terpotong di batas token, jadi tidak ditampilkan. Coba lagi, atau minta sesuatu yang lebih sederhana.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Saran:</value>
 	</data>

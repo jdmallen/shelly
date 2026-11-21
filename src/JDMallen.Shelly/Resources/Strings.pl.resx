@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>Nie otrzymano sugestii z API</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>Odpowiedź została ucięta na limicie tokenów, więc nie jest wyświetlana. Spróbuj ponownie lub poproś o coś prostszego.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Sugestia:</value>
 	</data>

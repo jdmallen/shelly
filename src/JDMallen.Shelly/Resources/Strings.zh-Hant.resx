@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>未從 API 收到任何建議</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>回答在權杖上限處被截斷，因此不予顯示。請重試，或提出更簡單的請求。</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>建議：</value>
 	</data>

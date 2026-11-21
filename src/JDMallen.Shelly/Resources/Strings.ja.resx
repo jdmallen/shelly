@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>API から提案を受け取れませんでした</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>回答がトークン上限で途切れたため、表示しません。もう一度試すか、より簡単な内容を依頼してください。</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>提案：</value>
 	</data>

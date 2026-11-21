@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>Z API nepřišel žádný návrh</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>Odpověď byla useknuta na limitu tokenů, proto se nezobrazuje. Zkuste to znovu nebo požádejte o něco jednoduššího.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Návrh:</value>
 	</data>

@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>Geen suggestie ontvangen van de API</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>Het antwoord is afgekapt bij de tokenlimiet en wordt daarom niet getoond. Probeer het opnieuw of vraag om iets eenvoudigers.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Suggestie:</value>
 	</data>

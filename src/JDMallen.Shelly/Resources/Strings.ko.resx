@@ -58,6 +58,9 @@
 	<data name="NoSuggestion" xml:space="preserve">
 		<value>API에서 제안을 받지 못했습니다</value>
 	</data>
+	<data name="ResponseTruncated" xml:space="preserve">
+		<value>응답이 토큰 한도에서 잘려 표시하지 않습니다. 다시 시도하거나 더 간단한 요청을 해 보세요.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>제안:</value>
 	</data>

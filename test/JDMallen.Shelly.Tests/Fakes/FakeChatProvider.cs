@@ -16,6 +16,12 @@ internal sealed class FakeChatProvider : IChatProvider
 
 	public Queue<TokenUsage?> ExplanationUsages { get; } = new();
 
+	/// <summary>Reports suggestions as cut off at the token limit.</summary>
+	public bool SuggestionTruncated { get; set; }
+
+	/// <summary>Reports explanations as cut off at the token limit.</summary>
+	public bool ExplanationTruncated { get; set; }
+
 	public List<string> SuggestionPrompts { get; } = [];
 
 	public List<string> ExplanationCommands { get; } = [];
@@ -38,7 +44,8 @@ internal sealed class FakeChatProvider : IChatProvider
 					SuggestionResponses.Dequeue(),
 					SuggestionUsages.Count == 0
 						? null
-						: SuggestionUsages.Dequeue()));
+						: SuggestionUsages.Dequeue(),
+					SuggestionTruncated));
 	}
 
 	public Task<ChatReply> ExplainCommandAsync(
@@ -55,6 +62,7 @@ internal sealed class FakeChatProvider : IChatProvider
 					ExplanationResponses.Dequeue(),
 					ExplanationUsages.Count == 0
 						? null
-						: ExplanationUsages.Dequeue()));
+						: ExplanationUsages.Dequeue(),
+					ExplanationTruncated));
 	}
 }

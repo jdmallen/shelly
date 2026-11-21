@@ -6,6 +6,8 @@ internal sealed class FakeConsoleIO : IConsoleIO
 {
 	public bool IsInteractive { get; set; } = true;
 
+	public bool IsInputRedirected { get; set; }
+
 	public Queue<string?> ReadLines { get; } = new();
 
 	public Queue<ConsoleKey> ReadKeys { get; } = new();
@@ -23,6 +25,8 @@ internal sealed class FakeConsoleIO : IConsoleIO
 		=> Output.AppendLine(text);
 
 	public void WriteError(string text) => Errors.AppendLine(text);
+
+	public void WriteErrorInline(string text) => Errors.Append(text);
 
 	public string? ReadLine()
 		=> ReadLines.Count == 0 ? null : ReadLines.Dequeue();

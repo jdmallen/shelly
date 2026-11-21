@@ -55,13 +55,19 @@ internal sealed class ReplLoop
 		while (true)
 		{
 			// Piped input gets only the command on stdout, so it composes with
-			// other tools: no question, no progress line, no menu.
+			// other tools: no progress line, no menu.
 			bool interactive = _io.IsInteractive;
 			if (string.IsNullOrWhiteSpace(prompt))
 			{
 				if (interactive)
 				{
 					_io.Write($"{Strings.WhatToDo} ", ConsoleColor.Cyan);
+				}
+				else if (!_io.IsInputRedirected)
+				{
+					// Only stdout is captured (x=$(shelly)): someone is
+					// typing, so ask on stderr, out of the captured output.
+					_io.WriteErrorInline($"{Strings.WhatToDo} ");
 				}
 
 				string? line = _io.ReadLine();
@@ -86,20 +92,21 @@ internal sealed class ReplLoop
 					_context,
 					cancellationToken);
 				SessionUsage.Add(reply.Usage);
+				if (reply.Truncated)
+				{
+					return Fail(Strings.ResponseTruncated, interactive);
+				}
+
 				suggestion = reply.Text;
 			}
 			catch (Exception ex)
 			{
-				_io.WriteLine(Strings.Error(ex.Message), ConsoleColor.Red);
-
-				return ReplResult.Failed();
+				return Fail(Strings.Error(ex.Message), interactive);
 			}
 
 			if (string.IsNullOrWhiteSpace(suggestion))
 			{
-				_io.WriteLine(Strings.NoSuggestion, ConsoleColor.Red);
-
-				return ReplResult.Failed();
+				return Fail(Strings.NoSuggestion, interactive);
 			}
 
 			if (!interactive)
@@ -138,6 +145,24 @@ internal sealed class ReplLoop
 		}
 	}
 
+	/// <summary>
+	/// Reports a failed request: in red on the terminal, or on stderr when
+	/// stdout is piped or captured, so it never passes for a command.
+	/// </summary>
+	private ReplResult Fail(string message, bool interactive)
+	{
+		if (interactive)
+		{
+			_io.WriteLine(message, ConsoleColor.Red);
+		}
+		else
+		{
+			_io.WriteError(message);
+		}
+
+		return ReplResult.Failed();
+	}
+
 	private async Task<(ActionOutcome, string?)> ActOnSuggestionAsync(
 		string suggestion,
 		ShellContext context,
@@ -173,6 +198,15 @@ internal sealed class ReplLoop
 							context,
 							cancellationToken);
 						SessionUsage.Add(reply.Usage);
+						if (reply.Truncated)
+						{
+							_io.WriteLine(
+								Strings.ResponseTruncated,
+								ConsoleColor.Red);
+
+							continue;
+						}
+
 						explanation = reply.Text;
 					}
 					catch (Exception ex)

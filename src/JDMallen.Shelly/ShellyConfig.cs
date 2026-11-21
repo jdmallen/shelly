@@ -195,7 +195,45 @@ internal sealed class ShellyConfig
 
 internal sealed class AnthropicConfig
 {
-	public string Model { get; set; } = "claude-haiku-4-5-20251001";
+	// Models released before Claude Opus 4.7, which accept a temperature.
+	// Every later model rejects one other than its default, so this list
+	// never needs to grow.
+	private static readonly string[] TemperatureModelPrefixes =
+	[
+		"claude-3",
+		"claude-haiku-4-5",
+		"claude-opus-4-0",
+		"claude-opus-4-1",
+		"claude-opus-4-2", // claude-opus-4-20250514
+		"claude-opus-4-5",
+		"claude-opus-4-6",
+		"claude-sonnet-4-0",
+		"claude-sonnet-4-2", // claude-sonnet-4-20250514
+		"claude-sonnet-4-5",
+		"claude-sonnet-4-6",
+	];
+
+	public string Model { get; set; } = "claude-haiku-5-5";
+
+	/// <summary>
+	/// Whether <see cref="Model" /> accepts shelly's low sampling temperature.
+	/// Unknown models are assumed not to, since only older ones do.
+	/// </summary>
+	internal bool AcceptsTemperature =>
+		TemperatureModelPrefixes.Any(prefix =>
+			Model.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+
+	/// <summary>
+	/// The generation budget. The newer models think by default, and that
+	/// thinking is spent from the same budget, so they need more room than
+	/// the older ones to finish the answer.
+	/// </summary>
+	internal int MaxTokens =>
+		AcceptsTemperature
+			? ChatProvider.DEFAULT_MAX_TOKENS
+			: THINKING_MAX_TOKENS;
+
+	private const int THINKING_MAX_TOKENS = 2048;
 }
 
 /// <summary>

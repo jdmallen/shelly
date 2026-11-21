@@ -220,7 +220,7 @@ public class InfoReportTests
 
 		Assert.Contains("provider:   anthropic", report);
 		Assert.Contains($"endpoint:   {InfoReport.ANTHROPIC_ENDPOINT}", report);
-		Assert.Contains("model:      claude-haiku-4-5-20251001", report);
+		Assert.Contains("model:      claude-haiku-5-5", report);
 		Assert.Contains("ANTHROPIC_API_KEY_SHELLY is set", report);
 		Assert.DoesNotContain(SECRET, report);
 	}

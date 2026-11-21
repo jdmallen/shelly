@@ -1,3 +1,5 @@
+using JDMallen.Toolbox.AI;
+
 using JDMallen.Shelly.Tests.Fakes;
 
 using Xunit;
@@ -190,6 +192,7 @@ public class ReplLoopTests
 	public async Task NotInteractive_PrintsOnlyTheSuggestionAndQuits()
 	{
 		_io.IsInteractive = false;
+		_io.IsInputRedirected = true;
 		_io.ReadLines.Enqueue("list files");
 		_provider.SuggestionResponses.Enqueue("ls -la");
 
@@ -199,6 +202,24 @@ public class ReplLoopTests
 		// No ReadKey was queued: reaching the menu would have thrown.
 		Assert.Equal(ReplAction.Quit, result.Action);
 		Assert.Equal(["list files"], _provider.SuggestionPrompts);
+		Assert.Equal($"ls -la{Environment.NewLine}", _io.Output.ToString());
+
+		// Piped stdin: nobody to ask.
+		Assert.Equal(string.Empty, _io.Errors.ToString());
+	}
+
+	[Fact]
+	public async Task CapturedStdout_AsksOnStderr()
+	{
+		_io.IsInteractive = false;
+		_io.ReadLines.Enqueue("list files");
+		_provider.SuggestionResponses.Enqueue("ls -la");
+
+		ReplResult result = await NewLoop()
+			.RunAsync(null, TestContext.Current.CancellationToken);
+
+		Assert.Equal(ReplAction.Quit, result.Action);
+		Assert.Equal($"{Strings.WhatToDo} ", _io.Errors.ToString());
 		Assert.Equal($"ls -la{Environment.NewLine}", _io.Output.ToString());
 	}
 
@@ -213,6 +234,40 @@ public class ReplLoopTests
 
 		Assert.Equal(ReplAction.Quit, result.Action);
 		Assert.Equal($"ls -la{Environment.NewLine}", _io.Output.ToString());
+	}
+
+	[Fact]
+	public async Task NotInteractive_ProviderError_GoesToStderr()
+	{
+		_io.IsInteractive = false;
+		_provider.SuggestionThrow =
+			new InvalidOperationException("network down");
+
+		ReplResult result = await NewLoop()
+			.RunAsync("list files", TestContext.Current.CancellationToken);
+
+		Assert.Equal(ReplAction.Failed, result.Action);
+		Assert.Contains("network down", _io.Errors.ToString());
+		Assert.Equal(string.Empty, _io.Output.ToString());
+	}
+
+	[Theory]
+	[InlineData(true, "cut off")]
+	[InlineData(false, "No suggestion received")]
+	public async Task NotInteractive_UnusableReply_GoesToStderr(
+		bool truncated,
+		string expectedError)
+	{
+		_io.IsInteractive = false;
+		_provider.SuggestionResponses.Enqueue(truncated ? "rm -rf /tmp/bui" : "");
+		_provider.SuggestionTruncated = truncated;
+
+		ReplResult result = await NewLoop()
+			.RunAsync("list files", TestContext.Current.CancellationToken);
+
+		Assert.Equal(ReplAction.Failed, result.Action);
+		Assert.Contains(expectedError, _io.Errors.ToString());
+		Assert.Equal(string.Empty, _io.Output.ToString());
 	}
 
 	[Fact]
@@ -305,6 +360,44 @@ public class ReplLoopTests
 		Assert.False(result.ShouldExecute);
 		Assert.Contains("explain broke", _io.Output.ToString());
 		Assert.Single(_provider.ExplanationCommands);
+	}
+
+	[Fact]
+	public async Task TruncatedSuggestion_FailsWithoutShowingIt()
+	{
+		_provider.SuggestionResponses.Enqueue("rm -rf /tmp/bui");
+		_provider.SuggestionUsages.Enqueue(new TokenUsage(100, 500));
+		_provider.SuggestionTruncated = true;
+		ReplLoop loop = NewLoop();
+
+		ReplResult result = await loop.RunAsync(
+			"clean the build dir",
+			TestContext.Current.CancellationToken);
+
+		Assert.Equal(ReplAction.Failed, result.Action);
+		Assert.False(result.ShouldExecute);
+		Assert.DoesNotContain("rm -rf", _io.Output.ToString());
+		Assert.Contains("cut off", _io.Output.ToString());
+		Assert.Equal(1, loop.SessionUsage.Requests);
+	}
+
+	[Fact]
+	public async Task TruncatedExplanation_StaysInActionLoopWithoutShowingIt()
+	{
+		_provider.SuggestionResponses.Enqueue("ls -la");
+		_provider.ExplanationResponses.Enqueue("Lists every fi");
+		_provider.ExplanationTruncated = true;
+		_io.ReadKeys.Enqueue(ConsoleKey.P);
+		_io.ReadKeys.Enqueue(ConsoleKey.X);
+
+		ReplResult result
+			= await NewLoop()
+				.RunAsync("list files", TestContext.Current.CancellationToken);
+
+		Assert.True(result.ShouldExecute);
+		Assert.Equal("ls -la", result.Command);
+		Assert.DoesNotContain("Lists every fi", _io.Output.ToString());
+		Assert.Contains("cut off", _io.Output.ToString());
 	}
 
 	[Fact]

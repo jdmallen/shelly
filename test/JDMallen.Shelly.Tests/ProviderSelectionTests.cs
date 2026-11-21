@@ -357,6 +357,40 @@ public class ShellyConfigTests
 			new AzureConfig { TenantId = tenantId, TokenScope = tokenScope }
 				.InvalidTokenSetting());
 
+	[Theory]
+	[InlineData("max_tokens", true)]
+	[InlineData("length", true)]
+	[InlineData("end_turn", false)]
+	[InlineData("stop", false)]
+	[InlineData(null, false)]
+	public void IsTruncated_MatchesEachProvidersLimitReason(
+		string? stopReason,
+		bool expected) =>
+		Assert.Equal(expected, ChatProvider.IsTruncated(stopReason));
+
+	[Theory]
+	[InlineData("claude-haiku-4-5-20251001", true)]
+	[InlineData("claude-sonnet-4-20250514", true)]
+	[InlineData("claude-opus-4-6", true)]
+	[InlineData("claude-3-5-haiku-latest", true)]
+	[InlineData("claude-haiku-5-5", false)]
+	[InlineData("claude-opus-4-7", false)]
+	[InlineData("claude-sonnet-5-5", false)]
+	[InlineData("some-future-model", false)]
+	public void AcceptsTemperature_OnlyForOlderModels(
+		string model,
+		bool expected)
+	{
+		var config = new AnthropicConfig { Model = model };
+
+		Assert.Equal(expected, config.AcceptsTemperature);
+
+		// Newer models think first, so they get a larger budget.
+		Assert.Equal(
+			expected ? ChatProvider.DEFAULT_MAX_TOKENS : 2048,
+			config.MaxTokens);
+	}
+
 	[Fact]
 	public void Deserialize_AzureAuth_DefaultsToApiKey()
 	{
