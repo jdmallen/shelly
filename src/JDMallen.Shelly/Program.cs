@@ -6,49 +6,51 @@ using JDMallen.Toolbox.AI.Azure;
 
 namespace JDMallen.Shelly;
 
-public static class Program
+internal static class Program
 {
 	// Hosted providers answer in seconds; a self-hosted model may need minutes,
 	// so its timeout comes from config instead.
 	private const int HOSTED_TIMEOUT_SECONDS = 30;
+
+	private static readonly IConsoleIO Io = new SystemConsoleIO();
 
 	public static async Task<int> Main(string[] args)
 	{
 		switch (CommandLineArgs.Parse(args))
 		{
 			case CommandLineArgs.ShowHelp:
-				Console.WriteLine(BuildHelpText());
+				Io.WriteLine(BuildHelpText());
 
 				return 0;
 			case CommandLineArgs.ShowVersion:
-				Console.WriteLine(BuildVersionLine());
+				Io.WriteLine(BuildVersionLine());
 
 				return 0;
 			case CommandLineArgs.ShowInfo:
-				Console.WriteLine(BuildInfoReport());
+				Io.WriteLine(BuildInfoReport());
 
 				return 0;
 			case CommandLineArgs.ShowConfig:
-				if (!Console.IsInputRedirected)
+				if (Io.IsInteractive)
 				{
 					return RunConfigWizard();
 				}
 
-				await Console.Error.WriteLineAsync(
+				Io.WriteError(
 					Strings.Error(Strings.InteractiveTerminalRequired));
 
 				return 1;
 
 			case CommandLineArgs.Error error:
-				await Console.Error.WriteLineAsync(error.Message);
-				await Console.Error.WriteLineAsync();
-				await Console.Error.WriteLineAsync(BuildHelpText());
+				Io.WriteError(error.Message);
+				Io.WriteError(string.Empty);
+				Io.WriteError(BuildHelpText());
 
 				return 1;
 
 			// Piped input keeps going straight to the prompt, as before the menu.
 			case CommandLineArgs.Run { Prompt: null }
-				when !Console.IsInputRedirected:
+				when Io.IsInteractive:
 				return await RunMainMenuAsync();
 			case CommandLineArgs.Run run:
 				return await RunAsync(run.Prompt);
@@ -59,7 +61,6 @@ public static class Program
 
 	private static async Task<int> RunMainMenuAsync()
 	{
-		var io = new SystemConsoleIO();
 		while (true)
 		{
 			// Re-checked on every pass, so the warning clears after Configure.
@@ -71,22 +72,22 @@ public static class Program
 				parseError,
 				Environment.GetEnvironmentVariable);
 
-			switch (MainMenu.Show(io, BuildVersionLine(), missingSettings))
+			switch (MainMenu.Show(Io, BuildVersionLine(), missingSettings))
 			{
 				case MainMenuChoice.Ask:
-					io.WriteLine();
+					Io.WriteLine();
 
 					return await RunAsync(null);
 				case MainMenuChoice.Configure:
-					io.WriteLine();
+					Io.WriteLine();
 					new ConfigWizard().Run(true);
-					io.WriteLine();
+					Io.WriteLine();
 
 					continue;
 				case MainMenuChoice.Info:
-					io.WriteLine();
-					io.WriteLine(BuildInfoReport());
-					io.WriteLine();
+					Io.WriteLine();
+					Io.WriteLine(BuildInfoReport());
+					Io.WriteLine();
 
 					continue;
 				case MainMenuChoice.Exit:
@@ -196,7 +197,7 @@ public static class Program
 				DateTimeOffset.Now,
 				out string? error))
 		{
-			Console.Error.WriteLine(Strings.UsageNotRecorded(path, error!));
+			Io.WriteError(Strings.UsageNotRecorded(path, error!));
 		}
 	}
 
@@ -207,7 +208,7 @@ public static class Program
 		{
 			// The edit action is only offered when the wrapper sets the env var,
 			// so this is defensive: print the command so it isn't silently lost.
-			Console.WriteLine(command);
+			Io.WriteLine(command);
 
 			return 0;
 		}
@@ -444,7 +445,7 @@ public static class Program
 	{
 		if (setting.DeprecatedVariable is not null)
 		{
-			Console.Error.WriteLine(
+			Io.WriteError(
 				Strings.DeprecatedEnvVar(
 					setting.DeprecatedVariable,
 					configKey,
@@ -454,7 +455,7 @@ public static class Program
 
 	private static IChatProvider? Fail(string message)
 	{
-		Console.Error.WriteLine(Strings.Error(message));
+		Io.WriteError(Strings.Error(message));
 
 		return null;
 	}
@@ -475,9 +476,7 @@ public static class Program
 
 		startInfo.ArgumentList.Add(command);
 
-		Console.ForegroundColor = ConsoleColor.Cyan;
-		Console.WriteLine(Strings.Executing);
-		Console.ResetColor();
+		Io.WriteLine(Strings.Executing, ConsoleColor.Cyan);
 
 		Process? process;
 		try
@@ -492,7 +491,7 @@ public static class Program
 
 		if (process is null)
 		{
-			await Console.Error.WriteLineAsync(
+			Io.WriteError(
 				Strings.Error(Strings.FailedToStartShell));
 
 			return 1;

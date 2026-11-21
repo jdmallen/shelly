@@ -17,7 +17,12 @@ internal sealed class FakeConsoleIO : IConsoleIO
 	public void Write(string text, ConsoleColor? color = null)
 		=> Output.Append(text);
 
-	public void WriteLine(string text = "") => Output.AppendLine(text);
+	public StringBuilder Errors { get; } = new();
+
+	public void WriteLine(string text = "", ConsoleColor? color = null)
+		=> Output.AppendLine(text);
+
+	public void WriteError(string text) => Errors.AppendLine(text);
 
 	public string? ReadLine()
 		=> ReadLines.Count == 0 ? null : ReadLines.Dequeue();

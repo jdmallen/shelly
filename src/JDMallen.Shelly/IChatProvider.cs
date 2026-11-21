@@ -1,6 +1,6 @@
 namespace JDMallen.Shelly;
 
-public interface IChatProvider
+internal interface IChatProvider
 {
 	Task<ChatReply> GetSuggestionAsync(
 		string prompt,
@@ -21,4 +21,4 @@ public interface IChatProvider
 /// The request's token counts, or null when the provider reported none (some
 /// self-hosted runners don't).
 /// </param>
-public readonly record struct ChatReply(string Text, TokenUsage? Usage = null);
+internal readonly record struct ChatReply(string Text, TokenUsage? Usage = null);

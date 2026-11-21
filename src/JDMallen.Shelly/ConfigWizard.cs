@@ -74,7 +74,7 @@ internal sealed class ConfigWizard
 	/// </param>
 	public ConfigWizardOutcome Run(bool fromMainMenu = false)
 	{
-		_io.Write($"{Strings.ConfigHeader(_configPath)}\n", ConsoleColor.Green);
+		_io.WriteLine(Strings.ConfigHeader(_configPath), ConsoleColor.Green);
 		_io.WriteLine();
 
 		ShellyConfig config = ShellyConfig.Load(
@@ -82,8 +82,8 @@ internal sealed class ConfigWizard
 			out string? parseError);
 		if (parseError is not null)
 		{
-			_io.Write(
-				$"{Strings.ConfigUnreadable(_configPath, parseError)}\n",
+			_io.WriteLine(
+				Strings.ConfigUnreadable(_configPath, parseError),
 				ConsoleColor.Yellow);
 			if (!_prompts.YesNo(Strings.ContinuePrompt, false))
 			{
@@ -295,13 +295,13 @@ internal sealed class ConfigWizard
 	{
 		_io.WriteLine(Strings.AzureCliSignInHeader);
 		string? azPath = AzureCli.Find(_environment.Get);
-		_io.Write(
-			$"  {(azPath is null ? Strings.AzureCliNotFound(AzureCli.INSTALL_URL) : Strings.AzureCliFound(azPath))}\n",
+		_io.WriteLine(
+			$"  {(azPath is null ? Strings.AzureCliNotFound(AzureCli.INSTALL_URL) : Strings.AzureCliFound(azPath))}",
 			azPath is null ? ConsoleColor.Yellow : ConsoleColor.Green);
 		_io.WriteLine($"  {Strings.AzureCliSignIn}");
 		_io.WriteLine();
-		_io.Write(
-			$"    {AzureCli.SignInCommand(azure)}\n",
+		_io.WriteLine(
+			$"    {AzureCli.SignInCommand(azure)}",
 			ConsoleColor.Yellow);
 		_io.WriteLine();
 		_io.WriteLine(
@@ -328,8 +328,8 @@ internal sealed class ConfigWizard
 	{
 		bool isSet = !string.IsNullOrEmpty(_environment.Get(variable));
 		_io.WriteLine(Strings.ApiKeyHeader);
-		_io.Write(
-			$"  {(isSet ? Strings.ApiKeySet(variable) : Strings.ApiKeyNotSet(variable))}\n",
+		_io.WriteLine(
+			$"  {(isSet ? Strings.ApiKeySet(variable) : Strings.ApiKeyNotSet(variable))}",
 			isSet ? ConsoleColor.Green : ConsoleColor.Yellow);
 		if (optional)
 		{
@@ -380,14 +380,12 @@ internal sealed class ConfigWizard
 				? $"  {Strings.FishUniversalVariable(KEY_PLACEHOLDER)}"
 				: $"  {Strings.ShellStartupLine(startupFile, KEY_PLACEHOLDER)}");
 		_io.WriteLine();
-		_io.Write($"    {line}\n", ConsoleColor.Yellow);
+		_io.WriteLine($"    {line}", ConsoleColor.Yellow);
 	}
 
 	/// <summary>
-	/// The line that sets <paramref name="variable" /> in
-	/// <paramref name="shell" />, and the startup file it belongs in; a null
-	/// file means the line is run once instead (fish's universal variables
-	/// persist on their own).
+	/// <see cref="Shell.SetVariableLine" /> with the key placeholder; a shell
+	/// with no convention of its own gets a POSIX <c>export</c> line.
 	/// </summary>
 	internal static (string Line, string? StartupFile) StartupLine(
 		Shell shell,
@@ -395,25 +393,8 @@ internal sealed class ConfigWizard
 	{
 		const string value = $"'{KEY_PLACEHOLDER}'";
 
-		return shell.Name switch
-		{
-			"fish" => ($"set -Ux {variable} {value}", null),
-			"zsh"  => ($"export {variable}={value}", "~/.zshrc"),
-			"bash" => ($"export {variable}={value}", "~/.bashrc"),
-			"tcsh" => ($"setenv {variable} {value}", "~/.tcshrc"),
-			"csh"  => ($"setenv {variable} {value}", "~/.cshrc"),
-			"pwsh" or "powershell" => ($"$env:{variable} = {value}",
-				"$PROFILE"),
-			"nu" => ($"$env.{variable} = {value}", "$nu.env-path"),
-			"elvish" => ($"set E:{variable} = {value}",
-				"~/.config/elvish/rc.elv"),
-			"ksh" or "ksh93" or "mksh" or "lksh" or "oksh" or "pdksh"
-				=> ($"export {variable}={value}", "~/.kshrc"),
-			"sh" or "dash" or "ash" or "posh" or "yash"
-				=> ($"export {variable}={value}", "~/.profile"),
-			_ => ($"export {variable}={value}",
-				Strings.UnknownShellStartupFile),
-		};
+		return shell.SetVariableLine(variable, value)
+			?? ($"export {variable}={value}", Strings.UnknownShellStartupFile);
 	}
 
 	private static int CurrentProviderIndex(string provider)
@@ -460,22 +441,22 @@ internal sealed class ConfigWizard
 		catch (Exception ex) when (ex is IOException
 									   or UnauthorizedAccessException)
 		{
-			_io.Write(
-				$"{Strings.Error(Strings.ConfigSaveFailed(_configPath, ex.Message))}\n",
+			_io.WriteLine(
+				Strings.Error(Strings.ConfigSaveFailed(_configPath, ex.Message)),
 				ConsoleColor.Red);
 
 			return ConfigWizardOutcome.Failed;
 		}
 
-		_io.Write($"{Strings.ConfigSaved(_configPath)}\n", ConsoleColor.Green);
+		_io.WriteLine(Strings.ConfigSaved(_configPath), ConsoleColor.Green);
 		if (pendingApiKey is null)
 		{
 			return ConfigWizardOutcome.Saved;
 		}
 
 		_environment.SetPersistent(apiKeyVariable!, pendingApiKey);
-		_io.Write(
-			$"{Strings.UserVariableSaved(apiKeyVariable!)}\n",
+		_io.WriteLine(
+			Strings.UserVariableSaved(apiKeyVariable!),
 			ConsoleColor.Green);
 
 		return ConfigWizardOutcome.Saved;

@@ -5,7 +5,7 @@ using JDMallen.Toolbox.AI.Azure;
 
 namespace JDMallen.Shelly;
 
-public sealed class ShellyConfig
+internal sealed class ShellyConfig
 {
 	internal const string ANTHROPIC_PROVIDER = "anthropic";
 	internal const string AZURE_PROVIDER = "azure";
@@ -172,7 +172,7 @@ public sealed class ShellyConfig
 	}
 }
 
-public sealed class AnthropicConfig
+internal sealed class AnthropicConfig
 {
 	public string Model { get; set; } = "claude-haiku-4-5-20251001";
 }
@@ -181,7 +181,7 @@ public sealed class AnthropicConfig
 /// Azure OpenAI settings that aren't secrets. Only the API key stays in an
 /// environment variable.
 /// </summary>
-public sealed class AzureConfig
+internal sealed class AzureConfig
 {
 	/// <summary>
 	/// The resource endpoint, e.g. "https://my-resource.openai.azure.com". When
@@ -393,7 +393,7 @@ public sealed class AzureConfig
 /// vLLM. Unlike the hosted providers, both the address and the model name are
 /// deployment-specific, so there is no useful default for either.
 /// </summary>
-public sealed class OpenAIConfig
+internal sealed class OpenAIConfig
 {
 	/// <summary>
 	/// The API root including the version segment, e.g.

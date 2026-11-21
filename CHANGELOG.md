@@ -14,7 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   used to reach the suggestion menu, fail to read a key, and exit with an
   unhandled exception after the request had already been paid for, without
   recording its token usage. It now prints only the suggested command to
-  stdout and exits 0, so `$(shelly "...")` works.
+  stdout and exits 0. The same happens when stdout is captured, so
+  `$(shelly "...")` returns the command instead of waiting on a menu nobody
+  can see.
 - **Error messages are readable again.** The native binary showed framework
   errors as bare resource keys, e.g. a trailing comma in `config.json` was
   reported as `TrailingCommaNotAllowedBeforeObjectEnd`. The full messages
@@ -28,6 +30,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   "same thing, but recursive" or "without sudo" has something to refer to.
   Repeated retries carry every earlier suggestion. Leaving the change empty
   asks for a different command instead of repeating the same request.
+
+### Changed
+
+- `shelly --config` with stdout redirected now stops with "interactive
+  terminal required", as it already did with stdin redirected, instead of
+  writing the wizard's screens into the redirect target.
+- Internal cleanup, with no other change in behavior:
+  - Console output goes through one interface: colored lines and stderr
+    included, so `Program` no longer writes to `Console` directly.
+  - Each known shell's startup file and set-variable syntax now live in the
+    shell table alongside its name and prompt hint, instead of in a second
+    list in the config wizard.
+  - One shared `PATH` lookup replaces the separate ones for the Azure CLI
+    and the clipboard tools.
+  - All types are `internal`; `ShellDetector` has its own file.
 
 ## [1.8.0]
 

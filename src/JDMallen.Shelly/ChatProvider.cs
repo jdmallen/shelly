@@ -12,7 +12,7 @@ namespace JDMallen.Shelly;
 /// directly; reasoning models need considerably more, because the thinking block
 /// is spent from the same budget and then discarded.
 /// </param>
-public sealed class ChatProvider(
+internal sealed class ChatProvider(
 	IChatCompletionClient client,
 	int maxTokens = ChatProvider.DEFAULT_MAX_TOKENS) : IChatProvider
 {

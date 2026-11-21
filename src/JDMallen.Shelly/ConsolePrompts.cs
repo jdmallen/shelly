@@ -36,7 +36,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 
 		for (var index = 0; index < options.Count; index++)
 		{
-			io.Write($"{INDENT}");
+			io.Write(INDENT);
 			io.Write($"{index + 1}", ConsoleColor.Green);
 			io.Write($") {options[index]}");
 			if (index == defaultIndex)
@@ -55,7 +55,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 
 		if (zeroOption is not null)
 		{
-			io.Write($"{INDENT}");
+			io.Write(INDENT);
 			io.Write("0", ConsoleColor.Green);
 			io.WriteLine($") {zeroOption}");
 		}
@@ -91,7 +91,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 					return chosen;
 				default:
 					io.WriteLine();
-					io.Write($"{Strings.InvalidChoice}\n", ConsoleColor.Yellow);
+					io.WriteLine(Strings.InvalidChoice, ConsoleColor.Yellow);
 
 					break;
 			}
@@ -131,7 +131,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 				return value;
 			}
 
-			io.Write($"{INDENT}{error}\n", ConsoleColor.Yellow);
+			io.WriteLine($"{INDENT}{error}", ConsoleColor.Yellow);
 		}
 	}
 
@@ -168,7 +168,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 				return value;
 			}
 
-			io.Write($"{INDENT}{error}\n", ConsoleColor.Yellow);
+			io.WriteLine($"{INDENT}{error}", ConsoleColor.Yellow);
 		}
 	}
 
@@ -260,7 +260,7 @@ internal sealed class ConsolePrompts(IConsoleIO io)
 			}
 
 			io.WriteLine();
-			io.Write($"{Strings.InvalidChoice}\n", ConsoleColor.Yellow);
+			io.WriteLine(Strings.InvalidChoice, ConsoleColor.Yellow);
 		}
 	}
 

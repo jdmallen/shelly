@@ -27,7 +27,7 @@ internal static class MainMenu
 		string versionLine,
 		IReadOnlyList<string>? missingSettings = null)
 	{
-		io.Write($"{versionLine}\n", ConsoleColor.Green);
+		io.WriteLine(versionLine, ConsoleColor.Green);
 		io.WriteLine();
 
 		Dictionary<int, string>? warnings = missingSettings is { Count: > 0 }

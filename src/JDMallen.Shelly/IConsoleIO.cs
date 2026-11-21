@@ -5,15 +5,19 @@ namespace JDMallen.Shelly;
 internal interface IConsoleIO
 {
 	/// <summary>
-	/// False when stdin is redirected (piped or from a file): there is no
-	/// keyboard to read single keys from, so the REPL prints the suggestion
-	/// and exits instead of showing its menu.
+	/// False when stdin or stdout is redirected. With stdin piped or from a
+	/// file there is no keyboard to read single keys from; with stdout
+	/// captured (e.g. <c>$(shelly "...")</c>) nobody would see the menu. Either
+	/// way the REPL prints the suggestion and exits instead.
 	/// </summary>
 	bool IsInteractive { get; }
 
 	void Write(string text, ConsoleColor? color = null);
 
-	void WriteLine(string text = "");
+	void WriteLine(string text = "", ConsoleColor? color = null);
+
+	/// <summary>Writes a line to stderr, uncolored.</summary>
+	void WriteError(string text);
 
 	string? ReadLine();
 
@@ -28,7 +32,8 @@ internal interface IConsoleIO
 
 internal sealed class SystemConsoleIO : IConsoleIO
 {
-	public bool IsInteractive => !Console.IsInputRedirected;
+	public bool IsInteractive =>
+		!Console.IsInputRedirected && !Console.IsOutputRedirected;
 
 	public void Write(string text, ConsoleColor? color = null)
 	{
@@ -45,7 +50,15 @@ internal sealed class SystemConsoleIO : IConsoleIO
 		Console.ForegroundColor = previous;
 	}
 
-	public void WriteLine(string text = "") => Console.WriteLine(text);
+	// The newline is written uncolored, so a color never bleeds into the
+	// next line on terminals that paint to the end of the line.
+	public void WriteLine(string text = "", ConsoleColor? color = null)
+	{
+		Write(text, color);
+		Console.WriteLine();
+	}
+
+	public void WriteError(string text) => Console.Error.WriteLine(text);
 
 	public string? ReadLine() => Console.ReadLine();
 

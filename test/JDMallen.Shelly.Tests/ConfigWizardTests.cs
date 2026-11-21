@@ -519,6 +519,9 @@ public sealed class ConfigWizardTests : IDisposable
 	[InlineData("dash", "export NAME='<your-key>'", "~/.profile")]
 	[InlineData("fish", "set -Ux NAME '<your-key>'", null)]
 	[InlineData("tcsh", "setenv NAME '<your-key>'", "~/.tcshrc")]
+	[InlineData("csh", "setenv NAME '<your-key>'", "~/.cshrc")]
+	[InlineData("mksh", "export NAME='<your-key>'", "~/.kshrc")]
+	[InlineData("powershell", "$env:NAME = '<your-key>'", "$PROFILE")]
 	[InlineData("pwsh", "$env:NAME = '<your-key>'", "$PROFILE")]
 	[InlineData("nu", "$env.NAME = '<your-key>'", "$nu.env-path")]
 	[InlineData(
@@ -538,11 +541,13 @@ public sealed class ConfigWizardTests : IDisposable
 		Assert.Equal(expectedFile, startupFile);
 	}
 
-	[Fact]
-	public void StartupLine_UnknownShell_FallsBackToExport()
+	[Theory]
+	[InlineData("xonsh")]
+	[InlineData("cmd")]
+	public void StartupLine_NoConvention_FallsBackToExport(string shell)
 	{
 		(string line, string? startupFile) = ConfigWizard.StartupLine(
-			Shell.FromNameOrPath("xonsh"),
+			Shell.FromNameOrPath(shell),
 			"NAME");
 
 		Assert.Equal("export NAME='<your-key>'", line);

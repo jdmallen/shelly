@@ -25,28 +25,10 @@ internal static class AzureCli
 	/// </summary>
 	public static string? Find(
 		Func<string, string?> getEnvironmentVariable,
-		bool? isWindows = null)
-	{
-		string? path = getEnvironmentVariable("PATH");
-		if (string.IsNullOrEmpty(path))
-		{
-			return null;
-		}
-
-		string[] names = isWindows ?? OperatingSystem.IsWindows()
-			? WindowsNames
-			: UnixNames;
-
-		return path
-			.Split(
-				Path.PathSeparator,
-				StringSplitOptions.RemoveEmptyEntries
-				| StringSplitOptions.TrimEntries)
-			.SelectMany(
-				_ => names,
-				Path.Combine)
-			.FirstOrDefault(File.Exists);
-	}
+		bool? isWindows = null) =>
+		PathLookup.Find(
+			getEnvironmentVariable,
+			isWindows ?? OperatingSystem.IsWindows() ? WindowsNames : UnixNames);
 
 	/// <summary>
 	/// <c>az login</c> for <paramref name="azure" />'s scope and tenant, so the

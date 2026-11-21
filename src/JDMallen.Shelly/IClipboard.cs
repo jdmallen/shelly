@@ -115,18 +115,9 @@ internal sealed class SystemClipboard : IClipboard
 		yield return new ClipboardCommand("xsel", "-i --clipboard");
 	}
 
-	private static bool IsOnPath(string fileName)
-	{
-		string? pathEnv = Environment.GetEnvironmentVariable("PATH");
-		if (string.IsNullOrEmpty(pathEnv))
-		{
-			return false;
-		}
-
-		return pathEnv.Split(Path.PathSeparator)
-			.Where(dir => !string.IsNullOrEmpty(dir))
-			.Any(dir => File.Exists(Path.Combine(dir, fileName)));
-	}
+	private static bool IsOnPath(string fileName) =>
+		PathLookup.Find(Environment.GetEnvironmentVariable, [fileName])
+			is not null;
 
 	private static async Task PipeToAsync(
 		ClipboardCommand command,

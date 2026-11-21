@@ -1,6 +1,6 @@
 namespace JDMallen.Shelly;
 
-public sealed class ReplLoop
+internal sealed class ReplLoop
 {
 	private readonly IChatProvider _provider;
 	private readonly IConsoleIO _io;
@@ -75,7 +75,7 @@ public sealed class ReplLoop
 
 			if (interactive)
 			{
-				_io.Write($"{Strings.Thinking}\n", ConsoleColor.Cyan);
+				_io.WriteLine(Strings.Thinking, ConsoleColor.Cyan);
 			}
 
 			string suggestion;
@@ -90,14 +90,14 @@ public sealed class ReplLoop
 			}
 			catch (Exception ex)
 			{
-				_io.Write($"{Strings.Error(ex.Message)}\n", ConsoleColor.Red);
+				_io.WriteLine(Strings.Error(ex.Message), ConsoleColor.Red);
 
 				return ReplResult.Failed();
 			}
 
 			if (string.IsNullOrWhiteSpace(suggestion))
 			{
-				_io.Write($"{Strings.NoSuggestion}\n", ConsoleColor.Red);
+				_io.WriteLine(Strings.NoSuggestion, ConsoleColor.Red);
 
 				return ReplResult.Failed();
 			}
@@ -146,8 +146,8 @@ public sealed class ReplLoop
 		while (true)
 		{
 			_io.WriteLine();
-			_io.Write($"{Strings.SuggestionHeader}\n", ConsoleColor.Green);
-			_io.Write($"{suggestion}\n", ConsoleColor.Yellow);
+			_io.WriteLine(Strings.SuggestionHeader, ConsoleColor.Green);
+			_io.WriteLine(suggestion, ConsoleColor.Yellow);
 			_io.WriteLine();
 			WriteOptions();
 
@@ -164,7 +164,7 @@ public sealed class ReplLoop
 					return (ActionOutcome.Edit, null);
 
 				case ConsoleKey.P:
-					_io.Write($"{Strings.Explaining}\n", ConsoleColor.Cyan);
+					_io.WriteLine(Strings.Explaining, ConsoleColor.Cyan);
 					string explanation;
 					try
 					{
@@ -177,16 +177,16 @@ public sealed class ReplLoop
 					}
 					catch (Exception ex)
 					{
-						_io.Write(
-							$"{Strings.Error(ex.Message)}\n",
+						_io.WriteLine(
+							Strings.Error(ex.Message),
 							ConsoleColor.Red);
 
 						continue;
 					}
 
 					_io.WriteLine();
-					_io.Write(
-						$"{Strings.ExplanationHeader}\n",
+					_io.WriteLine(
+						Strings.ExplanationHeader,
 						ConsoleColor.Green);
 					_io.WriteLine(explanation);
 
@@ -198,21 +198,21 @@ public sealed class ReplLoop
 						await _clipboard.SetTextAsync(
 							suggestion,
 							cancellationToken);
-						_io.Write(
-							$"{Strings.CopiedToClipboard}\n",
+						_io.WriteLine(
+							Strings.CopiedToClipboard,
 							ConsoleColor.Green);
 
 						return (ActionOutcome.Quit, null);
 					}
 					catch (Exception ex)
 					{
-						_io.Write(
-							$"{Strings.ClipboardUnavailable(ex.Message)}\n",
+						_io.WriteLine(
+							Strings.ClipboardUnavailable(ex.Message),
 							ConsoleColor.Red);
 						if (OperatingSystem.IsLinux())
 						{
-							_io.Write(
-								$"{Strings.InstallClipboardToolLinux}\n",
+							_io.WriteLine(
+								Strings.InstallClipboardToolLinux,
 								ConsoleColor.Yellow);
 						}
 
@@ -234,8 +234,8 @@ public sealed class ReplLoop
 					return (ActionOutcome.Quit, null);
 
 				default:
-					_io.Write(
-						$"{Strings.InvalidChoice}\n",
+					_io.WriteLine(
+						Strings.InvalidChoice,
 						ConsoleColor.Yellow);
 
 					continue;
@@ -306,7 +306,7 @@ public sealed class ReplLoop
 	}
 }
 
-public enum ReplAction
+internal enum ReplAction
 {
 	Quit,
 	Execute,
@@ -316,7 +316,7 @@ public enum ReplAction
 	Failed,
 }
 
-public readonly record struct ReplResult(ReplAction Action, string? Command)
+internal readonly record struct ReplResult(ReplAction Action, string? Command)
 {
 	public bool ShouldExecute => Action == ReplAction.Execute;
 
