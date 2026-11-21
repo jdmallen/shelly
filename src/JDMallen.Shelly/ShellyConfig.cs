@@ -68,7 +68,12 @@ public sealed class ShellyConfig
 
 			return loaded ?? new ShellyConfig();
 		}
-		catch (JsonException ex)
+		// JsonException also covers a null where a value is required (see
+		// RespectNullableAnnotations below); an unreadable file is reported
+		// the same way rather than crashing.
+		catch (Exception ex) when (ex is JsonException
+									   or IOException
+									   or UnauthorizedAccessException)
 		{
 			parseError = ex.Message;
 
@@ -450,6 +455,9 @@ internal readonly record struct AzureSetting(
 [JsonSourceGenerationOptions(
 	WriteIndented = true,
 	PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
-	DefaultIgnoreCondition = JsonIgnoreCondition.Never)]
+	DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+	// A hand-edited "provider": null would otherwise load as null and crash
+	// later; this makes it a parse error with a message instead.
+	RespectNullableAnnotations = true)]
 [JsonSerializable(typeof(ShellyConfig))]
 internal partial class ShellyConfigJsonContext : JsonSerializerContext;

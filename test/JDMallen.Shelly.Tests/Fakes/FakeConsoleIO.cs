@@ -4,6 +4,8 @@ namespace JDMallen.Shelly.Tests.Fakes;
 
 internal sealed class FakeConsoleIO : IConsoleIO
 {
+	public bool IsInteractive { get; set; } = true;
+
 	public Queue<string?> ReadLines { get; } = new();
 
 	public Queue<ConsoleKey> ReadKeys { get; } = new();

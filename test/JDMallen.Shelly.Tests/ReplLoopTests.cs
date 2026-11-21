@@ -124,7 +124,7 @@ public class ReplLoopTests
 	}
 
 	[Fact]
-	public async Task Retry_WithRefinement_ReQueriesWithAppendedRefinement()
+	public async Task Retry_WithRefinement_ReQueriesWithRejectedSuggestion()
 	{
 		_provider.SuggestionResponses.Enqueue("ls");
 		_provider.SuggestionResponses.Enqueue("ls -laSh");
@@ -141,12 +141,12 @@ public class ReplLoopTests
 		Assert.Equal(2, _provider.SuggestionPrompts.Count);
 		Assert.Equal("list files", _provider.SuggestionPrompts[0]);
 		Assert.Equal(
-			"list files (refinement: by size)",
+			Prompts.Retry("list files", "ls", "by size"),
 			_provider.SuggestionPrompts[1]);
 	}
 
 	[Fact]
-	public async Task Retry_WithoutRefinement_ReQueriesWithOriginalPrompt()
+	public async Task Retry_WithoutRefinement_AsksForADifferentCommand()
 	{
 		_provider.SuggestionResponses.Enqueue("ls");
 		_provider.SuggestionResponses.Enqueue("ls -la");
@@ -160,7 +160,59 @@ public class ReplLoopTests
 
 		Assert.True(result.ShouldExecute);
 		Assert.Equal("ls -la", result.Command);
-		Assert.Equal(["list files", "list files"], _provider.SuggestionPrompts);
+		Assert.Equal(
+			Prompts.Retry("list files", "ls", null),
+			_provider.SuggestionPrompts[1]);
+	}
+
+	[Fact]
+	public async Task Retry_Twice_CarriesEveryRejectedSuggestion()
+	{
+		_provider.SuggestionResponses.Enqueue("ls");
+		_provider.SuggestionResponses.Enqueue("ls -la");
+		_provider.SuggestionResponses.Enqueue("ls -laSh");
+		_io.ReadKeys.Enqueue(ConsoleKey.R);
+		_io.ReadLines.Enqueue("show hidden");
+		_io.ReadKeys.Enqueue(ConsoleKey.R);
+		_io.ReadLines.Enqueue("by size");
+		_io.ReadKeys.Enqueue(ConsoleKey.X);
+
+		await NewLoop()
+			.RunAsync("list files", TestContext.Current.CancellationToken);
+
+		string lastPrompt = _provider.SuggestionPrompts[2];
+		Assert.Contains("rejected): ls\n", lastPrompt);
+		Assert.Contains("rejected): ls -la\n", lastPrompt);
+		Assert.EndsWith("What should be different: by size", lastPrompt);
+	}
+
+	[Fact]
+	public async Task NotInteractive_PrintsOnlyTheSuggestionAndQuits()
+	{
+		_io.IsInteractive = false;
+		_io.ReadLines.Enqueue("list files");
+		_provider.SuggestionResponses.Enqueue("ls -la");
+
+		ReplResult result = await NewLoop()
+			.RunAsync(null, TestContext.Current.CancellationToken);
+
+		// No ReadKey was queued: reaching the menu would have thrown.
+		Assert.Equal(ReplAction.Quit, result.Action);
+		Assert.Equal(["list files"], _provider.SuggestionPrompts);
+		Assert.Equal($"ls -la{Environment.NewLine}", _io.Output.ToString());
+	}
+
+	[Fact]
+	public async Task NotInteractive_WithPromptArgument_SkipsReadingStdin()
+	{
+		_io.IsInteractive = false;
+		_provider.SuggestionResponses.Enqueue("ls -la");
+
+		ReplResult result = await NewLoop()
+			.RunAsync("list files", TestContext.Current.CancellationToken);
+
+		Assert.Equal(ReplAction.Quit, result.Action);
+		Assert.Equal($"ls -la{Environment.NewLine}", _io.Output.ToString());
 	}
 
 	[Fact]

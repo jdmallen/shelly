@@ -5,6 +5,30 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1]
+
+### Fixed
+
+- **Piped input no longer crashes.** With stdin redirected (e.g.
+  `echo "list files" | shelly` or `shelly "list files" < /dev/null`), shelly
+  used to reach the suggestion menu, fail to read a key, and exit with an
+  unhandled exception after the request had already been paid for, without
+  recording its token usage. It now prints only the suggested command to
+  stdout and exits 0, so `$(shelly "...")` works.
+- **Error messages are readable again.** The native binary showed framework
+  errors as bare resource keys, e.g. a trailing comma in `config.json` was
+  reported as `TrailingCommaNotAllowedBeforeObjectEnd`. The full messages
+  cost about 8 KB.
+- **A `null` in `config.json` no longer crashes.** A hand-edited value such
+  as `"provider": null` loaded as null and failed later with a stack trace;
+  it is now reported like any other parse error, and the defaults are used.
+  An unreadable `config.json` is reported the same way.
+- **[r]etry tells the model what it is retrying.** The rejected suggestion
+  is now sent along with the requested change, so a refinement such as
+  "same thing, but recursive" or "without sudo" has something to refer to.
+  Repeated retries carry every earlier suggestion. Leaving the change empty
+  asks for a different command instead of repeating the same request.
+
 ## [1.8.0]
 
 ### Added

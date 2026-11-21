@@ -54,9 +54,16 @@ public sealed class ReplLoop
 
 		while (true)
 		{
+			// Piped input gets only the command on stdout, so it composes with
+			// other tools: no question, no progress line, no menu.
+			bool interactive = _io.IsInteractive;
 			if (string.IsNullOrWhiteSpace(prompt))
 			{
-				_io.Write($"{Strings.WhatToDo} ", ConsoleColor.Cyan);
+				if (interactive)
+				{
+					_io.Write($"{Strings.WhatToDo} ", ConsoleColor.Cyan);
+				}
+
 				string? line = _io.ReadLine();
 				if (string.IsNullOrWhiteSpace(line))
 				{
@@ -66,7 +73,11 @@ public sealed class ReplLoop
 				prompt = line;
 			}
 
-			_io.Write($"{Strings.Thinking}\n", ConsoleColor.Cyan);
+			if (interactive)
+			{
+				_io.Write($"{Strings.Thinking}\n", ConsoleColor.Cyan);
+			}
+
 			string suggestion;
 			try
 			{
@@ -91,6 +102,13 @@ public sealed class ReplLoop
 				return ReplResult.Failed();
 			}
 
+			if (!interactive)
+			{
+				_io.WriteLine(suggestion);
+
+				return ReplResult.Quit();
+			}
+
 			(ActionOutcome outcome, string? refinement) =
 				await ActOnSuggestionAsync(
 					suggestion,
@@ -106,10 +124,7 @@ public sealed class ReplLoop
 				case ActionOutcome.Quit:
 					return ReplResult.Quit();
 				case ActionOutcome.Retry:
-					if (!string.IsNullOrWhiteSpace(refinement))
-					{
-						prompt = $"{prompt} (refinement: {refinement})";
-					}
+					prompt = Prompts.Retry(prompt, suggestion, refinement);
 
 					continue;
 				default:

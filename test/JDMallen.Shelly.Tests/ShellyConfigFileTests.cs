@@ -80,6 +80,43 @@ public sealed class ShellyConfigFileTests : IDisposable
 		Assert.Equal("{ not json", File.ReadAllText(ConfigPath));
 	}
 
+	[Theory]
+	[InlineData("""{ "provider": null }""")]
+	[InlineData("""{ "anthropic": null }""")]
+	[InlineData("""{ "azure": { "auth": null } }""")]
+	public void Load_NullForRequiredValue_ReportsErrorAndUsesDefaults(
+		string json)
+	{
+		File.WriteAllText(ConfigPath, json);
+
+		ShellyConfig loaded = ShellyConfig.Load(
+			ConfigPath,
+			out string? parseError);
+
+		Assert.NotNull(parseError);
+		Assert.Equal(ShellyConfig.ANTHROPIC_PROVIDER, loaded.Provider);
+		Assert.NotNull(loaded.Anthropic);
+		Assert.NotNull(loaded.Azure.Auth);
+	}
+
+	[Fact]
+	public void Load_UnreadableFile_ReportsErrorInsteadOfThrowing()
+	{
+		Assert.SkipWhen(
+			OperatingSystem.IsWindows(),
+			"Unix file modes only.");
+
+		File.WriteAllText(ConfigPath, "{}");
+		File.SetUnixFileMode(ConfigPath, UnixFileMode.None);
+
+		ShellyConfig loaded = ShellyConfig.Load(
+			ConfigPath,
+			out string? parseError);
+
+		Assert.NotNull(parseError);
+		Assert.Equal(ShellyConfig.ANTHROPIC_PROVIDER, loaded.Provider);
+	}
+
 	[Fact]
 	public void AzureSetting_ConfigValueBeatsDeprecatedVariable()
 	{

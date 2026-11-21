@@ -47,6 +47,29 @@ internal static class Prompts
 	}
 
 	/// <summary>
+	/// The user message for a retry: the request so far, the suggestion being
+	/// rejected, and what should change. Without the rejected command, "not
+	/// that one" or "without sudo" would have nothing to refer to. Retries
+	/// chain, so each one carries every earlier attempt.
+	/// </summary>
+	public static string Retry(
+		string prompt,
+		string rejectedSuggestion,
+		string? refinement)
+	{
+		string change = string.IsNullOrWhiteSpace(refinement)
+			? "Suggest a different command."
+			: refinement.Trim();
+
+		return $"""
+				{prompt}
+
+				Previous suggestion (rejected): {rejectedSuggestion}
+				What should be different: {change}
+				""";
+	}
+
+	/// <summary>
 	/// Names the user's shell, plus a syntax hint for shells whose syntax a
 	/// model tends to get wrong by defaulting to bash.
 	/// </summary>

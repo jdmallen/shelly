@@ -25,7 +25,9 @@
 		<EventSourceSupport>false</EventSourceSupport>
 		<HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
 		<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
-		<UseSystemResourceKeys>true</UseSystemResourceKeys>
+		<!-- UseSystemResourceKeys deliberately left off: it saves ~8 KB but turns
+				 every framework message the user sees (JSON parse errors, HTTP
+				 failures) into a bare resource key. -->
 	</PropertyGroup>
 
 	<ItemGroup>

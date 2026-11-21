@@ -4,6 +4,13 @@ namespace JDMallen.Shelly;
 
 internal interface IConsoleIO
 {
+	/// <summary>
+	/// False when stdin is redirected (piped or from a file): there is no
+	/// keyboard to read single keys from, so the REPL prints the suggestion
+	/// and exits instead of showing its menu.
+	/// </summary>
+	bool IsInteractive { get; }
+
 	void Write(string text, ConsoleColor? color = null);
 
 	void WriteLine(string text = "");
@@ -21,6 +28,8 @@ internal interface IConsoleIO
 
 internal sealed class SystemConsoleIO : IConsoleIO
 {
+	public bool IsInteractive => !Console.IsInputRedirected;
+
 	public void Write(string text, ConsoleColor? color = null)
 	{
 		if (color is null)
@@ -64,7 +73,7 @@ internal sealed class SystemConsoleIO : IConsoleIO
 					if (secret.Length > 0)
 					{
 						secret.Length--;
-						Console.Write(@" ");
+						Console.Write("\b \b");
 					}
 
 					break;
