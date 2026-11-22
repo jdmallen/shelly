@@ -248,6 +248,9 @@ internal sealed class ConfigWizard
 				break;
 			case AzureAuthKind.ApiKey:
 				return ChatProvider.AZURE_API_KEY_ENV_VAR;
+			case AzureAuthKind.AzureCli:
+				// Needs nothing beyond the tenant and scope below.
+				break;
 		}
 
 		if (azure.UsesInteractiveSignIn)

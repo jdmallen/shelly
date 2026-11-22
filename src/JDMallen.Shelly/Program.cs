@@ -6,49 +6,50 @@ internal static class Program
 {
 	private static readonly SystemConsoleIO IO = new();
 
-	public static async Task<int> Main(string[] args)
-	{
-		switch (CommandLineArgs.Parse(args))
+	// CommandLineArgs is closed, so a new kind of argument that isn't handled
+	// here is a compiler warning (CS8509), not a silent exit code.
+	public static async Task<int> Main(string[] args) =>
+		CommandLineArgs.Parse(args) switch
 		{
-			case CommandLineArgs.ShowHelp:
-				IO.WriteLine(BuildHelpText());
+			CommandLineArgs.ShowHelp => Print(BuildHelpText()),
+			CommandLineArgs.ShowVersion => Print(BuildVersionLine()),
+			CommandLineArgs.ShowInfo => Print(BuildInfoReport()),
+			CommandLineArgs.ShowConfig => RunConfigCommand(),
+			CommandLineArgs.Error error => ReportUsageError(error.Message),
 
-				return 0;
-			case CommandLineArgs.ShowVersion:
-				IO.WriteLine(BuildVersionLine());
+			// Piped input keeps going straight to the prompt, as before the
+			// menu.
+			CommandLineArgs.Run { Prompt: null } when IO.IsInteractive
+				=> await RunMainMenuAsync(),
+			CommandLineArgs.Run run => await RunAsync(run.Prompt),
+		};
 
-				return 0;
-			case CommandLineArgs.ShowInfo:
-				IO.WriteLine(BuildInfoReport());
+	private static int Print(string text)
+	{
+		IO.WriteLine(text);
 
-				return 0;
-			case CommandLineArgs.ShowConfig:
-				if (IO.IsInteractive)
-				{
-					return RunConfigWizard();
-				}
+		return 0;
+	}
 
-				IO.WriteError(
-					Strings.Error(Strings.InteractiveTerminalRequired));
-
-				return 1;
-
-			case CommandLineArgs.Error error:
-				IO.WriteError(error.Message);
-				IO.WriteError(string.Empty);
-				IO.WriteError(BuildHelpText());
-
-				return 1;
-
-			// Piped input keeps going straight to the prompt, as before the menu.
-			case CommandLineArgs.Run { Prompt: null }
-				when IO.IsInteractive:
-				return await RunMainMenuAsync();
-			case CommandLineArgs.Run run:
-				return await RunAsync(run.Prompt);
-			default:
-				return 1;
+	private static int RunConfigCommand()
+	{
+		if (IO.IsInteractive)
+		{
+			return RunConfigWizard();
 		}
+
+		IO.WriteError(Strings.Error(Strings.InteractiveTerminalRequired));
+
+		return 1;
+	}
+
+	private static int ReportUsageError(string message)
+	{
+		IO.WriteError(message);
+		IO.WriteError(string.Empty);
+		IO.WriteError(BuildHelpText());
+
+		return 1;
 	}
 
 	private static async Task<int> RunMainMenuAsync()

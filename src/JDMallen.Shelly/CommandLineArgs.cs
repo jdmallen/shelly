@@ -3,7 +3,7 @@ namespace JDMallen.Shelly;
 /// <summary>
 /// Outcome of parsing the command line. Pure data, so it needs no console.
 /// </summary>
-internal abstract record CommandLineArgs
+internal closed record CommandLineArgs
 {
 	public sealed record ShowHelp : CommandLineArgs;
 

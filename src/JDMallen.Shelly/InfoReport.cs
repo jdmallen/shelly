@@ -153,6 +153,10 @@ internal static class InfoReport
 							getEnvironmentVariable)));
 
 				return;
+			case AzureAuthKind.AzureCli:
+				AddAzureCliRows(rows, azure, getEnvironmentVariable);
+
+				return;
 			case null:
 				rows.Add(
 					("auth",
@@ -160,7 +164,17 @@ internal static class InfoReport
 
 				return;
 		}
+	}
 
+	/// <summary>
+	/// The Azure CLI sign-in: tenant, scope and az's location; no token is
+	/// fetched or shown.
+	/// </summary>
+	private static void AddAzureCliRows(
+		List<(string Label, string Value)> rows,
+		AzureConfig azure,
+		Func<string, string?> getEnvironmentVariable)
+	{
 		rows.Add(("auth", "Microsoft Entra ID via the Azure CLI"));
 		if (azure.InvalidTokenSetting() is { } invalidKey)
 		{

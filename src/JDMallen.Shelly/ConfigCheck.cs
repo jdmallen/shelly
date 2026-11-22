@@ -109,6 +109,9 @@ internal static class ConfigCheck
 				AddIfUnset(missing, getEnv, ChatProvider.AZURE_API_KEY_ENV_VAR);
 
 				return;
+			case AzureAuthKind.AzureCli:
+			case AzureAuthKind.AzureIdentity:
+				break;
 		}
 
 		// Both Entra ID methods take a tenant and scope; each has one more need.
