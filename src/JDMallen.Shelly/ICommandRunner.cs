@@ -13,6 +13,8 @@ internal interface ICommandRunner
 	Task<int?> RunAsync(string command, Shell shell);
 }
 
+// Runs in the shell the command was written for, i.e. the one shelly was
+// launched from, not $SHELL: a fish command fails under zsh.
 internal sealed class SystemCommandRunner : ICommandRunner
 {
 	public async Task<int?> RunAsync(string command, Shell shell)

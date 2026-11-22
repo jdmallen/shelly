@@ -223,6 +223,90 @@ public class ReplLoopTests
 			_provider.SuggestionPrompts);
 	}
 
+	private string PipeIn(string input)
+	{
+		_io.IsInteractive = false;
+		_io.IsInputRedirected = true;
+		_io.IsOutputRedirected = true;
+		_io.StdinRemainder = input;
+
+		return input;
+	}
+
+	[Fact]
+	public async Task PipedInput_AtTheLimit_IsSentWithoutAsking()
+	{
+		string input =
+			PipeIn(new string('a', ReplLoop.LARGE_PIPED_INPUT_BYTES));
+		_provider.SuggestionResponses.Enqueue("ls");
+
+		await NewLoop().RunAsync(null, TestContext.Current.CancellationToken);
+
+		Assert.Empty(_io.TerminalMessages);
+		Assert.Equal([input], _provider.SuggestionPrompts);
+	}
+
+	[Fact]
+	public async Task PipedInput_OverTheLimit_ShowsSizeAndSendsAllOnYes()
+	{
+		string input =
+			PipeIn(new string('a', ReplLoop.LARGE_PIPED_INPUT_BYTES * 2));
+		_io.TerminalAnswer = true;
+		_provider.SuggestionResponses.Enqueue("ls");
+
+		ReplResult result = await NewLoop()
+			.RunAsync(null, TestContext.Current.CancellationToken);
+
+		Assert.Equal(ReplAction.Quit, result.Action);
+		Assert.Equal([input], _provider.SuggestionPrompts);
+		Assert.Equal(
+			[Strings.PipedInputLarge(128, 32768, 64)],
+			_io.TerminalMessages);
+		Assert.Contains("128", _io.TerminalMessages[0]);
+	}
+
+	[Fact]
+	public async Task PipedInput_OverTheLimit_SendsNothingOnNo()
+	{
+		PipeIn(new string('a', ReplLoop.LARGE_PIPED_INPUT_BYTES + 1));
+		_io.TerminalAnswer = false;
+
+		ReplResult result = await NewLoop()
+			.RunAsync(null, TestContext.Current.CancellationToken);
+
+		Assert.Equal(ReplAction.Failed, result.Action);
+		Assert.Empty(_provider.SuggestionPrompts);
+		Assert.Contains(Strings.PipedInputNotSent, _io.Errors.ToString());
+	}
+
+	[Fact]
+	public async Task PipedInput_OverTheLimit_NoTerminal_SendsNothing()
+	{
+		PipeIn(new string('a', ReplLoop.LARGE_PIPED_INPUT_BYTES + 1));
+		_io.TerminalAnswer = null;
+
+		ReplResult result = await NewLoop()
+			.RunAsync(null, TestContext.Current.CancellationToken);
+
+		Assert.Equal(ReplAction.Failed, result.Action);
+		Assert.Empty(_provider.SuggestionPrompts);
+		string errors = _io.Errors.ToString();
+		Assert.Contains(Strings.PipedInputLarge(65, 16385, 64), errors);
+		Assert.Contains(Strings.NoTerminalToConfirm, errors);
+	}
+
+	[Fact]
+	public async Task PipedInput_SizeIsMeasuredInUtf8Bytes()
+	{
+		// 3 bytes each: over 64 KB with only a third as many characters.
+		PipeIn(new string('語', (ReplLoop.LARGE_PIPED_INPUT_BYTES / 3) + 1));
+		_io.TerminalAnswer = false;
+
+		await NewLoop().RunAsync(null, TestContext.Current.CancellationToken);
+
+		Assert.Single(_io.TerminalMessages);
+	}
+
 	[Fact]
 	public async Task ControlCharacters_ShownEscaped_ButExecutedExactly()
 	{

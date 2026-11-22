@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace JDMallen.Shelly;
 
 internal sealed class ReplLoop
@@ -103,6 +105,11 @@ internal sealed class ReplLoop
 					return ReplResult.Quit();
 				}
 
+				if (_io.IsInputRedirected && !ConfirmLargePipedInput(line))
+				{
+					return ReplResult.Failed();
+				}
+
 				prompt = line.Trim();
 			}
 
@@ -179,6 +186,47 @@ internal sealed class ReplLoop
 						@"Unexpected action outcome");
 #pragma warning restore CA2208
 			}
+		}
+	}
+
+	/// <summary>
+	/// Piped input is sent whole; past this many UTF-8 bytes someone has to
+	/// confirm the cost first (<c>cat big.log | shelly</c>).
+	/// </summary>
+	internal const int LARGE_PIPED_INPUT_BYTES = 64 * 1024;
+
+	/// <summary>
+	/// True when <paramref name="input" /> is small, or someone at the
+	/// terminal agrees to send it anyway after seeing its size. With no
+	/// terminal to ask, nothing is sent.
+	/// </summary>
+	private bool ConfirmLargePipedInput(string input)
+	{
+		int bytes = Encoding.UTF8.GetByteCount(input);
+		if (bytes <= LARGE_PIPED_INPUT_BYTES)
+		{
+			return true;
+		}
+
+		// About 4 characters per token for English text: a rough guide to
+		// the cost, not a count.
+		string warning = Strings.PipedInputLarge(
+			(bytes + 1023) / 1024,
+			(input.Length + 3) / 4,
+			LARGE_PIPED_INPUT_BYTES / 1024);
+		switch (_io.ConfirmOnTerminal(warning, Strings.SendAnywayPrompt))
+		{
+			case true:
+				return true;
+			case false:
+				_io.WriteError(Strings.PipedInputNotSent);
+
+				return false;
+			default:
+				_io.WriteError(warning);
+				_io.WriteError(Strings.NoTerminalToConfirm);
+
+				return false;
 		}
 	}
 

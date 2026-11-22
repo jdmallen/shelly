@@ -66,6 +66,21 @@
 		<value>Warning: this command contains hidden control characters, such as \r or \x1b. Running, editing or copying it keeps them as they are, and pasting it into a shell may run part of it immediately.</value>
 		<comment>Shown under a suggested command. Keep \r and \x1b exactly as written: they are how the escaped characters appear on screen.</comment>
 	</data>
+	<data name="PipedInputLargeFormat" xml:space="preserve">
+		<value>Piped input is {0:N0} KB, about {1:N0} tokens (estimated), more than the {2:N0} KB limit.</value>
+		<comment>{0} is the size in kilobytes, {1} an estimated token count, {2} the limit in kilobytes. Shown on the terminal when a prompt piped into shelly is unusually large.</comment>
+	</data>
+	<data name="SendAnywayPrompt" xml:space="preserve">
+		<value>Send it anyway?</value>
+		<comment>Asked after the piped-input size warning; answered with y or n, which stay untranslated.</comment>
+	</data>
+	<data name="PipedInputNotSent" xml:space="preserve">
+		<value>Nothing was sent.</value>
+	</data>
+	<data name="NoTerminalToConfirm" xml:space="preserve">
+		<value>There is no terminal to confirm on, so nothing was sent.</value>
+		<comment>Shown when the large-input question can't be asked, e.g. under cron or in CI.</comment>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Suggestion:</value>
 	</data>

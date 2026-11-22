@@ -372,7 +372,9 @@ Or run `shelly` with no arguments for a menu: ask a question (the default;
 press Enter), configure, show `--info`, or exit (`0` or Esc). In the wizard,
 `0` or Esc at the provider menu goes back without changing anything. When
 input is piped in, the menu is skipped and shelly reads the prompt directly, as
-before.
+before. Piped input is sent whole; past 64 KB shelly shows its size and an
+estimated token count and asks on the terminal before sending it (with no
+terminal to ask, as under cron, it sends nothing and exits 1).
 
 Quotation marks around the prompt are optional — `shelly` joins all positional
 arguments into a single prompt. Use quotes only when the prompt contains

@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.9.0]
 
 ### Added
 
@@ -18,8 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   compatible with o-series models; with this set, shelly sends
   `max_completion_tokens` instead and no `temperature`. Left out, it is
   guessed from the model name, so `o4-mini` or `gpt-5-mini` work without
-  it, while self-hosted models keep getting `max_tokens`. Requires
-  JDMallen.Toolbox.AI 4.9.0.
+  it, while self-hosted models keep getting `max_tokens`.
 
 ### Fixed
 
@@ -43,9 +42,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   editing and copying still use the exact text, as does captured output
   (`$(shelly ...)`), and a warning under the command says so: a raw `\r`
   pasted into a shell without bracketed paste (e.g. tcsh) acts as Enter.
-  Outside the menu the warning goes to stderr.
+  Outside the menu the warning goes to stderr. Bidi overrides and
+  zero-width characters, which can reorder or hide text the same way, are
+  shown escaped too (`\u202e`) and trigger the same warning.
 - **Piped prompts are sent whole.** `printf 'find big files\nin my home
-  dir\n' | shelly` sent only the first line; it now sends every line.
+  dir\n' | shelly` sent only the first line; it now sends every line. Past
+  64 KB (`cat big.log | shelly`), shelly first shows the size and an
+  estimated token count and asks on the terminal whether to send it; with
+  no terminal to ask, it sends nothing and exits 1.
 - **Markdown cleanup no longer mangles some commands.** A csh command such
   as `` `which a` b `which c` `` lost its outer backticks, and a fenced
   block followed by prose kept the closing fence and the prose in the

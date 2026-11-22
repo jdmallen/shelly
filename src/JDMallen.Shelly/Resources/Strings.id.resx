@@ -64,6 +64,18 @@
 	<data name="HiddenCharactersWarning" xml:space="preserve">
 		<value>Peringatan: perintah ini berisi karakter kontrol tersembunyi, seperti \r atau \x1b. Menjalankan, mengedit, atau menyalinnya tetap mempertahankannya, dan menempelkannya ke shell dapat langsung menjalankan sebagiannya.</value>
 	</data>
+	<data name="PipedInputLargeFormat" xml:space="preserve">
+		<value>Input dari pipe berukuran {0:N0} KB, sekitar {1:N0} token (perkiraan), melebihi batas {2:N0} KB.</value>
+	</data>
+	<data name="SendAnywayPrompt" xml:space="preserve">
+		<value>Tetap kirim?</value>
+	</data>
+	<data name="PipedInputNotSent" xml:space="preserve">
+		<value>Tidak ada yang dikirim.</value>
+	</data>
+	<data name="NoTerminalToConfirm" xml:space="preserve">
+		<value>Tidak ada terminal untuk konfirmasi, jadi tidak ada yang dikirim.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Saran:</value>
 	</data>

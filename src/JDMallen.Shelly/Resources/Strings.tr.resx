@@ -64,6 +64,18 @@
 	<data name="HiddenCharactersWarning" xml:space="preserve">
 		<value>Uyarı: bu komut \r veya \x1b gibi gizli denetim karakterleri içeriyor. Çalıştırmak, düzenlemek veya kopyalamak bunları olduğu gibi korur ve bir kabuğa yapıştırmak komutun bir kısmını hemen çalıştırabilir.</value>
 	</data>
+	<data name="PipedInputLargeFormat" xml:space="preserve">
+		<value>Pipe ile gelen girdi {0:N0} KB, yaklaşık {1:N0} token (tahmini); {2:N0} KB sınırını aşıyor.</value>
+	</data>
+	<data name="SendAnywayPrompt" xml:space="preserve">
+		<value>Yine de gönderilsin mi?</value>
+	</data>
+	<data name="PipedInputNotSent" xml:space="preserve">
+		<value>Hiçbir şey gönderilmedi.</value>
+	</data>
+	<data name="NoTerminalToConfirm" xml:space="preserve">
+		<value>Onaylamak için terminal yok, bu yüzden hiçbir şey gönderilmedi.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Öneri:</value>
 	</data>

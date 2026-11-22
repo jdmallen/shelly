@@ -26,6 +26,23 @@ internal static class Strings
 	public static string HiddenCharactersWarning
 		=> Get(nameof(HiddenCharactersWarning));
 
+	public static string PipedInputLarge(
+		int sizeKilobytes,
+		int estimatedTokens,
+		int limitKilobytes) =>
+		Format(
+			"PipedInputLargeFormat",
+			sizeKilobytes,
+			estimatedTokens,
+			limitKilobytes);
+
+	public static string SendAnywayPrompt => Get(nameof(SendAnywayPrompt));
+
+	public static string PipedInputNotSent => Get(nameof(PipedInputNotSent));
+
+	public static string NoTerminalToConfirm
+		=> Get(nameof(NoTerminalToConfirm));
+
 	public static string SuggestionHeader => Get(nameof(SuggestionHeader));
 
 	public static string Explaining => Get(nameof(Explaining));

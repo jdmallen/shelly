@@ -65,6 +65,18 @@
 	<data name="HiddenCharactersWarning" xml:space="preserve">
 		<value>Advertencia: este comando contiene caracteres de control ocultos, como \r o \x1b. Ejecutarlo, editarlo o copiarlo los conserva tal cual, y pegarlo en una shell puede ejecutar parte de él de inmediato.</value>
 	</data>
+	<data name="PipedInputLargeFormat" xml:space="preserve">
+		<value>La entrada canalizada ocupa {0:N0} KB, unos {1:N0} tokens (estimado), más que el límite de {2:N0} KB.</value>
+	</data>
+	<data name="SendAnywayPrompt" xml:space="preserve">
+		<value>¿Enviarla de todos modos?</value>
+	</data>
+	<data name="PipedInputNotSent" xml:space="preserve">
+		<value>No se envió nada.</value>
+	</data>
+	<data name="NoTerminalToConfirm" xml:space="preserve">
+		<value>No hay ningún terminal para confirmar, así que no se envió nada.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Sugerencia:</value>
 	</data>

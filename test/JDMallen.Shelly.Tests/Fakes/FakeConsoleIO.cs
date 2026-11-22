@@ -39,6 +39,21 @@ internal sealed class FakeConsoleIO : IConsoleIO
 	public string ReadToEnd() => StdinRemainder;
 
 	/// <summary>
+	/// The terminal's answer to <see cref="ConfirmOnTerminal" />; null means
+	/// there is no terminal.
+	/// </summary>
+	public bool? TerminalAnswer { get; set; }
+
+	public List<string> TerminalMessages { get; } = [];
+
+	public bool? ConfirmOnTerminal(string message, string question)
+	{
+		TerminalMessages.Add(message);
+
+		return TerminalAnswer;
+	}
+
+	/// <summary>
 	/// Runs before each <see cref="ReadKey" />, e.g. a Ctrl+C.
 	/// </summary>
 	public Action? BeforeReadKey { get; set; }

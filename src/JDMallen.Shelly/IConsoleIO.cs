@@ -43,6 +43,14 @@ internal interface IConsoleIO
 	/// <summary>Reads the rest of stdin, e.g. a whole piped prompt.</summary>
 	string ReadToEnd();
 
+	/// <summary>
+	/// Shows <paramref name="message" /> and asks <paramref name="question" />
+	/// on the terminal itself, for when stdin is a pipe. Returns whether the
+	/// answer was yes (y or yes; anything else is no), or null when there is
+	/// no terminal to ask on (cron, CI).
+	/// </summary>
+	bool? ConfirmOnTerminal(string message, string question);
+
 	ConsoleKey ReadKey();
 
 	/// <summary>
@@ -91,6 +99,35 @@ internal sealed class SystemConsoleIO : IConsoleIO
 	public string? ReadLine() => Console.ReadLine();
 
 	public string ReadToEnd() => Console.In.ReadToEnd();
+
+	public bool? ConfirmOnTerminal(string message, string question)
+	{
+		// stdin is the pipe, so ask the controlling terminal directly.
+		(string inputPath, string outputPath) = OperatingSystem.IsWindows()
+			? ("CONIN$", "CONOUT$")
+			: ("/dev/tty", "/dev/tty");
+		try
+		{
+			using var input = new StreamReader(
+				new FileStream(inputPath, FileMode.Open, FileAccess.Read));
+			using var output = new StreamWriter(
+				new FileStream(outputPath, FileMode.Open, FileAccess.Write))
+			{
+				AutoFlush = true,
+			};
+			output.WriteLine(message);
+			output.Write($"{question} [y/N] ");
+			string? answer = input.ReadLine()?.Trim().ToUpperInvariant();
+
+			return answer is "Y" or "YES";
+		}
+		catch (Exception ex) when (ex is IOException
+									   or UnauthorizedAccessException)
+		{
+			// No controlling terminal: opening /dev/tty fails with ENXIO.
+			return null;
+		}
+	}
 
 	public ConsoleKey ReadKey() => Console.ReadKey(true).Key;
 
