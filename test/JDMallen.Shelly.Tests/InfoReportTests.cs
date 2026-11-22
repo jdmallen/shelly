@@ -46,6 +46,7 @@ public class InfoReportTests
 			report.ReplaceLineEndings("\n"));
 		Assert.Contains("reasoning:  yes (temperature not sent)", report);
 		Assert.Contains("max tokens: 2048", report);
+		Assert.Contains("timeout:    30s", report);
 		Assert.Contains("auth:       api key", report);
 		Assert.Contains("api key:    AZURE_OPENAI_API_KEY is set", report);
 		Assert.Contains("shell:      Zsh (/usr/bin/zsh -c)", report);
@@ -253,6 +254,26 @@ public class InfoReportTests
 	}
 
 	[Fact]
+	public void OpenAI_ExplicitReasoningModel_SaysWhatIsSent()
+	{
+		string report = Build(
+			new ShellyConfig
+			{
+				Provider = "openai",
+				OpenAI = new OpenAIConfig
+				{
+					BaseUrl = "https://api.openai.com/v1",
+					Model = "my-fine-tune",
+					ReasoningModel = true,
+				},
+			});
+
+		Assert.Contains(
+			"reasoning:  yes (max_completion_tokens, temperature not sent)\n",
+			report.ReplaceLineEndings("\n"));
+	}
+
+	[Fact]
 	public void OpenAI_ReportsConfigFileSettings()
 	{
 		var config = new ShellyConfig
@@ -271,6 +292,9 @@ public class InfoReportTests
 
 		Assert.Contains("endpoint:   http://10.10.0.20:8080/v1", report);
 		Assert.Contains("model:      qwen", report);
+		Assert.Contains(
+			"reasoning:  no, guessed from the model name (openai.reasoningModel)",
+			report);
 		Assert.Contains("max tokens: 4096", report);
 		Assert.Contains("timeout:    120s", report);
 		Assert.Contains("OPENAI_API_KEY_SHELLY is not set (optional)", report);

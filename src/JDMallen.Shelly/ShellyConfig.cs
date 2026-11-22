@@ -300,6 +300,13 @@ internal sealed class AzureConfig
 	public bool ReasoningModel { get; set; }
 
 	/// <summary>
+	/// How long to wait for a reply. A reasoning deployment with a raised
+	/// <see cref="MaxTokens" /> can think for longer than the default.
+	/// </summary>
+	public int TimeoutSeconds { get; set; } =
+		ProviderFactory.HOSTED_TIMEOUT_SECONDS;
+
+	/// <summary>
 	/// How requests authenticate: <see cref="API_KEY_AUTH" /> (the default)
 	/// sends <c>AZURE_OPENAI_API_KEY</c>; <see cref="AZURE_CLI_AUTH" /> sends a
 	/// Microsoft Entra ID token from <c>az account get-access-token</c>, for
@@ -475,6 +482,45 @@ internal sealed class OpenAIConfig
 	/// thought and leaves no answer at all.
 	/// </summary>
 	public int MaxTokens { get; set; } = 2048;
+
+	/// <summary>
+	/// Set for one of OpenAI's reasoning models (o-series, gpt-5): the budget
+	/// is then sent as <c>max_completion_tokens</c>, which they require, and
+	/// <c>temperature</c> is not sent. Unset (the default, left out of the
+	/// file) guesses from <see cref="Model" />; see
+	/// <see cref="IsReasoningModel" />.
+	/// </summary>
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+	public bool? ReasoningModel { get; set; }
+
+	/// <summary>
+	/// <see cref="ReasoningModel" />, or when unset a guess from
+	/// <see cref="Model" />: OpenAI documents no naming rule, so this only
+	/// covers today's families (o1, o3, o4, gpt-5, but not the gpt-5 chat
+	/// models). Self-hosted model names match none of them.
+	/// </summary>
+	internal bool IsReasoningModel =>
+		ReasoningModel ?? LooksLikeReasoningModel(Model);
+
+	internal static bool LooksLikeReasoningModel(string model)
+	{
+		string id = model.Trim();
+		if (id.Contains("-chat", StringComparison.OrdinalIgnoreCase))
+		{
+			return false;
+		}
+
+		if (id.StartsWith("gpt-5", StringComparison.OrdinalIgnoreCase))
+		{
+			return true;
+		}
+
+		// "o3" or "o3-mini", but not a local model that merely starts with o.
+		return id.Length >= 2
+			&& char.ToLowerInvariant(id[0]) == 'o'
+			&& id[1] is '1' or '3' or '4'
+			&& (id.Length == 2 || id[2] == '-');
+	}
 }
 
 /// <summary>

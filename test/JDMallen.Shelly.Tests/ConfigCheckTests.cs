@@ -85,6 +85,21 @@ public class ConfigCheckTests
 	}
 
 	[Fact]
+	public void Azure_NonPositiveTimeout_IsListed() => Assert.Contains(
+		"azure.timeoutSeconds",
+		FindMissing(
+			new ShellyConfig
+			{
+				Provider = "azure",
+				Azure = new AzureConfig
+				{
+					Endpoint = "https://example.openai.azure.com",
+					Deployment = "gpt-6-luna",
+					TimeoutSeconds = 0,
+				},
+			}));
+
+	[Fact]
 	public void Azure_Unconfigured_ListsEverything() => Assert.Equal(
 		[
 			"azure.endpoint", "azure.deployment",

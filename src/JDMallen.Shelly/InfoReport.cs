@@ -54,6 +54,7 @@ internal static class InfoReport
 					("max tokens",
 						config.Azure.MaxTokens.ToString(
 							CultureInfo.CurrentCulture)));
+				rows.Add(("timeout", $"{config.Azure.TimeoutSeconds}s"));
 				AddAzureAuthRows(
 					rows,
 					config.Azure,
@@ -86,6 +87,7 @@ internal static class InfoReport
 						OrNotSet(config.OpenAI.BaseUrl, "openai.baseUrl")));
 				rows.Add(
 					("model", OrNotSet(config.OpenAI.Model, "openai.model")));
+				rows.Add(("reasoning", DescribeReasoning(config.OpenAI)));
 				rows.Add(
 					("max tokens",
 						config.OpenAI.MaxTokens.ToString(
@@ -285,6 +287,17 @@ internal static class InfoReport
 			: setting.DeprecatedVariable is null
 				? setting.Value!
 				: $"{setting.Value} (deprecated: from {setting.DeprecatedVariable})";
+
+	private static string DescribeReasoning(OpenAIConfig openAI)
+	{
+		string answer = openAI.IsReasoningModel
+			? "yes (max_completion_tokens, temperature not sent)"
+			: "no";
+
+		return openAI.ReasoningModel is null
+			? $"{answer}, guessed from the model name (openai.reasoningModel)"
+			: answer;
+	}
 
 	private static string OrNotSet(string value, string setting) =>
 		string.IsNullOrWhiteSpace(value) ? $"(not set: {setting})" : value;

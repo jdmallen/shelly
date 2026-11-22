@@ -17,8 +17,9 @@ internal sealed class ProviderFactory(
 	Action<string> writeError)
 {
 	// Hosted providers answer in seconds; a self-hosted model may need minutes,
-	// so its timeout comes from config instead.
-	private const int HOSTED_TIMEOUT_SECONDS = 30;
+	// so its timeout comes from config instead. Also azure.timeoutSeconds'
+	// default, for a reasoning deployment that thinks longer.
+	internal const int HOSTED_TIMEOUT_SECONDS = 30;
 
 	private readonly string _configPath = ShellyConfig.ConfigPath();
 
@@ -98,7 +99,10 @@ internal sealed class ProviderFactory(
 				new OpenAICompatibleClientOptions(
 					cfg.BaseUrl,
 					cfg.Model,
-					apiKey)),
+					apiKey)
+				{
+					IsReasoningModel = cfg.IsReasoningModel,
+				}),
 			cfg.MaxTokens);
 	}
 
@@ -110,6 +114,14 @@ internal sealed class ProviderFactory(
 				Strings.MustBeGreaterThanZero(
 					"azure.maxTokens",
 					cfg.MaxTokens));
+		}
+
+		if (cfg.TimeoutSeconds <= 0)
+		{
+			return Fail<IChatProvider>(
+				Strings.MustBeGreaterThanZero(
+					"azure.timeoutSeconds",
+					cfg.TimeoutSeconds));
 		}
 
 		AzureSetting endpoint = cfg.ResolveEndpoint(getEnvironmentVariable);
@@ -144,7 +156,7 @@ internal sealed class ProviderFactory(
 			? null
 			: new ChatProvider(
 				new AzureOpenAIChatClient(
-					CreateHttpClient(HOSTED_TIMEOUT_SECONDS),
+					CreateHttpClient(cfg.TimeoutSeconds),
 					options with { IsReasoningModel = cfg.ReasoningModel }),
 				cfg.MaxTokens);
 	}

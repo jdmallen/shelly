@@ -174,6 +174,19 @@ internal sealed class ConfigWizard
 	{
 		openAI.BaseUrl = _prompts.HttpUrl("openai.baseUrl", openAI.BaseUrl);
 		openAI.Model = _prompts.Text("openai.model", openAI.Model);
+
+		// Offered as the guess from the model name; accepting a guess leaves
+		// the setting unset, so it follows a later change of model.
+		bool reasoningModel = _prompts.Boolean(
+			"openai.reasoningModel",
+			openAI.IsReasoningModel);
+		if (openAI.ReasoningModel is not null
+			|| reasoningModel
+			!= OpenAIConfig.LooksLikeReasoningModel(openAI.Model))
+		{
+			openAI.ReasoningModel = reasoningModel;
+		}
+
 		openAI.TimeoutSeconds = _prompts.PositiveInteger(
 			"openai.timeoutSeconds",
 			openAI.TimeoutSeconds);
@@ -203,6 +216,9 @@ internal sealed class ConfigWizard
 		azure.MaxTokens = _prompts.PositiveInteger(
 			"azure.maxTokens",
 			azure.MaxTokens);
+		azure.TimeoutSeconds = _prompts.PositiveInteger(
+			"azure.timeoutSeconds",
+			azure.TimeoutSeconds);
 
 		_io.WriteLine();
 		_io.WriteLine(Strings.AzureAuthHeader);

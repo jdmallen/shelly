@@ -36,6 +36,60 @@ public class ProviderSelectionTests
 	}
 
 	[Theory]
+	[InlineData("o1", true)]
+	[InlineData("o3-mini", true)]
+	[InlineData("O4-mini-2025-04-16", true)]
+	[InlineData("gpt-5", true)]
+	[InlineData("gpt-5.5-pro", true)]
+	[InlineData(" gpt-5-mini ", true)]
+	[InlineData("gpt-5-chat-latest", false)]
+	[InlineData("gpt-5.2-chat-latest", false)]
+	[InlineData("gpt-4o", false)]
+	[InlineData("gpt-4.1-mini", false)]
+	[InlineData("o2", false)]
+	[InlineData("olmo-2-13b", false)]
+	[InlineData("o3x", false)]
+	[InlineData("qwen3-8b", false)]
+	[InlineData("", false)]
+	public void LooksLikeReasoningModel_KnownFamiliesOnly(
+		string model,
+		bool expected)
+		=> Assert.Equal(expected, OpenAIConfig.LooksLikeReasoningModel(model));
+
+	[Theory]
+	[InlineData("o4-mini", null, true)]
+	[InlineData("o4-mini", false, false)]
+	[InlineData("qwen", null, false)]
+	[InlineData("qwen", true, true)]
+	public void IsReasoningModel_ExplicitSettingBeatsTheGuess(
+		string model,
+		bool? setting,
+		bool expected)
+		=> Assert.Equal(
+			expected,
+			new OpenAIConfig { Model = model, ReasoningModel = setting }
+				.IsReasoningModel);
+
+	[Fact]
+	public void Serialize_UnsetReasoningModel_IsLeftOut()
+	{
+		string unset = JsonSerializer.Serialize(
+			new ShellyConfig(),
+			ShellyConfigJsonContext.Default.ShellyConfig);
+		string set = JsonSerializer.Serialize(
+			new ShellyConfig { OpenAI = { ReasoningModel = false } },
+			ShellyConfigJsonContext.Default.ShellyConfig);
+
+		Assert.DoesNotContain("\"reasoningModel\": null", unset);
+		Assert.Contains("\"reasoningModel\": false", set);
+		Assert.False(
+			JsonSerializer.Deserialize(
+				set,
+				ShellyConfigJsonContext.Default.ShellyConfig)!
+				.OpenAI.ReasoningModel);
+	}
+
+	[Theory]
 	[InlineData("anthropic", "Anthropic")]
 	[InlineData("Anthropic", "Anthropic")]
 	[InlineData("openai", "OpenAI")]
@@ -166,6 +220,24 @@ public class ProviderSelectionTests
 		Assert.Contains("azure.maxTokens", error);
 	}
 
+	[Theory]
+	[InlineData(0)]
+	[InlineData(-1)]
+	public void CreateProvider_AzureNonPositiveTimeout_Fails(
+		int timeoutSeconds)
+	{
+		var config = new ShellyConfig
+		{
+			Provider = "azure",
+			Azure = { TimeoutSeconds = timeoutSeconds },
+		};
+
+		(IChatProvider? provider, string error) = Create(config);
+
+		Assert.Null(provider);
+		Assert.Contains("azure.timeoutSeconds", error);
+	}
+
 	private static ShellyConfig AzureConfigWithAuth(
 		string auth,
 		string tenantId = "") =>
@@ -286,6 +358,18 @@ public class ShellyConfigTests
 			2048,
 			Deserialize("{ \"azure\": { \"maxTokens\": 2048 } }")
 				.Azure.MaxTokens);
+	}
+
+	[Fact]
+	public void Deserialize_ReadsAzureTimeout_DefaultsTo30()
+	{
+		Assert.Equal(
+			30,
+			Deserialize("{ \"provider\": \"azure\" }").Azure.TimeoutSeconds);
+		Assert.Equal(
+			120,
+			Deserialize("{ \"azure\": { \"timeoutSeconds\": 120 } }")
+				.Azure.TimeoutSeconds);
 	}
 
 	[Fact]

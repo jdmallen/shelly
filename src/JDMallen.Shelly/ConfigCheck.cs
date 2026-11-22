@@ -70,6 +70,10 @@ internal static class ConfigCheck
 					NeedsMove(azure.ResolveDeployment(getEnv)),
 					"azure.deployment");
 				AddIf(missing, azure.MaxTokens <= 0, "azure.maxTokens");
+				AddIf(
+					missing,
+					azure.TimeoutSeconds <= 0,
+					"azure.timeoutSeconds");
 				AddAzureAuth(missing, azure, getEnv);
 
 				break;

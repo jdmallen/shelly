@@ -179,6 +179,7 @@ Default contents:
     "deployment": "",
     "maxTokens": 500,
     "reasoningModel": false,
+    "timeoutSeconds": 30,
     "auth": "apiKey",
     "tenantId": "",
     "tokenScope": ""
@@ -209,6 +210,9 @@ Set `provider` to `"azure"` and fill in the `azure` block:
 - `azure.reasoningModel`: set `true` for a reasoning deployment (o-series,
   gpt-5 and later reasoning models). These reject sampling parameters, so
   shelly then stops sending `temperature`.
+- `azure.timeoutSeconds`: how long to wait for a reply, default `30`. Raise
+  it for a reasoning deployment with a larger `maxTokens` if requests time
+  out.
 
 A reasoning deployment spends its hidden thinking from the same budget, so
 pair `reasoningModel: true` with a larger `maxTokens`, e.g. `2048`; too small
@@ -336,6 +340,15 @@ llama.cpp, llama-swap, Ollama, vLLM, or LM Studio:
 | `model`          | The model name as your server reports it — check `curl <baseUrl>/models`. Required.                      |
 | `timeoutSeconds` | Default `300`. A cold model has to load its weights from disk before generating, which can take minutes. |
 | `maxTokens`      | Default `2048`, versus `500` for the hosted providers. See the note on reasoning models below.           |
+| `reasoningModel` | Optional. For OpenAI's own reasoning models; see below. Leave it out for self-hosted runners.            |
+
+**OpenAI reasoning models (o-series, gpt-5).** openai.com expects their budget
+as `max_completion_tokens` rather than `max_tokens`, and they don't take a
+`temperature`. shelly sends that form when `reasoningModel` is `true`. Left
+out, it guesses from `model`: ids starting with `o1`, `o3`, `o4` or `gpt-5`
+count, except the `gpt-5` chat models. Set it to `true` or `false` if the
+guess is wrong, e.g. for a fine-tune with its own name. `shelly --info` shows
+what was decided.
 
 **Reasoning ("thinking") models work, with two caveats.** Their thinking block
 is stripped before you see the suggestion, whether the server splits it into

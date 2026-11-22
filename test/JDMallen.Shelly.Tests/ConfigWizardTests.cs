@@ -121,6 +121,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue("localhost:8080"); // invalid URL
 		_io.ReadLines.Enqueue("http://localhost:8080/v1"); // openai.baseUrl
 		_io.ReadLines.Enqueue("qwen"); // openai.model
+		_io.ReadLines.Enqueue(""); // openai.reasoningModel: keep the guess
 		_io.ReadLines.Enqueue("soon"); // invalid timeout
 		_io.ReadLines.Enqueue(""); // openai.timeoutSeconds: keep
 		_io.ReadLines.Enqueue("4096"); // openai.maxTokens
@@ -134,9 +135,57 @@ public sealed class ConfigWizardTests : IDisposable
 		Assert.Equal("qwen", saved.OpenAI.Model);
 		Assert.Equal(300, saved.OpenAI.TimeoutSeconds);
 		Assert.Equal(4096, saved.OpenAI.MaxTokens);
+		Assert.Null(saved.OpenAI.ReasoningModel);
+		Assert.Contains("  openai.reasoningModel (y/n) [n]: ", Output);
 		Assert.Contains(Strings.InvalidHttpUrl, Output);
 		Assert.Contains(Strings.InvalidPositiveInteger, Output);
 		Assert.Contains(Strings.ApiKeyOptional, Output);
+	}
+
+	[Theory]
+	[InlineData("", null)] // accept the guess: stays unset
+	[InlineData("y", null)] // same as the guess: stays unset
+	[InlineData("n", false)] // overrides the guess
+	public void OpenAI_ReasoningModel_OffersTheGuessFromTheModelName(
+		string answer,
+		bool? expected)
+	{
+		_io.ReadKeys.Enqueue(ConsoleKey.D2);
+		_io.ReadLines.Enqueue("https://api.openai.com/v1"); // openai.baseUrl
+		_io.ReadLines.Enqueue("o4-mini"); // openai.model
+		_io.ReadLines.Enqueue(answer); // openai.reasoningModel
+		_io.ReadLines.Enqueue(""); // openai.timeoutSeconds
+		_io.ReadLines.Enqueue(""); // openai.maxTokens
+		_io.ReadKeys.Enqueue(ConsoleKey.Y); // save
+
+		Assert.Equal(ConfigWizardOutcome.Saved, Run());
+
+		Assert.Contains("  openai.reasoningModel (y/n) [y]: ", Output);
+		Assert.Equal(expected, Saved().OpenAI.ReasoningModel);
+	}
+
+	[Fact]
+	public void OpenAI_ReasoningModel_KeepsAnExplicitValue()
+	{
+		new ShellyConfig
+		{
+			Provider = "openai",
+			OpenAI = new OpenAIConfig
+			{
+				BaseUrl = "http://localhost:8080/v1",
+				Model = "qwen",
+				ReasoningModel = false,
+			},
+		}.Save(ConfigPath);
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // provider: current
+		_io.ReadLines.Enqueue(""); // openai.baseUrl
+		_io.ReadLines.Enqueue(""); // openai.model
+		_io.ReadLines.Enqueue(""); // openai.reasoningModel: keep (n)
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
+
+		Assert.Equal(ConfigWizardOutcome.Saved, Run());
+
+		Assert.False(Saved().OpenAI.ReasoningModel);
 	}
 
 	[Fact]
@@ -176,6 +225,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue("gpt-6-luna"); // azure.deployment
 		_io.ReadLines.Enqueue("y"); // azure.reasoningModel
 		_io.ReadLines.Enqueue("2048"); // azure.maxTokens
+		_io.ReadLines.Enqueue("120"); // azure.timeoutSeconds
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // auth: current (API key)
 		_io.ReadKeys.Enqueue(
 			ConsoleKey.Enter); // set the user variable: yes (default)
@@ -190,6 +240,7 @@ public sealed class ConfigWizardTests : IDisposable
 		Assert.Equal("gpt-6-luna", saved.Azure.Deployment);
 		Assert.True(saved.Azure.ReasoningModel);
 		Assert.Equal(2048, saved.Azure.MaxTokens);
+		Assert.Equal(120, saved.Azure.TimeoutSeconds);
 		Assert.Equal(
 			SECRET,
 			environment.Persisted[ChatProvider.AZURE_API_KEY_ENV_VAR]);
@@ -216,6 +267,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue("maybe");         // azure.reasoningModel: invalid
 		_io.ReadLines.Enqueue("");              // azure.reasoningModel: keep
 		_io.ReadLines.Enqueue("");              // azure.maxTokens
+		_io.ReadLines.Enqueue("");              // azure.timeoutSeconds
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // auth: current (API key)
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
 
@@ -245,6 +297,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue("gpt-6-luna"); // azure.deployment
 		_io.ReadLines.Enqueue(""); // azure.reasoningModel
 		_io.ReadLines.Enqueue(""); // azure.maxTokens
+		_io.ReadLines.Enqueue(""); // azure.timeoutSeconds
 		_io.ReadKeys.Enqueue(ConsoleKey.D2); // auth: Azure CLI
 		_io.ReadLines.Enqueue("contoso.onmicrosoft.com"); // azure.tenantId
 		_io.ReadLines.Enqueue(""); // azure.tokenScope
@@ -286,6 +339,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue("");              // azure.deployment
 		_io.ReadLines.Enqueue("");              // azure.reasoningModel
 		_io.ReadLines.Enqueue("");              // azure.maxTokens
+		_io.ReadLines.Enqueue("");              // azure.timeoutSeconds
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // auth: current (Azure CLI)
 		_io.ReadLines.Enqueue("not a tenant!"); // azure.tenantId: invalid
 		_io.ReadLines.Enqueue("-");             // azure.tenantId: clear
@@ -324,6 +378,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue("");              // azure.deployment
 		_io.ReadLines.Enqueue("");              // azure.reasoningModel
 		_io.ReadLines.Enqueue("");              // azure.maxTokens
+		_io.ReadLines.Enqueue("");              // azure.timeoutSeconds
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // auth: current
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // credential: current
 		_io.ReadLines.Enqueue("not a tenant!"); // azure.tenantId: invalid
@@ -366,6 +421,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue("");              // azure.deployment
 		_io.ReadLines.Enqueue("");              // azure.reasoningModel
 		_io.ReadLines.Enqueue("");              // azure.maxTokens
+		_io.ReadLines.Enqueue("");              // azure.timeoutSeconds
 		_io.ReadKeys.Enqueue(ConsoleKey.D1);    // auth: API key
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
 
@@ -386,6 +442,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue("gpt-6-luna"); // azure.deployment
 		_io.ReadLines.Enqueue(""); // azure.reasoningModel
 		_io.ReadLines.Enqueue(""); // azure.maxTokens
+		_io.ReadLines.Enqueue(""); // azure.timeoutSeconds
 		_io.ReadKeys.Enqueue(ConsoleKey.D3); // auth: Azure.Identity
 		_io.ReadKeys.Enqueue(ConsoleKey.D2); // credential: deviceCode
 		_io.ReadLines.Enqueue("contoso.onmicrosoft.com"); // azure.tenantId
@@ -428,6 +485,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue("");              // azure.deployment
 		_io.ReadLines.Enqueue("");              // azure.reasoningModel
 		_io.ReadLines.Enqueue("");              // azure.maxTokens
+		_io.ReadLines.Enqueue("");              // azure.timeoutSeconds
 		_io.ReadKeys.Enqueue(
 			ConsoleKey.Enter); // auth: current (Azure.Identity)
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // credential: current (default)

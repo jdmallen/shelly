@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`azure.timeoutSeconds`**: how long to wait for an Azure reply, default
+  30 as before. A reasoning deployment with a raised `azure.maxTokens` can
+  think for longer than that. Set in `shelly --config` and shown by
+  `--info`.
+- **`openai.reasoningModel`**: OpenAI's reasoning models (o-series, gpt-5)
+  through the `openai` provider. OpenAI documents `max_tokens` as not
+  compatible with o-series models; with this set, shelly sends
+  `max_completion_tokens` instead and no `temperature`. Left out, it is
+  guessed from the model name, so `o4-mini` or `gpt-5-mini` work without
+  it, while self-hosted models keep getting `max_tokens`. Requires
+  JDMallen.Toolbox.AI 4.9.0.
+
 ### Fixed
 
 - **Ctrl+C during an executed command stops the command, not shelly.**
