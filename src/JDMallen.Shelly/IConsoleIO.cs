@@ -19,6 +19,12 @@ internal interface IConsoleIO
 	/// </summary>
 	bool IsInputRedirected { get; }
 
+	/// <summary>
+	/// True when stdout is piped or captured: what's written is data for
+	/// another program, not text for someone to read.
+	/// </summary>
+	bool IsOutputRedirected { get; }
+
 	void Write(string text, ConsoleColor? color = null);
 
 	void WriteLine(string text = "", ConsoleColor? color = null);
@@ -33,6 +39,9 @@ internal interface IConsoleIO
 	void WriteErrorInline(string text);
 
 	string? ReadLine();
+
+	/// <summary>Reads the rest of stdin, e.g. a whole piped prompt.</summary>
+	string ReadToEnd();
 
 	ConsoleKey ReadKey();
 
@@ -49,6 +58,8 @@ internal sealed class SystemConsoleIO : IConsoleIO
 		!Console.IsInputRedirected && !Console.IsOutputRedirected;
 
 	public bool IsInputRedirected => Console.IsInputRedirected;
+
+	public bool IsOutputRedirected => Console.IsOutputRedirected;
 
 	public void Write(string text, ConsoleColor? color = null)
 	{
@@ -78,6 +89,8 @@ internal sealed class SystemConsoleIO : IConsoleIO
 	public void WriteErrorInline(string text) => Console.Error.Write(text);
 
 	public string? ReadLine() => Console.ReadLine();
+
+	public string ReadToEnd() => Console.In.ReadToEnd();
 
 	public ConsoleKey ReadKey() => Console.ReadKey(true).Key;
 

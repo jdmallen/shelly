@@ -93,13 +93,16 @@ internal sealed class ReplLoop
 					_io.WriteErrorInline($"{Strings.WhatToDo} ");
 				}
 
-				string? line = _io.ReadLine();
+				// Piped input is read whole: a prompt may span several lines.
+				string? line = _io.IsInputRedirected
+					? _io.ReadToEnd()
+					: _io.ReadLine();
 				if (string.IsNullOrWhiteSpace(line))
 				{
 					return ReplResult.Quit();
 				}
 
-				prompt = line;
+				prompt = line.Trim();
 			}
 
 			if (interactive)
@@ -134,7 +137,12 @@ internal sealed class ReplLoop
 
 			if (!interactive)
 			{
-				_io.WriteLine(suggestion);
+				// Captured output is data and stays exact; on a terminal
+				// (only stdin piped) someone reads it, so escape it.
+				_io.WriteLine(
+					_io.IsOutputRedirected
+						? suggestion
+						: TerminalText.Escape(suggestion));
 
 				return ReplResult.Quit();
 			}
@@ -174,6 +182,8 @@ internal sealed class ReplLoop
 	/// </summary>
 	private ReplResult Fail(string message, bool interactive)
 	{
+		// The message may carry a server's error body.
+		message = TerminalText.Escape(message);
 		if (interactive)
 		{
 			_io.WriteLine(message, ConsoleColor.Red);
@@ -195,7 +205,8 @@ internal sealed class ReplLoop
 		{
 			_io.WriteLine();
 			_io.WriteLine(Strings.SuggestionHeader, ConsoleColor.Green);
-			_io.WriteLine(suggestion, ConsoleColor.Yellow);
+			// Escaped for display only: x, e and c use the exact text.
+			_io.WriteLine(TerminalText.Escape(suggestion), ConsoleColor.Yellow);
 			_io.WriteLine();
 			WriteOptions();
 
@@ -235,7 +246,7 @@ internal sealed class ReplLoop
 					catch (Exception ex)
 					{
 						_io.WriteLine(
-							Strings.Error(ex.Message),
+							TerminalText.Escape(Strings.Error(ex.Message)),
 							ConsoleColor.Red);
 
 						continue;
@@ -245,7 +256,7 @@ internal sealed class ReplLoop
 					_io.WriteLine(
 						Strings.ExplanationHeader,
 						ConsoleColor.Green);
-					_io.WriteLine(explanation);
+					_io.WriteLine(TerminalText.Escape(explanation));
 
 					continue;
 
@@ -264,7 +275,8 @@ internal sealed class ReplLoop
 					catch (Exception ex)
 					{
 						_io.WriteLine(
-							Strings.ClipboardUnavailable(ex.Message),
+							TerminalText.Escape(
+								Strings.ClipboardUnavailable(ex.Message)),
 							ConsoleColor.Red);
 						if (OperatingSystem.IsLinux())
 						{

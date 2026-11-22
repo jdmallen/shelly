@@ -8,6 +8,11 @@ internal sealed class FakeConsoleIO : IConsoleIO
 
 	public bool IsInputRedirected { get; set; }
 
+	public bool IsOutputRedirected { get; set; }
+
+	/// <summary>The rest of stdin, for <see cref="ReadToEnd" />.</summary>
+	public string StdinRemainder { get; set; } = string.Empty;
+
 	public Queue<string?> ReadLines { get; } = new();
 
 	public Queue<ConsoleKey> ReadKeys { get; } = new();
@@ -31,7 +36,11 @@ internal sealed class FakeConsoleIO : IConsoleIO
 	public string? ReadLine()
 		=> ReadLines.Count == 0 ? null : ReadLines.Dequeue();
 
-	/// <summary>Runs before each <see cref="ReadKey" />, e.g. a Ctrl+C.</summary>
+	public string ReadToEnd() => StdinRemainder;
+
+	/// <summary>
+	/// Runs before each <see cref="ReadKey" />, e.g. a Ctrl+C.
+	/// </summary>
 	public Action? BeforeReadKey { get; set; }
 
 	public ConsoleKey ReadKey()

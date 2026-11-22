@@ -17,6 +17,9 @@ public class CommandSanitizerTests
 	[InlineData("```\nls -la\n```", "ls -la")]
 	[InlineData("```bash\nls\ncat file\n```", "ls\ncat file")]
 	[InlineData("  ```bash\nls\n```  ", "ls")]
+	[InlineData("```bash\nls\n```\nThis lists files", "ls")]
+	[InlineData("```bash\nls\n```\nOr: ```bash\nls -a\n```", "ls")]
+	[InlineData("```ls```", "ls")]
 	public void Strip_RemovesTripleBacktickFences(string input, string expected)
 		=> Assert.Equal(expected, CommandSanitizer.Strip(input));
 
@@ -30,6 +33,8 @@ public class CommandSanitizerTests
 	[Theory]
 	[InlineData("echo `date`", "echo `date`")]
 	[InlineData("ls | grep `whoami`", "ls | grep `whoami`")]
+	[InlineData("`which a` b `which c`", "`which a` b `which c`")]
+	[InlineData("`ls` `pwd`", "`ls` `pwd`")]
 	public void Strip_PreservesMidStringBackticks(string input, string expected)
 		=> Assert.Equal(expected, CommandSanitizer.Strip(input));
 

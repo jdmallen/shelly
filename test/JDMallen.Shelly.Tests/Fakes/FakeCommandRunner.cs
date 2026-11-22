@@ -4,7 +4,9 @@ internal sealed class FakeCommandRunner : ICommandRunner
 {
 	public List<string> Commands { get; } = [];
 
-	/// <summary>The exit code to report; null means the shell didn't start.</summary>
+	/// <summary>
+	/// The exit code to report; null means the shell didn't start.
+	/// </summary>
 	public int? ExitCode { get; set; }
 
 	/// <summary>Runs while the "command" is running, e.g. a Ctrl+C.</summary>

