@@ -58,9 +58,33 @@ public class CommandLineArgsTests
 			CommandLineArgs.Parse(["--"]));
 
 	[Fact]
-	public void Parse_HelpAfterPromptWords_StillShowsHelp()
-		=> Assert.IsType<CommandLineArgs.ShowHelp>(
-			CommandLineArgs.Parse(["list", "--help"]));
+	public void Parse_HelpAfterPromptWords_IsPromptText() => Assert.Equal(
+		new CommandLineArgs.Run("list files --help"),
+		CommandLineArgs.Parse(["list", "files", "--help"]));
+
+	[Fact]
+	public void Parse_UnknownOptionAfterPromptWords_IsPromptText()
+		=> Assert.Equal(
+			new CommandLineArgs.Run("find files with grep -r"),
+			CommandLineArgs.Parse(["find", "files", "with", "grep", "-r"]));
+
+	[Fact]
+	public void Parse_TerminatorAfterPromptWords_IsPromptText() => Assert.Equal(
+		new CommandLineArgs.Run("list -- files"),
+		CommandLineArgs.Parse(["list", "--", "files"]));
+
+	[Fact]
+	public void Parse_TerminatorLetsThePromptLeadWithADash() => Assert.Equal(
+		new CommandLineArgs.Run("-la but also sort by filename for ls"),
+		CommandLineArgs.Parse(
+		[
+			"--", "-la", "but", "also", "sort", "by", "filename", "for", "ls",
+		]));
+
+	[Fact]
+	public void Parse_OptionBeforePromptWords_StillWorks()
+		=> Assert.IsType<CommandLineArgs.ShowInfo>(
+			CommandLineArgs.Parse(["--info", "list", "files"]));
 
 	[Fact]
 	public void Parse_HelpAfterTerminator_IsPromptText() => Assert.Equal(

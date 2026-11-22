@@ -13,14 +13,14 @@ public sealed class SessionRunnerTests
 	private readonly FakeCommandRunner _commandRunner = new();
 	private readonly List<long> _recordedTotals = [];
 
-	private SessionRunner NewRunner()
+	private SessionRunner NewRunner(string? editFilePath = null)
 	{
 		Shell shell = Shell.FromNameOrPath("bash");
 		var loop = new ReplLoop(
 			_provider,
 			_io,
 			new FakeClipboard(),
-			false,
+			editFilePath is not null,
 			new ShellContext(shell, "os", "/pwd"));
 
 		return new SessionRunner(
@@ -29,7 +29,8 @@ public sealed class SessionRunnerTests
 			_io,
 			_interrupts,
 			_commandRunner,
-			usage => _recordedTotals.Add(usage.TotalTokens));
+			usage => _recordedTotals.Add(usage.TotalTokens),
+			editFilePath);
 	}
 
 	private void SuggestLsSpending15Tokens()
@@ -117,6 +118,53 @@ public sealed class SessionRunnerTests
 
 		Assert.Equal(1, exitCode);
 		Assert.Contains(Strings.FailedToStartShell, _io.Errors.ToString());
+	}
+
+	[Fact]
+	public async Task Edit_WritesTheCommandForTheWrapper()
+	{
+		string directory =
+			Directory.CreateTempSubdirectory("shelly-edit-").FullName;
+		try
+		{
+			string path = Path.Combine(directory, "edit");
+			SuggestLsSpending15Tokens();
+			_io.ReadKeys.Enqueue(ConsoleKey.E);
+
+			int exitCode = await NewRunner(path)
+				.RunAsync("list files", TestContext.Current.CancellationToken);
+
+			Assert.Equal(0, exitCode);
+			Assert.Equal(
+				"ls -la",
+				await File.ReadAllTextAsync(
+					path,
+					TestContext.Current.CancellationToken));
+		}
+		finally
+		{
+			Directory.Delete(directory, true);
+		}
+	}
+
+	[Fact]
+	public async Task Edit_UnwritableFile_ReportsItAndPrintsTheCommand()
+	{
+		string path = Path.Combine(
+			Path.GetTempPath(),
+			$"shelly-missing-{Guid.NewGuid():N}",
+			"edit");
+		SuggestLsSpending15Tokens();
+		_io.ReadKeys.Enqueue(ConsoleKey.E);
+
+		int exitCode = await NewRunner(path)
+			.RunAsync("list files", TestContext.Current.CancellationToken);
+
+		Assert.Equal(1, exitCode);
+		Assert.StartsWith(Strings.Error(string.Empty), _io.Errors.ToString());
+		Assert.EndsWith(
+			$"ls -la{Environment.NewLine}",
+			_io.Output.ToString());
 	}
 
 	[Fact]

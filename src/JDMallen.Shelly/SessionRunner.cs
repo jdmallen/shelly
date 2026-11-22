@@ -8,13 +8,18 @@ namespace JDMallen.Shelly;
 /// Adds the session's usage to the lifetime log. Called exactly once, either
 /// when the loop returns or on a Ctrl+C before that.
 /// </param>
+/// <param name="editFilePath">
+/// Where [e]dit writes the command for the shell wrapper
+/// (<see cref="EditHandoff.FilePath" />); null without the wrapper.
+/// </param>
 internal sealed class SessionRunner(
 	ReplLoop loop,
 	Shell shell,
 	IConsoleIO io,
 	IInterruptSource interrupts,
 	ICommandRunner commandRunner,
-	Action<TokenUsageTally> recordUsage)
+	Action<TokenUsageTally> recordUsage,
+	string? editFilePath)
 {
 	private int _usageRecorded;
 	private volatile bool _executing;
@@ -91,17 +96,29 @@ internal sealed class SessionRunner(
 
 	private int WriteEditHandoff(string command)
 	{
-		string? path = EditHandoff.FilePath;
-		if (string.IsNullOrEmpty(path))
+		if (string.IsNullOrEmpty(editFilePath))
 		{
-			// The edit action is only offered when the wrapper sets the env var,
-			// so this is defensive: print the command so it isn't silently lost.
+			// The edit action is only offered when the wrapper sets the env
+			// var, so this is defensive: print the command so it isn't lost.
 			io.WriteLine(command);
 
 			return 0;
 		}
 
-		File.WriteAllText(path, command);
+		try
+		{
+			File.WriteAllText(editFilePath, command);
+		}
+		catch (Exception ex) when (ex is IOException
+									   or UnauthorizedAccessException)
+		{
+			// E.g. the wrapper's temp file was removed. Still hand over the
+			// command, on stdout, so it isn't lost.
+			io.WriteError(TerminalText.Escape(Strings.Error(ex.Message)));
+			io.WriteLine(command);
+
+			return 1;
+		}
 
 		return 0;
 	}

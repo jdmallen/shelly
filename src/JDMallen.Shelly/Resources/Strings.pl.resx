@@ -61,6 +61,9 @@
 	<data name="ResponseTruncated" xml:space="preserve">
 		<value>Odpowiedź została ucięta na limicie tokenów, więc nie jest wyświetlana. Spróbuj ponownie lub poproś o coś prostszego.</value>
 	</data>
+	<data name="HiddenCharactersWarning" xml:space="preserve">
+		<value>Uwaga: to polecenie zawiera ukryte znaki sterujące, takie jak \r lub \x1b. Uruchomienie, edycja i kopiowanie zachowują je bez zmian, a wklejenie do powłoki może od razu uruchomić jego część.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Sugestia:</value>
 	</data>
@@ -306,6 +309,9 @@
 	</data>
 	<data name="InvalidTenantId" xml:space="preserve">
 		<value>Wpisz identyfikator dzierżawy (GUID) lub domenę, np. contoso.onmicrosoft.com.</value>
+	</data>
+	<data name="InvalidTokenScopeFormat" xml:space="preserve">
+		<value>Wpisz adres URL https, na przykład {0}.</value>
 	</data>
 	<data name="AzureCliSignInHeader" xml:space="preserve">
 		<value>Logowanie przez Azure CLI:</value>

@@ -247,6 +247,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadLines.Enqueue(""); // azure.maxTokens
 		_io.ReadKeys.Enqueue(ConsoleKey.D2); // auth: Azure CLI
 		_io.ReadLines.Enqueue("contoso.onmicrosoft.com"); // azure.tenantId
+		_io.ReadLines.Enqueue(""); // azure.tokenScope
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
 
 		Assert.Equal(ConfigWizardOutcome.Saved, Run(environment));
@@ -288,6 +289,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // auth: current (Azure CLI)
 		_io.ReadLines.Enqueue("not a tenant!"); // azure.tenantId: invalid
 		_io.ReadLines.Enqueue("-");             // azure.tenantId: clear
+		_io.ReadLines.Enqueue("");              // azure.tokenScope
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
 
 		Assert.Equal(ConfigWizardOutcome.Saved, Run());
@@ -301,6 +303,49 @@ public sealed class ConfigWizardTests : IDisposable
 		Assert.Contains(
 			"az login --scope https://ai.azure.com/.default",
 			Output);
+	}
+
+	[Fact]
+	public void Azure_InvalidTokenScope_RepromptsAndClearsTheWarning()
+	{
+		new ShellyConfig
+		{
+			Provider = "azure",
+			Azure = new AzureConfig
+			{
+				Endpoint = "https://example.openai.azure.com",
+				Deployment = "gpt-6-luna",
+				Auth = AzureConfig.AZURE_IDENTITY_AUTH,
+				TokenScope = "not a scope",
+			},
+		}.Save(ConfigPath);
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // provider: current (azure)
+		_io.ReadLines.Enqueue("");              // azure.endpoint
+		_io.ReadLines.Enqueue("");              // azure.deployment
+		_io.ReadLines.Enqueue("");              // azure.reasoningModel
+		_io.ReadLines.Enqueue("");              // azure.maxTokens
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // auth: current
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // credential: current
+		_io.ReadLines.Enqueue("not a tenant!"); // azure.tenantId: invalid
+		_io.ReadLines.Enqueue("");              // azure.tenantId: keep
+		_io.ReadLines.Enqueue("ftp://x");       // azure.tokenScope: invalid
+		_io.ReadLines.Enqueue(
+			"https://cognitiveservices.azure.com/.default");
+		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
+
+		Assert.Equal(ConfigWizardOutcome.Saved, Run());
+
+		ShellyConfig saved = Saved();
+		Assert.Equal(
+			"https://cognitiveservices.azure.com/.default",
+			saved.Azure.TokenScope);
+		Assert.Contains(Strings.InvalidTenantId, Output);
+		Assert.Contains(
+			Strings.InvalidTokenScope("https://ai.azure.com/.default"),
+			Output);
+		Assert.DoesNotContain(
+			"azure.tokenScope",
+			ConfigCheck.FindMissing(saved, null, _ => null));
 	}
 
 	[Fact]
@@ -344,6 +389,7 @@ public sealed class ConfigWizardTests : IDisposable
 		_io.ReadKeys.Enqueue(ConsoleKey.D3); // auth: Azure.Identity
 		_io.ReadKeys.Enqueue(ConsoleKey.D2); // credential: deviceCode
 		_io.ReadLines.Enqueue("contoso.onmicrosoft.com"); // azure.tenantId
+		_io.ReadLines.Enqueue(""); // azure.tokenScope
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
 
 		Assert.Equal(ConfigWizardOutcome.Saved, Run());
@@ -386,6 +432,7 @@ public sealed class ConfigWizardTests : IDisposable
 			ConsoleKey.Enter); // auth: current (Azure.Identity)
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // credential: current (default)
 		_io.ReadLines.Enqueue(""); // azure.tenantId
+		_io.ReadLines.Enqueue(""); // azure.tokenScope
 		_io.ReadKeys.Enqueue(ConsoleKey.Enter); // save
 
 		Assert.Equal(ConfigWizardOutcome.Saved, Run());

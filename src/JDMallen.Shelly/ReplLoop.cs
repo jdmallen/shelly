@@ -29,11 +29,12 @@ internal sealed class ReplLoop
 
 	public ReplLoop(
 		IChatProvider provider,
+		IConsoleIO io,
 		ShellContext context,
 		bool showTokenUsage = true)
 		: this(
 			provider,
-			new SystemConsoleIO(),
+			io,
 			new SystemClipboard(),
 			EditHandoff.IsEnabled,
 			context,
@@ -143,6 +144,11 @@ internal sealed class ReplLoop
 					_io.IsOutputRedirected
 						? suggestion
 						: TerminalText.Escape(suggestion));
+				if (TerminalText.HasHiddenCharacters(suggestion))
+				{
+					// stderr, so it never becomes part of a captured command.
+					_io.WriteError(Strings.HiddenCharactersWarning);
+				}
 
 				return ReplResult.Quit();
 			}
@@ -207,6 +213,14 @@ internal sealed class ReplLoop
 			_io.WriteLine(Strings.SuggestionHeader, ConsoleColor.Green);
 			// Escaped for display only: x, e and c use the exact text.
 			_io.WriteLine(TerminalText.Escape(suggestion), ConsoleColor.Yellow);
+			if (TerminalText.HasHiddenCharacters(suggestion))
+			{
+				// Copy keeps them too, and a raw CR pasted into a shell
+				// without bracketed paste (e.g. tcsh) acts as Enter.
+				_io.WriteLine(
+					Strings.HiddenCharactersWarning,
+					ConsoleColor.Red);
+			}
 			_io.WriteLine();
 			WriteOptions();
 

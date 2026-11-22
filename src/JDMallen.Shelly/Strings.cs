@@ -23,6 +23,9 @@ internal static class Strings
 
 	public static string ResponseTruncated => Get(nameof(ResponseTruncated));
 
+	public static string HiddenCharactersWarning
+		=> Get(nameof(HiddenCharactersWarning));
+
 	public static string SuggestionHeader => Get(nameof(SuggestionHeader));
 
 	public static string Explaining => Get(nameof(Explaining));
@@ -133,6 +136,9 @@ internal static class Strings
 	public static string OptionalTextHint => Get(nameof(OptionalTextHint));
 
 	public static string InvalidTenantId => Get(nameof(InvalidTenantId));
+
+	public static string InvalidTokenScope(string example) =>
+		Format("InvalidTokenScopeFormat", example);
 
 	public static string AzureCliSignInHeader
 		=> Get(nameof(AzureCliSignInHeader));

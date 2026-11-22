@@ -27,13 +27,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Control characters other than newline and tab are now shown escaped
   (`\r`, `\x1b`) in suggestions, explanations and error messages. Executing,
   editing and copying still use the exact text, as does captured output
-  (`$(shelly ...)`).
+  (`$(shelly ...)`), and a warning under the command says so: a raw `\r`
+  pasted into a shell without bracketed paste (e.g. tcsh) acts as Enter.
+  Outside the menu the warning goes to stderr.
 - **Piped prompts are sent whole.** `printf 'find big files\nin my home
   dir\n' | shelly` sent only the first line; it now sends every line.
 - **Markdown cleanup no longer mangles some commands.** A csh command such
   as `` `which a` b `which c` `` lost its outer backticks, and a fenced
   block followed by prose kept the closing fence and the prose in the
   command.
+- **Flags inside a prompt no longer need quoting.** `shelly find files with
+  grep -r` failed with `Option 'r' is unknown.` Everything after the first
+  prompt word is now prompt text, shelly's own options included, so
+  `shelly list files --help` asks the model. `--` still lets a prompt start
+  with a dash.
+- **Saving the config keeps a symlink.** `shelly --config` replaced a
+  symlinked `config.json` (e.g. one kept in a dotfiles repo) with a regular
+  file. It now writes through to the link's target.
+- **The wizard asks for `azure.tokenScope`.** A bad scope was reported next
+  to Configure, but the wizard had no way to fix it. It also no longer
+  accepts an invalid tenant while the saved scope is invalid.
+- **`csh` is described as csh.** The model was told it was writing for
+  tcsh.
+- **`" anthropic"` is a known provider.** Spaces around `provider` in
+  `config.json` are ignored.
+- **A failed [e]dit handoff is reported.** If the shell wrapper's file
+  can't be written, shelly prints the error and the command instead of a
+  stack trace.
 
 ## [1.8.1]
 

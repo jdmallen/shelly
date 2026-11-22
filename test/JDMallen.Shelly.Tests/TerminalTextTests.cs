@@ -18,6 +18,19 @@ public class TerminalTextTests
 	public void Escape_ShowsControlCharacters(string input, string expected)
 		=> Assert.Equal(expected, TerminalText.Escape(input));
 
+	[Theory]
+	[InlineData("ls -la", false)]
+	[InlineData("ls\n\tcat file", false)]
+	[InlineData("ls\r\ncat file", false)]
+	[InlineData("ls\rrm", true)]
+	[InlineData("trailing\r", true)]
+	[InlineData("\u001b[2K", true)]
+	[InlineData("csi\u009b2K", true)]
+	public void HasHiddenCharacters_MatchesWhatEscapeChanges(
+		string input,
+		bool expected)
+		=> Assert.Equal(expected, TerminalText.HasHiddenCharacters(input));
+
 	[Fact]
 	public void Escape_PlainText_ReturnsTheSameInstance()
 	{

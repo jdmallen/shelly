@@ -42,8 +42,8 @@ public class ProviderSelectionTests
 	[InlineData("LOCAL", "OpenAI")]
 	[InlineData("azure", "Azure")]
 	[InlineData("llama", null)]
-	[InlineData(" azure", null)]
-	public void Kind_ParsesProviderIgnoringCase(
+	[InlineData(" azure ", "Azure")]
+	public void Kind_ParsesProviderIgnoringCaseAndSpaces(
 		string provider,
 		string? expected) =>
 		Assert.Equal(

@@ -39,7 +39,7 @@ internal sealed class ShellyConfig
 	/// names none.
 	/// </summary>
 	internal ProviderKind? Kind =>
-		Provider.ToLowerInvariant() switch
+		Provider.Trim().ToLowerInvariant() switch
 		{
 			ANTHROPIC_PROVIDER => ProviderKind.Anthropic,
 			OPENAI_PROVIDER or LOCAL_PROVIDER_ALIAS => ProviderKind.OpenAI,
@@ -60,14 +60,17 @@ internal sealed class ShellyConfig
 	/// </summary>
 	public bool ShowTokenUsage { get; set; } = true;
 
-	public static ShellyConfig Load()
+	/// <summary>
+	/// Loads the user's config; a file that fails to parse is reported to
+	/// <paramref name="writeWarning" /> and yields the defaults.
+	/// </summary>
+	public static ShellyConfig Load(Action<string> writeWarning)
 	{
 		string path = ConfigPath();
 		ShellyConfig config = Load(path, out string? parseError);
 		if (parseError is not null)
 		{
-			Console.Error.WriteLine(
-				Strings.ConfigParseWarning(path, parseError));
+			writeWarning(Strings.ConfigParseWarning(path, parseError));
 		}
 
 		return config;
@@ -115,10 +118,17 @@ internal sealed class ShellyConfig
 	/// <summary>
 	/// Writes the config to <paramref name="path" /> via a temporary file in
 	/// the same directory, so an interrupted write can't leave a truncated
-	/// config behind.
+	/// config behind. A symlinked config (e.g. kept in a dotfiles repo) is
+	/// written through to its target, so the link survives.
 	/// </summary>
 	internal void Save(string path)
 	{
+		var file = new FileInfo(path);
+		if (file.LinkTarget is not null)
+		{
+			path = file.ResolveLinkTarget(true)!.FullName;
+		}
+
 		string directory = Path.GetDirectoryName(Path.GetFullPath(path))!;
 		Directory.CreateDirectory(directory);
 		string temporaryPath = Path.Combine(

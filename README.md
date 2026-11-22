@@ -370,8 +370,12 @@ characters your shell would otherwise interpret (pipes, redirects, semicolons,
 shelly "find files modified in the last 24h and pipe to wc -l"
 ```
 
-A prompt that starts with a dash would be read as an option. Put `--` first to
-end option parsing; everything after it is the prompt:
+Options are only read before the prompt starts: once the first prompt word
+appears, everything after it is prompt text, so `shelly find files with grep
+-r` needs no quoting (and `shelly list files --help` asks the model rather
+than showing help). A prompt that starts with a dash would be read as an
+option. Put `--` first to end option parsing; everything after it is the
+prompt:
 
 ```sh
 shelly -- -la but sorted by size

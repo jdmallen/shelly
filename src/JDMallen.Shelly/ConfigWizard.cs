@@ -65,9 +65,9 @@ internal sealed class ConfigWizard
 		_utcNow = utcNow;
 	}
 
-	public ConfigWizard()
+	public ConfigWizard(IConsoleIO io)
 		: this(
-			new SystemConsoleIO(),
+			io,
 			new SystemUserEnvironment(),
 			ShellDetector.Detect(),
 			ShellyConfig.ConfigPath(),
@@ -243,8 +243,14 @@ internal sealed class ConfigWizard
 		azure.TenantId = _prompts.OptionalText(
 			"azure.tenantId",
 			azure.TenantId,
-			value => IsInvalidTenant(azure, value)
+			value => IsInvalidTenant(value)
 				? Strings.InvalidTenantId
+				: null);
+		azure.TokenScope = _prompts.OptionalText(
+			"azure.tokenScope",
+			azure.TokenScope,
+			value => IsInvalidScope(value)
+				? Strings.InvalidTokenScope(AzureOpenAIScopes.DEFAULT)
 				: null);
 
 		return null;
@@ -275,9 +281,14 @@ internal sealed class ConfigWizard
 		}
 	}
 
-	private static bool IsInvalidTenant(AzureConfig azure, string tenantId) =>
-		new AzureConfig { TenantId = tenantId, TokenScope = azure.TokenScope }
-			.InvalidTokenSetting()
+	private static bool IsInvalidScope(string tokenScope) =>
+		new AzureConfig { TokenScope = tokenScope }.InvalidTokenSetting()
+		== "azure.tokenScope";
+
+	// Each value is checked alone: checked with the saved scope, a bad scope
+	// was reported first and let any tenant through.
+	private static bool IsInvalidTenant(string tenantId) =>
+		new AzureConfig { TenantId = tenantId }.InvalidTokenSetting()
 		== "azure.tenantId";
 
 	/// <summary>

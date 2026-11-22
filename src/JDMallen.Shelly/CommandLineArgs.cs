@@ -30,7 +30,10 @@ internal abstract record CommandLineArgs
 		{
 			if (optionsEnded || !argument.StartsWith('-') || argument == "-")
 			{
+				// Everything after the first prompt word is prompt text, so
+				// `shelly find files with grep -r` needs no quoting.
 				promptWords.Add(argument);
+				optionsEnded = true;
 
 				continue;
 			}

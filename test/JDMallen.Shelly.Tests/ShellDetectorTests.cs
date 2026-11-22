@@ -255,4 +255,10 @@ public class ShellDetectorTests
 				? entry
 				: null;
 	}
+
+	[Theory]
+	[InlineData("csh", "C shell (csh)")]
+	[InlineData("tcsh", "C shell (tcsh)")]
+	public void CShells_AreNamedForWhatTheyAre(string name, string displayName)
+		=> Assert.Equal(displayName, Shell.FromNameOrPath(name).DisplayName);
 }

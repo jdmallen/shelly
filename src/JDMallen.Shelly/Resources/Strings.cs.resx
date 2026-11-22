@@ -61,6 +61,9 @@
 	<data name="ResponseTruncated" xml:space="preserve">
 		<value>Odpověď byla useknuta na limitu tokenů, proto se nezobrazuje. Zkuste to znovu nebo požádejte o něco jednoduššího.</value>
 	</data>
+	<data name="HiddenCharactersWarning" xml:space="preserve">
+		<value>Upozornění: tento příkaz obsahuje skryté řídicí znaky, například \r nebo \x1b. Spuštění, úprava i kopírování je ponechají beze změny a vložení do shellu může část příkazu okamžitě spustit.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Návrh:</value>
 	</data>
@@ -306,6 +309,9 @@
 	</data>
 	<data name="InvalidTenantId" xml:space="preserve">
 		<value>Zadej ID tenanta (GUID) nebo doménu, například contoso.onmicrosoft.com.</value>
+	</data>
+	<data name="InvalidTokenScopeFormat" xml:space="preserve">
+		<value>Zadejte adresu URL https, například {0}.</value>
 	</data>
 	<data name="AzureCliSignInHeader" xml:space="preserve">
 		<value>Přihlášení přes Azure CLI:</value>

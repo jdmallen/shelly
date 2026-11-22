@@ -72,7 +72,7 @@ internal static class Program
 					return await RunAsync(null);
 				case MainMenuChoice.Configure:
 					Io.WriteLine();
-					new ConfigWizard().Run(true);
+					new ConfigWizard(Io).Run(true);
 					Io.WriteLine();
 
 					continue;
@@ -90,7 +90,7 @@ internal static class Program
 	}
 
 	private static int RunConfigWizard() =>
-		new ConfigWizard().Run() == ConfigWizardOutcome.Failed ? 1 : 0;
+		new ConfigWizard(Io).Run() == ConfigWizardOutcome.Failed ? 1 : 0;
 
 	private static string BuildInfoReport()
 	{
@@ -101,7 +101,7 @@ internal static class Program
 		return InfoReport.Build(
 			BuildVersionLine(),
 			ShellyConfig.ConfigPath(),
-			ShellyConfig.Load(),
+			ShellyConfig.Load(Io.WriteError),
 			ShellDetector.Detect(),
 			Environment.GetEnvironmentVariable,
 			new InfoReport.UsageReport(usagePath, usage, usageError));
@@ -144,7 +144,7 @@ internal static class Program
 
 	private static async Task<int> RunAsync(string? prompt)
 	{
-		ShellyConfig config = ShellyConfig.Load();
+		ShellyConfig config = ShellyConfig.Load(Io.WriteError);
 
 		IChatProvider? provider = new ProviderFactory(
 				Environment.GetEnvironmentVariable,
@@ -156,7 +156,7 @@ internal static class Program
 		}
 
 		ShellContext context = ShellContext.Detect();
-		var loop = new ReplLoop(provider, context, config.ShowTokenUsage);
+		var loop = new ReplLoop(provider, Io, context, config.ShowTokenUsage);
 
 		return await new SessionRunner(
 				loop,
@@ -164,7 +164,8 @@ internal static class Program
 				Io,
 				new SystemInterruptSource(),
 				new SystemCommandRunner(),
-				RecordUsage)
+				RecordUsage,
+				EditHandoff.FilePath)
 			.RunAsync(prompt);
 	}
 

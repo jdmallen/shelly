@@ -62,6 +62,10 @@
 	<data name="ResponseTruncated" xml:space="preserve">
 		<value>The answer was cut off at the token limit, so it isn't shown. Try again, or ask for something simpler.</value>
 	</data>
+	<data name="HiddenCharactersWarning" xml:space="preserve">
+		<value>Warning: this command contains hidden control characters, such as \r or \x1b. Running, editing or copying it keeps them as they are, and pasting it into a shell may run part of it immediately.</value>
+		<comment>Shown under a suggested command. Keep \r and \x1b exactly as written: they are how the escaped characters appear on screen.</comment>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Suggestion:</value>
 	</data>
@@ -340,6 +344,10 @@
 	<data name="InvalidTenantId" xml:space="preserve">
 		<value>Enter a tenant ID (a GUID) or a domain such as contoso.onmicrosoft.com.</value>
 		<comment>Keep contoso.onmicrosoft.com untranslated.</comment>
+	</data>
+	<data name="InvalidTokenScopeFormat" xml:space="preserve">
+		<value>Enter an https URL such as {0}.</value>
+		<comment>{0} is the default scope URL; keep it untranslated.</comment>
 	</data>
 	<data name="AzureCliSignInHeader" xml:space="preserve">
 		<value>Azure CLI sign-in:</value>

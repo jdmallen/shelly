@@ -61,6 +61,9 @@
 	<data name="ResponseTruncated" xml:space="preserve">
 		<value>Відповідь обрізано на ліміті токенів, тому її не показано. Спробуйте ще раз або попросіть щось простіше.</value>
 	</data>
+	<data name="HiddenCharactersWarning" xml:space="preserve">
+		<value>Увага: ця команда містить приховані керівні символи, наприклад \r або \x1b. Під час запуску, редагування та копіювання вони зберігаються як є, а вставлення в оболонку може одразу виконати частину команди.</value>
+	</data>
 	<data name="SuggestionHeader" xml:space="preserve">
 		<value>Пропозиція:</value>
 	</data>
@@ -306,6 +309,9 @@
 	</data>
 	<data name="InvalidTenantId" xml:space="preserve">
 		<value>Введіть ID клієнта (GUID) або домен, наприклад contoso.onmicrosoft.com.</value>
+	</data>
+	<data name="InvalidTokenScopeFormat" xml:space="preserve">
+		<value>Введіть URL-адресу https, наприклад {0}.</value>
 	</data>
 	<data name="AzureCliSignInHeader" xml:space="preserve">
 		<value>Вхід через Azure CLI:</value>

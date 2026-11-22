@@ -1,3 +1,5 @@
+using System.Runtime.Versioning;
+
 using Xunit;
 
 namespace JDMallen.Shelly.Tests;
@@ -41,6 +43,46 @@ public sealed class ShellyConfigFileTests : IDisposable
 		Assert.True(loaded.Azure.ReasoningModel);
 		Assert.Equal("claude-x", loaded.Anthropic.Model);
 		Assert.Equal("http://localhost:8080/v1", loaded.OpenAI.BaseUrl);
+	}
+
+	[Fact]
+	public void Save_ThroughSymlink_WritesTheTargetAndKeepsTheLink()
+	{
+		Assert.SkipWhen(
+			OperatingSystem.IsWindows(),
+			"Creating symlinks needs extra rights on Windows.");
+		string dotfiles = Directory.CreateDirectory(
+				Path.Combine(_directory, "dotfiles"))
+			.FullName;
+		string target = Path.Combine(dotfiles, "shelly.json");
+		File.WriteAllText(target, "{}");
+		File.CreateSymbolicLink(
+			ConfigPath,
+			Path.Combine("dotfiles", "shelly.json"));
+
+		new ShellyConfig { Provider = "azure" }.Save(ConfigPath);
+
+		Assert.NotNull(new FileInfo(ConfigPath).LinkTarget);
+		Assert.Equal(
+			"azure",
+			ShellyConfig.Load(target, out _).Provider);
+		Assert.Equal([target], Directory.GetFiles(dotfiles));
+		Assert.Equal([ConfigPath], Directory.GetFiles(_directory));
+	}
+
+	[Fact]
+	public void Save_ThroughDanglingSymlink_CreatesTheTarget()
+	{
+		Assert.SkipWhen(
+			OperatingSystem.IsWindows(),
+			"Creating symlinks needs extra rights on Windows.");
+		string target = Path.Combine(_directory, "shelly.json");
+		File.CreateSymbolicLink(ConfigPath, target);
+
+		new ShellyConfig { Provider = "azure" }.Save(ConfigPath);
+
+		Assert.NotNull(new FileInfo(ConfigPath).LinkTarget);
+		Assert.Equal("azure", ShellyConfig.Load(target, out _).Provider);
 	}
 
 	[Fact]
@@ -100,6 +142,7 @@ public sealed class ShellyConfigFileTests : IDisposable
 	}
 
 	[Fact]
+	[UnsupportedOSPlatform("windows")]
 	public void Load_UnreadableFile_ReportsErrorInsteadOfThrowing()
 	{
 		Assert.SkipWhen(

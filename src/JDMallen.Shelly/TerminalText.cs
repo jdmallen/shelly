@@ -54,6 +54,27 @@ internal static class TerminalText
 		return escaped.ToString();
 	}
 
+	/// <summary>
+	/// Whether <see cref="Escape" /> would show anything escaped: a control
+	/// character other than newline, tab, or the CR of a CRLF.
+	/// </summary>
+	public static bool HasHiddenCharacters(string text)
+	{
+		for (var index = 0; index < text.Length; index++)
+		{
+			char character = text[index];
+			bool isCrlf = character == '\r'
+				&& index + 1 < text.Length
+				&& text[index + 1] == '\n';
+			if (NeedsEscape(character) && !isCrlf)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private static bool NeedsEscape(char character) =>
 		char.IsControl(character) && character is not ('\n' or '\t');
 }
