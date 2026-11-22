@@ -35,6 +35,13 @@ executable — no .NET runtime needed.
 | Windows | x64          | `shelly-<version>-win-x64.zip`        |
 | Windows | arm64        | `shelly-<version>-win-arm64.zip`      |
 
+The x64 builds need a CPU that supports x86-64-v2 (roughly 2009 or newer:
+Intel Nehalem or AMD Bulldozer onward), the minimum for .NET 11. On an older
+CPU, shelly exits with "The current CPU is missing one or more of the baseline
+instruction sets." For an older x64 CPU, use
+[1.8.1](https://github.com/jdmallen/shelly/releases/tag/1.8.1), the last
+release built on .NET 10.
+
 Verify the download against `SHA256SUMS.txt` published alongside the release.
 
 **Linux / macOS:**
