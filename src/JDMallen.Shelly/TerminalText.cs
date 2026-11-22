@@ -41,24 +41,30 @@ internal static class TerminalText
 			{
 				escaped.Append(character);
 			}
-			else if (character == '\r')
-			{
-				escaped.Append(@"\r");
-			}
-			else if (character <= '\u00ff')
-			{
-				escaped.Append(@"\x").Append(
-					((int)character).ToString(
-						"x2",
-						CultureInfo.InvariantCulture));
-			}
 			else
-			{
-				escaped.Append(@"\u").Append(
-					((int)character).ToString(
-						"x4",
-						CultureInfo.InvariantCulture));
-			}
+				switch (character)
+				{
+					case '\r':
+						escaped.Append(@"\r");
+
+						break;
+					case <= '\u00ff':
+						escaped.Append(@"\x")
+							.Append(
+								((int)character).ToString(
+									"x2",
+									CultureInfo.InvariantCulture));
+
+						break;
+					default:
+						escaped.Append(@"\u")
+							.Append(
+								((int)character).ToString(
+									"x4",
+									CultureInfo.InvariantCulture));
+
+						break;
+				}
 		}
 
 		return escaped.ToString();
@@ -100,5 +106,7 @@ internal static class TerminalText
 		character is >= '\u202a' and <= '\u202e'
 			or >= '\u2066' and <= '\u2069'
 			or >= '\u200b' and <= '\u200f'
-			or '\u061c' or '\u2060' or '\ufeff';
+			or '\u061c'
+			or '\u2060'
+			or '\ufeff';
 }

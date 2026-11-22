@@ -41,10 +41,10 @@ internal sealed class ShellyConfig
 	internal ProviderKind? Kind =>
 		Provider.Trim().ToLowerInvariant() switch
 		{
-			ANTHROPIC_PROVIDER => ProviderKind.Anthropic,
+			ANTHROPIC_PROVIDER                      => ProviderKind.Anthropic,
 			OPENAI_PROVIDER or LOCAL_PROVIDER_ALIAS => ProviderKind.OpenAI,
-			AZURE_PROVIDER => ProviderKind.Azure,
-			_ => null,
+			AZURE_PROVIDER                          => ProviderKind.Azure,
+			_                                       => null,
 		};
 
 	public AnthropicConfig Anthropic { get; set; } = new();
@@ -102,6 +102,7 @@ internal sealed class ShellyConfig
 
 			return loaded ?? new ShellyConfig();
 		}
+
 		// JsonException also covers a null where a value is required (see
 		// RespectNullableAnnotations below); an unreadable file is reported
 		// the same way rather than crashing.
@@ -443,7 +444,7 @@ internal sealed class AzureConfig
 	internal string? InvalidTokenSetting() =>
 		TokenProviderOptions().FindInvalidProperty() switch
 		{
-			nameof(AzureCliTokenProviderOptions.Scope) => "azure.tokenScope",
+			nameof(AzureCliTokenProviderOptions.Scope)    => "azure.tokenScope",
 			nameof(AzureCliTokenProviderOptions.TenantId) => "azure.tenantId",
 
 			// Timeout isn't a shelly setting, so it is always the default.
@@ -559,6 +560,7 @@ internal readonly record struct AzureSetting(
 	WriteIndented = true,
 	PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
 	DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+
 	// A hand-edited "provider": null would otherwise load as null and crash
 	// later; this makes it a parse error with a message instead.
 	RespectNullableAnnotations = true)]

@@ -111,10 +111,8 @@ internal sealed class SystemConsoleIO : IConsoleIO
 			using var input = new StreamReader(
 				new FileStream(inputPath, FileMode.Open, FileAccess.Read));
 			using var output = new StreamWriter(
-				new FileStream(outputPath, FileMode.Open, FileAccess.Write))
-			{
-				AutoFlush = true,
-			};
+				new FileStream(outputPath, FileMode.Open, FileAccess.Write));
+			output.AutoFlush = true;
 			output.WriteLine(message);
 			output.Write($"{question} [y/N] ");
 			string? answer = input.ReadLine()?.Trim().ToUpperInvariant();
@@ -153,7 +151,7 @@ internal sealed class SystemConsoleIO : IConsoleIO
 					if (secret.Length > 0)
 					{
 						secret.Length--;
-						Console.Write("\b \b");
+						Console.Write(@" ");
 					}
 
 					break;

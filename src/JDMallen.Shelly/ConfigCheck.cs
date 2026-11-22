@@ -99,18 +99,16 @@ internal static class ConfigCheck
 		Func<string, string?> getEnv)
 	{
 		AzureAuthKind? auth = azure.AuthKind;
-		if (auth is null)
+		switch (auth)
 		{
-			missing.Add("azure.auth");
+			case null:
+				missing.Add("azure.auth");
 
-			return;
-		}
+				return;
+			case AzureAuthKind.ApiKey:
+				AddIfUnset(missing, getEnv, ChatProvider.AZURE_API_KEY_ENV_VAR);
 
-		if (auth == AzureAuthKind.ApiKey)
-		{
-			AddIfUnset(missing, getEnv, ChatProvider.AZURE_API_KEY_ENV_VAR);
-
-			return;
+				return;
 		}
 
 		// Both Entra ID methods take a tenant and scope; each has one more need.

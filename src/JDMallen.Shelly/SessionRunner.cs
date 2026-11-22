@@ -84,14 +84,14 @@ internal sealed class SessionRunner(
 
 		_executing = true;
 		int? exitCode = await commandRunner.RunAsync(command, shell);
-		if (exitCode is null)
+		if (exitCode is not null)
 		{
-			io.WriteError(Strings.Error(Strings.FailedToStartShell));
-
-			return 1;
+			return exitCode.Value;
 		}
 
-		return exitCode.Value;
+		io.WriteError(Strings.Error(Strings.FailedToStartShell));
+
+		return 1;
 	}
 
 	private int WriteEditHandoff(string command)

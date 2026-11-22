@@ -48,7 +48,7 @@ internal sealed class ProviderFactory(
 					{
 						OmitTemperature = !cfg.AcceptsTemperature,
 					}),
-					cfg.MaxTokens);
+				cfg.MaxTokens);
 	}
 
 	private IChatProvider? CreateOpenAI(OpenAIConfig cfg)

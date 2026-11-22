@@ -259,6 +259,7 @@ internal sealed class ReplLoop
 		{
 			_io.WriteLine();
 			_io.WriteLine(Strings.SuggestionHeader, ConsoleColor.Green);
+
 			// Escaped for display only: x, e and c use the exact text.
 			_io.WriteLine(TerminalText.Escape(suggestion), ConsoleColor.Yellow);
 			if (TerminalText.HasHiddenCharacters(suggestion))
@@ -269,6 +270,7 @@ internal sealed class ReplLoop
 					Strings.HiddenCharactersWarning,
 					ConsoleColor.Red);
 			}
+
 			_io.WriteLine();
 			WriteOptions();
 

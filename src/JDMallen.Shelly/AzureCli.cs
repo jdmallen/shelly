@@ -28,7 +28,9 @@ internal static class AzureCli
 		bool? isWindows = null) =>
 		PathLookup.Find(
 			getEnvironmentVariable,
-			isWindows ?? OperatingSystem.IsWindows() ? WindowsNames : UnixNames);
+			isWindows ?? OperatingSystem.IsWindows()
+				? WindowsNames
+				: UnixNames);
 
 	/// <summary>
 	/// <c>az login</c> for <paramref name="azure" />'s scope and tenant, so the

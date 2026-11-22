@@ -283,7 +283,7 @@ internal sealed partial class WindowsProcessTree : IProcessTree
 
 	[LibraryImport("kernel32.dll")]
 	[return: MarshalAs(UnmanagedType.Bool)]
-	private static partial bool CloseHandle(nint handle);
+	private static partial void CloseHandle(IntPtr handle);
 
 	[LibraryImport("kernel32.dll", EntryPoint = "QueryFullProcessImageNameW")]
 	[return: MarshalAs(UnmanagedType.Bool)]

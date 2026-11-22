@@ -419,7 +419,9 @@ internal sealed class ConfigWizard
 	}
 
 	private static int CurrentProviderIndex(ProviderKind? provider) =>
-		Math.Max(Array.FindIndex(Providers, option => option.Kind == provider), 0);
+		Math.Max(
+			Array.FindIndex(Providers, option => option.Kind == provider),
+			0);
 
 	// The key waits for the config save, so declining "Save changes?" (or a
 	// failed write) leaves the user's environment untouched too.
@@ -448,7 +450,8 @@ internal sealed class ConfigWizard
 									   or UnauthorizedAccessException)
 		{
 			_io.WriteLine(
-				Strings.Error(Strings.ConfigSaveFailed(_configPath, ex.Message)),
+				Strings.Error(
+					Strings.ConfigSaveFailed(_configPath, ex.Message)),
 				ConsoleColor.Red);
 
 			return ConfigWizardOutcome.Failed;

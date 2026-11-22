@@ -10,8 +10,8 @@ public class TerminalTextTests
 	[InlineData("a\tb", "a\tb")]
 	[InlineData("line one\r\nline two", "line one\nline two")]
 	[InlineData("ls\rrm", @"ls\rrm")]
-	[InlineData("\u001b[2K", @"\x1b[2K")]
-	[InlineData("bell\u0007", @"bell\x07")]
+	[InlineData("\e[2K", @"\x1b[2K")]
+	[InlineData("bell\a", @"bell\x07")]
 	[InlineData("del\u007f", @"del\x7f")]
 	[InlineData("csi\u009b2K", @"csi\x9b2K")]
 	[InlineData("trailing\r", @"trailing\r")]
@@ -29,7 +29,7 @@ public class TerminalTextTests
 	[InlineData("ls\r\ncat file", false)]
 	[InlineData("ls\rrm", true)]
 	[InlineData("trailing\r", true)]
-	[InlineData("\u001b[2K", true)]
+	[InlineData("\e[2K", true)]
 	[InlineData("csi\u009b2K", true)]
 	[InlineData("ls #\u202e", true)]
 	[InlineData("l\u200ds", true)]
@@ -43,8 +43,8 @@ public class TerminalTextTests
 	[Fact]
 	public void Escape_PlainText_ReturnsTheSameInstance()
 	{
-		const string TEXT = "ls -la";
+		const string text = "ls -la";
 
-		Assert.Same(TEXT, TerminalText.Escape(TEXT));
+		Assert.Same(text, TerminalText.Escape(text));
 	}
 }

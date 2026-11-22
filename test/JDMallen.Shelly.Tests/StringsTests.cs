@@ -18,7 +18,7 @@ public partial class StringsTests
 	];
 
 	public static TheoryData<string> TranslatedCultures
-		=> new(TranslatedCultureNames);
+		=> [.. TranslatedCultureNames];
 
 	public static TheoryData<string, char> MenuLabels => new()
 	{

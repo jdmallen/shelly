@@ -54,8 +54,20 @@ internal sealed record Shell(
 
 	private static readonly KnownShell[] KnownShells =
 	[
-		new(["bash"], "Bash", DashC, null, EXPORT, "~/.bashrc"),
-		new(["zsh"], "Zsh", DashC, null, EXPORT, "~/.zshrc"),
+		new(
+			["bash"],
+			"Bash",
+			DashC,
+			null,
+			EXPORT,
+			"~/.bashrc"),
+		new(
+			["zsh"],
+			"Zsh",
+			DashC,
+			null,
+			EXPORT,
+			"~/.zshrc"),
 		new(
 			["sh", "dash", "ash", "posh", "yash"],
 			"POSIX sh",
@@ -81,8 +93,20 @@ internal sealed record Shell(
 			+ "arithmetic (use `math`) and no heredocs.",
 			"set -Ux {0} {1}",
 			null),
-		new(["tcsh"], "C shell (tcsh)", DashC, CSH_HINT, SETENV, "~/.tcshrc"),
-		new(["csh"], "C shell (csh)", DashC, CSH_HINT, SETENV, "~/.cshrc"),
+		new(
+			["tcsh"],
+			"C shell (tcsh)",
+			DashC,
+			CSH_HINT,
+			SETENV,
+			"~/.tcshrc"),
+		new(
+			["csh"],
+			"C shell (csh)",
+			DashC,
+			CSH_HINT,
+			SETENV,
+			"~/.cshrc"),
 		new(
 			["pwsh"],
 			"PowerShell",
