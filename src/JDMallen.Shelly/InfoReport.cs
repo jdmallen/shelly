@@ -65,8 +65,13 @@ internal static class InfoReport
 				rows.Add(("endpoint", ANTHROPIC_ENDPOINT));
 				rows.Add(("model", config.Anthropic.Model));
 				rows.Add(
+					("temperature",
+						config.Anthropic.AcceptsTemperature
+							? "sent"
+							: "not sent"));
+				rows.Add(
 					("max tokens",
-						ChatProvider.DEFAULT_MAX_TOKENS.ToString(
+						config.Anthropic.MaxTokens.ToString(
 							CultureInfo.CurrentCulture)));
 				rows.Add(
 					("api key",

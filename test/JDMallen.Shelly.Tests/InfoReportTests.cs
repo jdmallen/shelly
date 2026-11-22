@@ -218,11 +218,38 @@ public class InfoReportTests
 
 		string report = Build(new ShellyConfig());
 
-		Assert.Contains("provider:   anthropic", report);
-		Assert.Contains($"endpoint:   {InfoReport.ANTHROPIC_ENDPOINT}", report);
-		Assert.Contains("model:      claude-haiku-5-5", report);
+		Assert.Contains("provider:    anthropic", report);
+		Assert.Contains(
+			$"endpoint:    {InfoReport.ANTHROPIC_ENDPOINT}",
+			report);
+		Assert.Contains("model:       claude-haiku-5-5", report);
 		Assert.Contains("ANTHROPIC_API_KEY_SHELLY is set", report);
 		Assert.DoesNotContain(SECRET, report);
+	}
+
+	[Fact]
+	public void Anthropic_ThinkingModel_ReportsTheBudgetItIsSent()
+	{
+		string report = Build(new ShellyConfig());
+
+		Assert.Contains("temperature: not sent", report);
+		Assert.Contains("max tokens:  2048", report);
+	}
+
+	[Fact]
+	public void Anthropic_TemperatureModel_ReportsTheSmallerBudget()
+	{
+		string report = Build(
+			new ShellyConfig
+			{
+				Anthropic = new AnthropicConfig
+				{
+					Model = "claude-sonnet-4-5",
+				},
+			});
+
+		Assert.Contains("temperature: sent", report);
+		Assert.Contains("max tokens:  500", report);
 	}
 
 	[Fact]
@@ -302,7 +329,7 @@ public class InfoReportTests
 
 		// The usage block is aligned on its own, so the provider block keeps
 		// its padding.
-		Assert.Contains("provider:   anthropic", report);
+		Assert.Contains("provider:    anthropic", report);
 	}
 
 	[Fact]

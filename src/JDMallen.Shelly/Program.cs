@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace JDMallen.Shelly;
@@ -159,30 +157,15 @@ internal static class Program
 
 		ShellContext context = ShellContext.Detect();
 		var loop = new ReplLoop(provider, context, config.ShowTokenUsage);
-		ReplResult result = await loop.RunAsync(prompt);
 
-		// Before executing: the command may run long, or be interrupted along
-		// with shelly, and the tokens were spent either way.
-		RecordUsage(loop.SessionUsage);
-
-		if (result.Action == ReplAction.Failed)
-		{
-			return 1;
-		}
-
-		if (string.IsNullOrWhiteSpace(result.Command))
-		{
-			return 0;
-		}
-
-		return result.Action switch
-		{
-			ReplAction.Execute => await ExecuteAsync(
-				result.Command,
-				context.Shell),
-			ReplAction.Edit => WriteEditHandoff(result.Command),
-			_               => 0,
-		};
+		return await new SessionRunner(
+				loop,
+				context.Shell,
+				Io,
+				new SystemInterruptSource(),
+				new SystemCommandRunner(),
+				RecordUsage)
+			.RunAsync(prompt);
 	}
 
 	private static void RecordUsage(TokenUsageTally sessionUsage)
@@ -196,64 +179,5 @@ internal static class Program
 		{
 			Io.WriteError(Strings.UsageNotRecorded(path, error!));
 		}
-	}
-
-	private static int WriteEditHandoff(string command)
-	{
-		string? path = EditHandoff.FilePath;
-		if (string.IsNullOrEmpty(path))
-		{
-			// The edit action is only offered when the wrapper sets the env var,
-			// so this is defensive: print the command so it isn't silently lost.
-			Io.WriteLine(command);
-
-			return 0;
-		}
-
-		File.WriteAllText(path, command);
-
-		return 0;
-	}
-
-	// Runs in the shell the command was written for, i.e. the one shelly was
-	// launched from, not $SHELL: a fish command fails under zsh.
-	private static async Task<int> ExecuteAsync(string command, Shell shell)
-	{
-		var startInfo = new ProcessStartInfo
-		{
-			FileName = shell.Executable,
-			UseShellExecute = false,
-		};
-		foreach (string flag in shell.CommandFlags)
-		{
-			startInfo.ArgumentList.Add(flag);
-		}
-
-		startInfo.ArgumentList.Add(command);
-
-		Io.WriteLine(Strings.Executing, ConsoleColor.Cyan);
-
-		Process? process;
-		try
-		{
-			process = Process.Start(startInfo);
-		}
-		catch (Win32Exception)
-		{
-			// The shell isn't on PATH, e.g. a mistyped SHELLY_SHELL.
-			process = null;
-		}
-
-		if (process is null)
-		{
-			Io.WriteError(
-				Strings.Error(Strings.FailedToStartShell));
-
-			return 1;
-		}
-
-		await process.WaitForExitAsync();
-
-		return process.ExitCode;
 	}
 }

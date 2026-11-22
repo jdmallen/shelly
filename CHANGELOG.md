@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **Ctrl+C during an executed command stops the command, not shelly.**
+  shelly used to exit at once and leave a command that handles Ctrl+C
+  (`ping`, `python3`, `ssh`, `docker logs -f`) still running, sharing the
+  terminal with your shell, and its exit code was lost. shelly now waits for
+  the command to finish and exits with its code.
+- **Ctrl+C at the suggestion menu records token usage.** Leaving the menu
+  with Ctrl+C skipped the usage log, so `--info` undercounted lifetime
+  totals. The tokens are now recorded first; shelly still exits as
+  interrupted (130), so `shelly && next` doesn't run `next`.
+- **`--info` shows the real Anthropic token budget.** It printed 500 for
+  every model, while the newer models are sent 2048. It now prints the
+  budget actually sent, plus a `temperature` row saying whether one is sent.
+
 ## [1.8.1]
 
 ### Fixed

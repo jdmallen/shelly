@@ -31,7 +31,15 @@ internal sealed class FakeConsoleIO : IConsoleIO
 	public string? ReadLine()
 		=> ReadLines.Count == 0 ? null : ReadLines.Dequeue();
 
-	public ConsoleKey ReadKey() => ReadKeys.Dequeue();
+	/// <summary>Runs before each <see cref="ReadKey" />, e.g. a Ctrl+C.</summary>
+	public Action? BeforeReadKey { get; set; }
+
+	public ConsoleKey ReadKey()
+	{
+		BeforeReadKey?.Invoke();
+
+		return ReadKeys.Dequeue();
+	}
 
 	public string? ReadSecret()
 		=> ReadSecrets.Count == 0 ? null : ReadSecrets.Dequeue();

@@ -46,6 +46,29 @@ internal sealed class ReplLoop
 	/// </summary>
 	public TokenUsageTally SessionUsage { get; } = new();
 
+	// Ctrl+C records SessionUsage from another thread.
+	private readonly Lock _usageLock = new();
+
+	/// <summary>
+	/// Passes <see cref="SessionUsage" /> to <paramref name="read" /> while no
+	/// request's usage is being added to it.
+	/// </summary>
+	public void ReadUsage(Action<TokenUsageTally> read)
+	{
+		lock (_usageLock)
+		{
+			read(SessionUsage);
+		}
+	}
+
+	private void AddUsage(TokenUsage? usage)
+	{
+		lock (_usageLock)
+		{
+			SessionUsage.Add(usage);
+		}
+	}
+
 	public async Task<ReplResult> RunAsync(
 		string? initialPrompt,
 		CancellationToken cancellationToken = default)
@@ -91,7 +114,7 @@ internal sealed class ReplLoop
 					prompt,
 					_context,
 					cancellationToken);
-				SessionUsage.Add(reply.Usage);
+				AddUsage(reply.Usage);
 				if (reply.Truncated)
 				{
 					return Fail(Strings.ResponseTruncated, interactive);
@@ -197,7 +220,7 @@ internal sealed class ReplLoop
 							suggestion,
 							context,
 							cancellationToken);
-						SessionUsage.Add(reply.Usage);
+						AddUsage(reply.Usage);
 						if (reply.Truncated)
 						{
 							_io.WriteLine(
