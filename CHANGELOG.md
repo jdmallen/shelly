@@ -20,6 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   guessed from the model name, so `o4-mini` or `gpt-5-mini` work without
   it, while self-hosted models keep getting `max_tokens`.
 
+### Changed
+
+- **Targets .NET 11.** Building from source needs the .NET 11 SDK. The
+  release binaries are self-contained, so nothing changes for people who
+  download them, except that x64 binaries now need an x86-64-v2 CPU
+  (roughly 2009 or newer).
+
 ### Fixed
 
 - **Ctrl+C during an executed command stops the command, not shelly.**

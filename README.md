@@ -63,7 +63,7 @@ say so. Either way, every other action still works.
 
 ### Build from source
 
-Requires the **.NET 10 SDK** (https://dotnet.microsoft.com/download).
+Requires the **.NET 11 SDK** (https://dotnet.microsoft.com/download).
 
 ```sh
 git clone https://github.com/jdmallen/shelly.git
